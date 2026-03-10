@@ -82,7 +82,7 @@ def send_eskiz_sms(phone: str, code: str):
     eskiz_phone = phone.replace("+", "")
 
     # Must match approved Eskiz template if your account requires it
-    message = message = f"TaskiN: TaskiN platformasida ro’yxatdan o’tish uchun tasdiqlash kodingiz: {code}"
+    message = message = f"Intask platformasida ro'yxatdan o'tish uchun tasdiqlash kodingiz: {code}. Kod 2 daqiqa ichida amal qiladi."
 
     try:
         send_url = "https://notify.eskiz.uz/api/message/sms/send"

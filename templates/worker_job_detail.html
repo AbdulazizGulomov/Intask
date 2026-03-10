@@ -1,0 +1,275 @@
+{% load i18n %}
+{% load static %}
+<!doctype html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>{{ job.title }} — TaskiN</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body { background:#f6f7fb; }
+    .cardx { border-radius: 18px; overflow:hidden; }
+    .meta-line { display:flex; gap:10px; flex-wrap:wrap; color:#6c757d; align-items: center; }
+    .sticky-cta{ position: static; margin-top: 16px; }
+    .job-photo { width: 100%; height: 260px; object-fit: cover; background: #eef2f7; display:block; }
+
+    .photo-edit-slot {
+      position: relative; border: 1px dashed #ccc; border-radius: 10px; padding: 10px; margin-bottom: 10px; text-align: center; background: #fff;
+    }
+    .photo-edit-slot img { max-height: 80px; object-fit: cover; width: 100%; border-radius: 6px; }
+    .photo-edit-slot .delete-label {
+      position: absolute; top: 5px; right: 5px; background: rgba(255, 255, 255, 0.9); padding: 2px 5px; border-radius: 5px; cursor: pointer; font-size: 12px; border: 1px solid #ddd;
+    }
+    .preview-banner{ margin-bottom: 14px; padding: 12px 14px; border-radius: 14px; background: #fff7ed; border: 1px solid #fed7aa; color: #9a3412; font-weight: 700; }
+
+    .icon-input-group { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .icon-input-group > span { width: 24px; text-align: center; }
+    .icon-input-group > input, .icon-input-group > select { flex: 1; }
+  </style>
+</head>
+<body>
+
+<form method="POST" enctype="multipart/form-data" action="{% url 'accounts:worker_job_detail' job.id %}?preview=1">
+  {% csrf_token %}
+  <div class="container py-4" style="max-width: 760px;">
+
+    {% if preview_mode %}
+      <a href="{% url 'accounts:employer_home' %}" class="text-decoration-none">← {% trans "Orqaga" %}</a>
+      <div class="preview-banner mt-3">
+        👁 {% trans "Preview mode: Employer is viewing this page as worker" %}
+      </div>
+    {% else %}
+      <a href="{% url 'accounts:worker_home' %}" class="text-decoration-none">← {% trans "Orqaga" %}</a>
+    {% endif %}
+
+    <div class="card cardx shadow-sm mt-3 p-3">
+
+      {% if preview_mode %}
+        <h5 class="mb-3">{% trans "Photos (edit)" %}</h5>
+        <div class="row g-2 mb-4">
+          {% for i in "1234" %}
+            <div class="col-6 col-md-3">
+              <div class="photo-edit-slot">
+                {% if i == "1" and job.photo1 %}
+                  <img src="{{ job.photo1.url }}" alt="Photo 1">
+                  <label class="delete-label"><input type="checkbox" name="delete_photo1"> O'chirish</label>
+                {% elif i == "2" and job.photo2 %}
+                  <img src="{{ job.photo2.url }}" alt="Photo 2">
+                  <label class="delete-label"><input type="checkbox" name="delete_photo2"> O'chirish</label>
+                {% elif i == "3" and job.photo3 %}
+                  <img src="{{ job.photo3.url }}" alt="Photo 3">
+                  <label class="delete-label"><input type="checkbox" name="delete_photo3"> O'chirish</label>
+                {% elif i == "4" and job.photo4 %}
+                  <img src="{{ job.photo4.url }}" alt="Photo 4">
+                  <label class="delete-label"><input type="checkbox" name="delete_photo4"> O'chirish</label>
+                {% endif %}
+                <input type="file" name="photo{{ i }}" class="form-control form-control-sm mt-2">
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label text-muted">Job Title</label>
+          <input type="text" name="title" class="form-control" value="{{ job.title }}" required>
+        </div>
+
+        <div class="mb-3 d-flex align-items-center gap-2">
+          <label class="form-label mb-0 text-muted">Status (edit labels)</label>
+
+          <select name="job_type" class="form-select w-auto text-bg-secondary border-0 rounded-pill">
+            {% for value, label in job_type_choices %}
+              <option value="{{ value }}" {% if job.job_type == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+
+          {% if job.is_active %}
+            <span class="badge text-bg-success rounded-pill px-3 py-2">Faol</span>
+          {% else %}
+            <span class="badge text-bg-danger rounded-pill px-3 py-2">Yopilgan</span>
+          {% endif %}
+
+          <span class="badge text-bg-warning text-dark rounded-pill px-3 py-2">Preview mode</span>
+        </div>
+
+        <div class="mt-4">
+          <div class="icon-input-group">
+            <span>📍</span>
+              <label>
+                  <select name="region" class="form-select">
+                    {% for value, label in region_choices %}
+                      <option value="{{ value }}" {% if job.region == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                  </select>
+              </label>
+          </div>
+
+          <div class="icon-input-group">
+            <span>🧰</span>
+            <select name="profession" class="form-select">
+              <option value="">---------</option>
+              {% for prof in professions %}
+                <option value="{{ prof.id }}" {% if job.profession.id == prof.id %}selected{% endif %}>{{ prof.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="icon-input-group">
+            <span>💰</span>
+            <input type="text" name="pay_text" class="form-control" value="{% if job.pay_text %}{{ job.pay_text }}{% else %}{{ pay_display }}{% endif %}">
+          </div>
+
+          <div class="icon-input-group">
+            <span>🕒</span>
+            <input type="date" class="form-control" value="{{ job.created_at|date:'Y-m-d' }}" readonly>
+          </div>
+        </div>
+
+        <div class="row g-2 mt-2">
+          <div class="col-12 col-sm-6">
+            <label class="form-label text-muted mb-1" style="font-size: 13px;">Employer Phone:</label>
+            <input type="text" class="form-control form-control-sm" value="{{ job.employer.phone|default:'' }}" readonly>
+          </div>
+          <div class="col-12 col-sm-6">
+            <label class="form-label text-muted mb-1" style="font-size: 13px;">Employer ID:</label>
+            <input type="text" class="form-control form-control-sm" value="{{ job.employer.id }}" readonly>
+          </div>
+        </div>
+
+        <hr class="my-4"/>
+
+        <h5 class="mb-2">Tavsif</h5>
+        <textarea name="description" class="form-control" rows="5">{{ job.description }}</textarea>
+
+        <hr class="my-4"/>
+
+        <div class="d-flex align-items-center gap-2">
+          <span>📞 Telefon:</span>
+          <input type="tel" name="contact_phone" class="form-control w-auto" value="{{ job.contact_phone|default:'' }}">
+        </div>
+
+        <hr class="my-4"/>
+
+        <h5 class="mb-2">Lokatsiya</h5>
+        <div class="text-secondary mb-2">
+          Edit Coordinates
+          <div class="row g-2 mt-1">
+            <div class="col-6">
+              <input type="text" id="editableLat" name="lat" class="form-control form-control-sm" value="{{ job.lat|default:'' }}" placeholder="Latitude">
+            </div>
+            <div class="col-6">
+              <input type="text" id="editableLng" name="lng" class="form-control form-control-sm" value="{{ job.lng|default:'' }}" placeholder="Longitude">
+            </div>
+          </div>
+        </div>
+
+      {% else %}
+        {% if photos and photos|length > 0 %}
+          <div id="jobPhotos" class="carousel slide" data-bs-ride="carousel">
+             <div class="carousel-inner">
+              {% for p in photos %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                  <img class="job-photo" src="{{ p.url }}" alt="job photo">
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% else %}
+          <div class="job-photo d-flex align-items-center justify-content-center text-muted">
+            <div style="font-size:48px;">🧰</div>
+          </div>
+        {% endif %}
+
+        <div class="mt-3 p-2">
+          <h3 class="mb-1">{{ job.title }}</h3>
+          <div class="mt-2">
+            <span class="badge text-bg-success rounded-pill px-3 py-2">{{ job.get_job_type_display }}</span>
+            {% if job.is_active %}
+              <span class="badge text-bg-light text-success border rounded-pill px-3 py-2">{% trans "Faol" %}</span>
+            {% else %}
+              <span class="badge text-bg-light text-danger border rounded-pill px-3 py-2">{% trans "Yopilgan" %}</span>
+            {% endif %}
+          </div>
+
+          <div class="meta-line mt-3">
+            <div>📍 <strong class="text-dark">{{ region_label }}</strong></div>
+            {% if profession_name %}<div>🧰 <strong class="text-dark">{{ profession_name }}</strong></div>{% endif %}
+            <div>💰 <strong class="text-dark">{% if pay_display %}{{ pay_display }}{% else %}{{ job.pay_text }}{% endif %}</strong></div>
+            {% if job.created_at %}<div>🕒 {{ job.created_at|date:"d M Y" }}</div>{% endif %}
+          </div>
+
+          <hr class="my-4"/>
+          <h5 class="mb-2">{% trans "Tavsif" %}</h5>
+          <p class="text-secondary mb-0" style="white-space:pre-line;">{{ job.description|default:"Tavsif kiritilmagan." }}</p>
+
+          <hr class="my-4"/>
+          <div class="text-secondary">
+            📞 {% trans "Telefon" %}: <strong class="text-dark">{{ job.contact_phone }}</strong>
+          </div>
+
+          <hr class="my-4"/>
+          <h5 class="mb-2">{% trans "Lokatsiya" %}</h5>
+          {% if job.lat and job.lng %}
+            <div class="text-secondary mb-2">
+              {% trans "Ish joyi koordinatalari" %}: <strong class="text-dark">{{ job.lat }}, {{ job.lng }}</strong>
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      <div class="d-flex gap-2 flex-wrap mt-2 {% if preview_mode %}px-0{% else %}px-2{% endif %}">
+        <a id="yandexMapLink" class="btn btn-outline-secondary" target="_blank" href="https://yandex.com/maps/?pt={{ job.lng|default:'0' }},{{ job.lat|default:'0' }}&z=14&l=map">🗺️ Yandex Map</a>
+        <a id="googleMapLink" class="btn btn-outline-secondary" target="_blank" href="https://www.google.com/maps?q={{ job.lat|default:'0' }},{{ job.lng|default:'0' }}">📍 Google Map</a>
+      </div>
+
+    </div>
+
+    <div class="sticky-cta mt-3 mb-5">
+      <div class="d-grid gap-2">
+
+      {% if preview_mode %}
+        <button type="submit" class="btn btn-success btn-lg">💾 {% trans "Saqlash" %}</button>
+      {% else %}
+        {% if job.contact_phone %}
+          <a class="btn btn-success btn-lg" href="tel:{{ job.contact_phone|cut:' ' }}">📞 {% trans "Qo‘ng‘iroq qilish" %}</a>
+        {% else %}
+          <button class="btn btn-success btn-lg" disabled>📞 {% trans "Telefon yo‘q" %}</button>
+        {% endif %}
+        <a class="btn btn-outline-primary btn-lg" href="{% url 'accounts:worker_apply' %}?next={{ request.get_full_path|urlencode }}">✅ {% trans "Ariza yuborish" %}</a>
+      {% endif %}
+
+      </div>
+    </div>
+
+  </div>
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const editableLat = document.getElementById("editableLat");
+  const editableLng = document.getElementById("editableLng");
+  const yandexMapLink = document.getElementById("yandexMapLink");
+  const googleMapLink = document.getElementById("googleMapLink");
+
+  function updateMapLinks() {
+    if (editableLat && editableLng) {
+      const latVal = editableLat.value;
+      const lngVal = editableLng.value;
+      if (latVal && lngVal) {
+        yandexMapLink.href = `https://yandex.com/maps/?pt=${lngVal},${latVal}&z=14&l=map`;
+        googleMapLink.href = `https://www.google.com/maps?q=$${latVal},${lngVal}`;
+      }
+    }
+  }
+
+  if (editableLat && editableLng) {
+    editableLat.addEventListener('input', updateMapLinks);
+    editableLng.addEventListener('input', updateMapLinks);
+  }
+</script>
+
+</body>
+</html>

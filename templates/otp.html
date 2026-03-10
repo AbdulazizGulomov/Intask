@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+<style>
+.otp-wrapper{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.otp-card{
+    width:100%;
+    max-width:500px;
+    background:white;
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.08);
+    padding:30px;
+}
+
+.otp-title{
+    font-size:24px;
+    font-weight:700;
+}
+
+.otp-sub{
+    color:#6c757d;
+    font-size:14px;
+}
+
+.phone-input{
+    height:55px;
+    font-size:18px;
+}
+
+.code-input{
+    height:55px;
+    font-size:18px;
+    letter-spacing:8px;
+    text-align:center;
+}
+
+.btn-otp{
+    height:55px;
+    font-size:18px;
+    border-radius:10px;
+}
+
+#codeBlock{
+    display:none;
+}
+</style>
+
+<div class="otp-wrapper">
+    <div class="otp-card">
+
+        <div class="mb-3 text-muted">
+            🔒 {% trans "Xavfsiz kirish" %}
+        </div>
+
+        <h4 class="otp-title mb-1">
+            {% trans "Telefon raqamingizni kiriting" %}
+        </h4>
+
+        <p class="otp-sub mb-4">
+            {% trans "Tasdiqlash kodi SMS orqali yuboriladi" %}
+        </p>
+
+        <div id="msg" class="alert alert-warning d-none"></div>
+
+        <label class="form-label small">
+            {% trans "Telefon raqami" %}
+        </label>
+
+        <div class="input-group mb-3">
+            <span class="input-group-text">+998</span>
+            <input
+                id="phone"
+                type="tel"
+                class="form-control phone-input"
+                placeholder="90 123 45 67"
+            >
+        </div>
+
+        <button id="sendBtn" class="btn btn-primary btn-otp w-100 mb-3" type="button">
+            {% trans "Kodni yuborish" %}
+        </button>
+
+        <div id="codeBlock">
+            <label class="form-label small">
+                {% trans "Tasdiqlash kodi" %}
+            </label>
+
+            <input
+                id="code"
+                class="form-control code-input mb-3"
+                maxlength="6"
+                placeholder="000000"
+            >
+
+            <button id="verifyBtn" class="btn btn-success btn-otp w-100" type="button">
+                {% trans "Tasdiqlash" %}
+            </button>
+        </div>
+
+        <input type="hidden" id="nextUrl" value="{{ request.GET.next|default:'/' }}">
+
+        <p class="text-center text-muted small mt-4">
+            {% trans "Kodni hech kimga bermang · Kod 5 daqiqa amal qiladi" %}
+        </p>
+
+    </div>
+</div>
+
+<script>
+function showMsg(text, type="warning"){
+    const el = document.getElementById("msg");
+    el.className = "alert d-block";
+    if(type === "success"){
+        el.classList.add("alert-success");
+    }else if(type === "danger"){
+        el.classList.add("alert-danger");
+    }else{
+        el.classList.add("alert-warning");
+    }
+    el.innerText = text;
+}
+
+function normalizeUZPhone(raw){
+    const digits = (raw || "").replace(/\D/g, "");
+    return "+998" + digits;
+}
+
+async function postJSON(url, data){
+    const res = await fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        credentials: "same-origin",
+        body: JSON.stringify(data)
+    });
+
+    const json = await res.json().catch(() => ({}));
+
+    if(!res.ok){
+        throw new Error(json.detail || json.message || "Xatolik yuz berdi");
+    }
+
+    return json;
+}
+
+document.getElementById("sendBtn").onclick = async () => {
+    try{
+        const phone = normalizeUZPhone(document.getElementById("phone").value);
+
+        if(phone.length < 13){
+            showMsg("Telefon raqamini to'g'ri kiriting", "warning");
+            return;
+        }
+
+        await postJSON("/auth/send-otp/", { phone });
+
+        document.getElementById("codeBlock").style.display = "block";
+        showMsg("Kod yuborildi", "success");
+    }catch(error){
+        showMsg(error.message, "danger");
+    }
+};
+
+document.getElementById("verifyBtn").onclick = async () => {
+    try{
+        const phone = normalizeUZPhone(document.getElementById("phone").value);
+        const code = (document.getElementById("code").value || "").trim();
+        const next = document.getElementById("nextUrl").value || "/";
+
+        if(phone.length < 13){
+            showMsg("Telefon raqamini to'g'ri kiriting", "warning");
+            return;
+        }
+
+        if(code.length < 4){
+            showMsg("Kodni kiriting", "warning");
+            return;
+        }
+
+        const data = await postJSON("/auth/verify-otp/", { phone, code, next });
+
+        showMsg("Tasdiqlandi. Yo'naltirilmoqda...", "success");
+        window.location.href = data.next || "/";
+    }catch(error){
+        showMsg(error.message, "danger");
+    }
+};
+</script>
+
+{% endblock %}

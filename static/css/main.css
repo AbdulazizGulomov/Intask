@@ -1,0 +1,79 @@
+/* ================================
+   Global Font & Body
+================================ */
+
+body {
+    font-family: Inter, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+}
+
+
+/* ================================
+   Cards
+================================ */
+
+.card {
+    border-radius: 20px;
+    border: none;
+}
+
+
+/* ================================
+   Sidebar / Filter Panel
+================================ */
+
+.form-check-input {
+    border-radius: 50%;
+}
+
+.form-check-label {
+    font-size: 0.9rem;
+}
+
+
+/* ================================
+   Card Typography
+================================ */
+
+.card h5 {
+    font-weight: 600;
+}
+
+.card .text-secondary {
+    font-size: 0.85rem;
+}
+
+
+/* ================================
+   Modal
+================================ */
+
+.modal-content {
+    border-radius: 20px;
+}
+
+
+/* ================================
+   Avatar Images
+================================ */
+
+.avatar-sm {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+
+/* ================================
+   Utility Helpers
+================================ */
+
+.pointer {
+    cursor: pointer;
+}
+
+.shadow-soft {
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}

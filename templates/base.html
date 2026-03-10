@@ -1,0 +1,154 @@
+{% load static %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TaskiN</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+    <style>
+        body {
+            font-family: Inter, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .card {
+            border-radius: 20px;
+        }
+
+        .form-check-input {
+            border-radius: 50%;
+        }
+
+        .form-check-label {
+            font-size: 0.9rem;
+        }
+
+        .card h5 {
+            font-weight: 600;
+        }
+
+        .card .text-secondary {
+            font-size: 0.85rem;
+        }
+
+        .modal-content {
+            border-radius: 20px;
+        }
+
+        /* OTP page fix */
+        body.otp-page {
+            margin: 0;
+            padding: 0;
+            background: #eef4f7;
+        }
+
+        body.otp-page .page-content {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100%;
+            max-width: 100%;
+        }
+    </style>
+</head>
+
+<body class="{% if request.path == '/auth/otp/' %}otp-page{% else %}bg-light{% endif %}">
+
+    {% if request.path != '/auth/otp/' %}
+    <nav class="navbar navbar-expand-lg navbar-white bg-white shadow-sm py-2">
+        <div class="container">
+
+            <a class="navbar-brand fw-bold text-primary" href="/">InTask</a>
+
+            <div class="ms-auto d-flex align-items-center gap-3">
+
+                <!-- LANGUAGE SWITCHER -->
+                <div class="small d-flex gap-2 align-items-center">
+
+                    <form action="{% url 'set_language' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                        <button type="submit" name="language" value="uz"
+                            class="btn btn-link p-0 text-decoration-none small">
+                            UZB
+                        </button>
+                    </form>
+
+                    |
+
+                    <form action="{% url 'set_language' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                        <button type="submit" name="language" value="ru"
+                            class="btn btn-link p-0 text-decoration-none small">
+                            RUS
+                        </button>
+                    </form>
+
+                    |
+
+                    <form action="{% url 'set_language' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                        <button type="submit" name="language" value="en"
+                            class="btn btn-link p-0 text-decoration-none small">
+                            ENG
+                        </button>
+                    </form>
+
+                </div>
+
+                {% if request.user.is_authenticated %}
+
+                    <div class="d-flex align-items-center gap-2">
+
+                        {% if request.user.role == "worker" and request.user.worker_profile.photo %}
+                            <img src="{{ request.user.worker_profile.photo.url }}"
+                                 style="width:35px;height:35px;border-radius:50%;object-fit:cover;">
+                        {% else %}
+                            <div style="width:35px;height:35px;border-radius:50%;background:#eee;display:flex;align-items:center;justify-content:center;">
+                                👤
+                            </div>
+                        {% endif %}
+
+                        <div class="small">
+                            <div class="fw-semibold">
+                                {{ display_name }}
+                            </div>
+                            <div class="text-muted" style="font-size:11px;">
+                                {{ request.user.phone }}
+                            </div>
+                        </div>
+
+                        <a href="{% url 'accounts:logout' %}" class="btn btn-outline-secondary btn-sm">
+                            {% trans "Chiqish" %}
+                        </a>
+
+                    </div>
+
+                {% else %}
+
+                    <a href="{% url 'accounts:otp' %}" class="btn btn-primary btn-sm">
+                        {% trans "RO‘YXATDAN O‘TISH" %}
+                    </a>
+
+                {% endif %}
+
+            </div>
+        </div>
+    </nav>
+    {% endif %}
+
+    <main class="page-content {% if request.path != '/auth/otp/' %}container-fluid mt-4{% endif %}">
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

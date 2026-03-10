@@ -1,0 +1,222 @@
+{% load i18n %}
+<!doctype html>
+<html lang="">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>{% trans "Create Job" %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container py-4" style="max-width: 720px;">
+  <h3 class="mb-3">{% trans "Create Job" %}</h3>
+
+  {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data" class="card p-3 shadow-sm">
+    {% csrf_token %}
+
+    <!-- TITLE -->
+    <div class="mb-3">
+      <label class="form-label">{% trans "Title" %}</label>
+      <input name="title" class="form-control" required>
+    </div>
+
+    <!-- PHOTOS -->
+    <div class="mb-3">
+      <label class="form-label">{% trans "Job photos" %}</label>
+
+      <div class="row g-3">
+
+        <div class="col-md-6">
+          <input type="file" name="photo1" id="photo1" class="form-control" accept="image/*">
+          <img id="preview1" class="img-fluid mt-2 rounded border" style="display:none; max-height:220px; object-fit:cover;">
+        </div>
+
+        <div class="col-md-6">
+          <input type="file" name="photo2" id="photo2" class="form-control" accept="image/*">
+          <img id="preview2" class="img-fluid mt-2 rounded border" style="display:none; max-height:220px; object-fit:cover;">
+        </div>
+
+        <div class="col-md-6">
+          <input type="file" name="photo3" id="photo3" class="form-control" accept="image/*">
+          <img id="preview3" class="img-fluid mt-2 rounded border" style="display:none; max-height:220px; object-fit:cover;">
+        </div>
+
+        <div class="col-md-6">
+          <input type="file" name="photo4" id="photo4" class="form-control" accept="image/*">
+          <img id="preview4" class="img-fluid mt-2 rounded border" style="display:none; max-height:220px; object-fit:cover;">
+        </div>
+
+      </div>
+
+      <div class="form-text mt-2">
+        {% trans "You can upload up to 4 photos. Each selected photo will preview immediately." %}
+      </div>
+    </div>
+
+    <!-- REGION + PROFESSION + TYPE -->
+    <div class="row g-3">
+
+      <div class="col-md-4">
+        <label class="form-label">{% trans "Region" %}</label>
+        <select name="region" class="form-select" required>
+          <option value="">--</option>
+          {% for k,v in regions %}
+            <option value="{{ k }}">{{ v }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">{% trans "Profession" %}</label>
+        <select name="profession" class="form-select" required>
+          <option value="">--</option>
+          {% for profession in professions %}
+            <option value="{{ profession.id }}">{{ profession.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">{% trans "Job type" %}</label>
+        <select name="job_type" class="form-select" required>
+          <option value="">--</option>
+          {% for k,v in job_types %}
+            <option value="{{ k }}">{{ v }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+    </div>
+
+    <!-- PAY -->
+    <div class="row g-3 mt-3">
+
+      <div class="col-md-4">
+        <label class="form-label">{% trans "Currency" %}</label>
+        <select name="pay_currency" class="form-select">
+          {% for k,v in currencies %}
+            <option value="{{ k }}">{{ v }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">{% trans "Pay min" %}</label>
+        <input name="pay_min" type="number" step="0.01" class="form-control" placeholder="6000000">
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">{% trans "Pay max" %}</label>
+        <input name="pay_max" type="number" step="0.01" class="form-control" placeholder="8000000">
+      </div>
+
+    </div>
+
+    <!-- PAY TEXT -->
+    <div class="mt-2">
+      <label class="form-label">{% trans "Pay text (optional)" %}</label>
+      <input name="pay_text" class="form-control" placeholder="6–8 mln so‘m">
+    </div>
+
+    <!-- DESCRIPTION -->
+    <div class="mb-3 mt-3">
+      <label class="form-label">{% trans "Description" %}</label>
+      <textarea name="description" class="form-control" rows="4"></textarea>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="row g-3">
+
+      <div class="col-md-6">
+        <label class="form-label">{% trans "Contact phone" %}</label>
+        <input name="contact_phone" class="form-control" placeholder="+998901234567">
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">{% trans "Lat" %}</label>
+        <input id="lat" name="lat" class="form-control" placeholder="41.2995">
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">{% trans "Lng" %}</label>
+        <input id="lng" name="lng" class="form-control" placeholder="69.2401">
+      </div>
+
+    </div>
+
+    <!-- LOCATION BUTTON -->
+    <div class="mt-3">
+      <button type="button" id="getLocationBtn" class="btn btn-outline-primary w-100">
+        📍 {% trans "Use my current location" %}
+      </button>
+      <div id="locMsg" class="small text-muted mt-2"></div>
+    </div>
+
+    <!-- BUTTONS -->
+    <div class="d-flex gap-2 mt-3">
+      <button class="btn btn-success" type="submit">{% trans "Save" %}</button>
+      <a class="btn btn-outline-secondary" href="{% url 'accounts:employer_home' %}">
+        {% trans "Back" %}
+      </a>
+    </div>
+
+  </form>
+</div>
+
+<script>
+function bindPreview(inputId, imgId){
+  const input=document.getElementById(inputId)
+  const img=document.getElementById(imgId)
+  if(!input||!img)return
+
+  input.addEventListener("change",()=>{
+    const file=input.files&&input.files[0]
+    if(!file){img.style.display="none";return}
+
+    const url=URL.createObjectURL(file)
+    img.src=url
+    img.style.display="block"
+  })
+}
+
+bindPreview("photo1","preview1")
+bindPreview("photo2","preview2")
+bindPreview("photo3","preview3")
+bindPreview("photo4","preview4")
+
+const btn=document.getElementById("getLocationBtn")
+const lat=document.getElementById("lat")
+const lng=document.getElementById("lng")
+const msg=document.getElementById("locMsg")
+
+btn.addEventListener("click",()=>{
+  if(!navigator.geolocation){
+    msg.textContent="Geolocation not supported"
+    return
+  }
+
+  btn.disabled=true
+  msg.textContent="Getting location..."
+
+  navigator.geolocation.getCurrentPosition(
+    (pos)=>{
+      lat.value=pos.coords.latitude.toFixed(6)
+      lng.value=pos.coords.longitude.toFixed(6)
+      msg.textContent="Location added"
+      btn.disabled=false
+    },
+    (err)=>{
+      msg.textContent="Location error: "+err.message
+      btn.disabled=false
+    }
+  )
+})
+</script>
+
+</body>
+</html>

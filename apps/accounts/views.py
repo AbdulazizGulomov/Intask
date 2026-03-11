@@ -372,7 +372,7 @@ def worker_apply(request, job_id: int):
     else:
         messages.info(request, "Siz allaqachon bu ishga ariza yuborgansiz.")
 
-    return redirect("jobs:detail", pk=job.id)
+    return redirect("accounts:worker_job_detail", job_id=job.id)
 
 
 @login_required

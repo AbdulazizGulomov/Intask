@@ -96,21 +96,44 @@
       animation: fadeSlideUp 0.25s ease, fadeOut 0.35s ease 3.2s forwards;
     }
 
-    .taskin-toast-success {
-      background: #16a34a;
-    }
-
-    .taskin-toast-info {
-      background: #2563eb;
-    }
-
-    .taskin-toast-warning {
-      background: #d97706;
-    }
-
+    .taskin-toast-success { background: #16a34a; }
+    .taskin-toast-info { background: #2563eb; }
+    .taskin-toast-warning { background: #d97706; }
     .taskin-toast-error,
-    .taskin-toast-danger {
-      background: #dc2626;
+    .taskin-toast-danger { background: #dc2626; }
+
+    .applicants-box {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 16px;
+      margin-top: 20px;
+    }
+
+    .applicant-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 14px;
+      background: #fafafa;
+      margin-bottom: 12px;
+    }
+
+    .applicant-card:last-child {
+      margin-bottom: 0;
+    }
+
+    .applicant-name {
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 4px;
+    }
+
+    .applicant-meta {
+      color: #6b7280;
+      font-size: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
     }
 
     @keyframes fadeSlideUp {
@@ -156,7 +179,11 @@
         👁 {% trans "Preview mode: Employer is viewing this page as worker" %}
       </div>
     {% else %}
-      <a href="{% url 'accounts:worker_home' %}" class="text-decoration-none">← {% trans "Orqaga" %}</a>
+      {% if is_employer_view %}
+        <a href="{% url 'accounts:employer_home' %}" class="text-decoration-none">← {% trans "Orqaga" %}</a>
+      {% else %}
+        <a href="{% url 'accounts:worker_home' %}" class="text-decoration-none">← {% trans "Orqaga" %}</a>
+      {% endif %}
     {% endif %}
 
     <div class="card cardx shadow-sm mt-3 p-3">
@@ -191,7 +218,7 @@
           <input type="text" name="title" class="form-control" value="{{ job.title }}" required>
         </div>
 
-        <div class="mb-3 d-flex align-items-center gap-2">
+        <div class="mb-3 d-flex align-items-center gap-2 flex-wrap">
           <label class="form-label mb-0 text-muted">Status (edit labels)</label>
 
           <select name="job_type" class="form-select w-auto text-bg-secondary border-0 rounded-pill">
@@ -342,6 +369,38 @@
             </div>
           {% endif %}
         </div>
+
+        {% if is_employer_view %}
+          <div class="applicants-box">
+            <h5 class="mb-3">📋 Applicants</h5>
+
+            {% for app in applicants %}
+              <div class="applicant-card">
+                <div class="applicant-name">
+                  {% if app.worker.worker_profile.first_name or app.worker.worker_profile.last_name %}
+                    {{ app.worker.worker_profile.first_name }} {{ app.worker.worker_profile.last_name }}
+                  {% else %}
+                    Worker #{{ app.worker.id }}
+                  {% endif %}
+                </div>
+
+                <div class="applicant-meta">
+                  <div>📞 {{ app.worker.phone|default:"No phone" }}</div>
+                  <div>📌 {{ app.status }}</div>
+                  <div>🕒 {{ app.created_at|date:"d M Y H:i" }}</div>
+                  {% if app.worker.worker_profile.age %}
+                    <div>🎂 {{ app.worker.worker_profile.age }}</div>
+                  {% endif %}
+                  {% if app.worker.worker_profile.gender %}
+                    <div>👤 {{ app.worker.worker_profile.gender }}</div>
+                  {% endif %}
+                </div>
+              </div>
+            {% empty %}
+              <div class="text-muted">Hozircha arizachilar yo‘q.</div>
+            {% endfor %}
+          </div>
+        {% endif %}
       {% endif %}
 
       <div class="d-flex gap-2 flex-wrap mt-2 {% if preview_mode %}px-0{% else %}px-2{% endif %}">
@@ -356,15 +415,29 @@
         {% if preview_mode %}
           <button type="submit" class="btn btn-success btn-lg">💾 {% trans "Saqlash" %}</button>
         {% else %}
-          {% if job.contact_phone %}
-            <a class="btn btn-success btn-lg" href="tel:{{ job.contact_phone|cut:' ' }}">📞 {% trans "Qo‘ng‘iroq qilish" %}</a>
-          {% else %}
-            <button class="btn btn-success btn-lg" disabled>📞 {% trans "Telefon yo‘q" %}</button>
+          {% if is_worker_view %}
+            {% if job.contact_phone %}
+              <a class="btn btn-success btn-lg" href="tel:{{ job.contact_phone|cut:' ' }}">📞 {% trans "Qo‘ng‘iroq qilish" %}</a>
+            {% else %}
+              <button class="btn btn-success btn-lg" disabled>📞 {% trans "Telefon yo‘q" %}</button>
+            {% endif %}
+
+            {% if already_applied %}
+              <button class="btn btn-secondary btn-lg" disabled>
+                ✅ {% trans "Siz allaqachon ariza yuborgansiz" %}
+              </button>
+            {% else %}
+              <a class="btn btn-outline-primary btn-lg" href="{% url 'accounts:worker_apply' job.id %}">
+                ✅ {% trans "Ariza yuborish" %}
+              </a>
+            {% endif %}
           {% endif %}
 
-          <a class="btn btn-outline-primary btn-lg" href="{% url 'accounts:worker_apply' job.id %}">
-            ✅ {% trans "Ariza yuborish" %}
-          </a>
+          {% if is_employer_view %}
+            <a class="btn btn-outline-warning btn-lg" href="{% url 'accounts:worker_job_detail' job.id %}?preview=1">
+              👁 Preview mode
+            </a>
+          {% endif %}
         {% endif %}
       </div>
     </div>
@@ -380,7 +453,7 @@
   const googleMapLink = document.getElementById("googleMapLink");
 
   function updateMapLinks() {
-    if (editableLat && editableLng) {
+    if (editableLat && editableLng && yandexMapLink && googleMapLink) {
       const latVal = editableLat.value;
       const lngVal = editableLng.value;
       if (latVal && lngVal) {

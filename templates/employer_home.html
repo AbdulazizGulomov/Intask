@@ -277,20 +277,27 @@
                     <div class="d-flex align-items-start justify-content-between gap-3 flex-wrap">
                       <div class="d-flex align-items-start gap-3">
                         {% if job.photo_url %}
-                          <img
-                            src="{{ job.photo_url }}"
-                            alt="{% trans 'Job image' %}"
-                            style="width:56px;height:56px;border-radius:12px;object-fit:cover;border:1px solid rgba(255,255,255,0.25);">
+                          <a href="{% url 'accounts:worker_job_detail' job.id %}" aria-label="{% trans 'Open job details' %}">
+                            <img
+                              src="{{ job.photo_url }}"
+                              alt="{% trans 'Job image' %}"
+                              style="width:56px;height:56px;border-radius:12px;object-fit:cover;border:1px solid rgba(255,255,255,0.25);">
+                          </a>
                         {% else %}
-                          <div
-                            style="width:56px;height:56px;border-radius:12px;background:rgba(255,255,255,0.18);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.25);"
-                            aria-hidden="true">
+                          <a
+                            href="{% url 'accounts:worker_job_detail' job.id %}"
+                            style="width:56px;height:56px;border-radius:12px;background:rgba(255,255,255,0.18);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.25);text-decoration:none;"
+                            aria-label="{% trans 'Open job details' %}">
                             🧰
-                          </div>
+                          </a>
                         {% endif %}
 
                         <div>
-                          <div class="job-title">{{ job.title }}</div>
+                          <div class="job-title">
+                            <a href="{% url 'accounts:worker_job_detail' job.id %}" class="text-decoration-none text-reset">
+                              {{ job.title }}
+                            </a>
+                          </div>
 
                           <div class="job-meta">
                             <span>📍 {{ job.region_label }}</span>
@@ -306,10 +313,10 @@
                         </div>
                       </div>
 
-                      <div class="d-flex align-items-center gap-2">
-                        <button class="btn btn-green btn-sm px-3" type="button">
+                      <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <a class="btn btn-green btn-sm px-3" href="{% url 'accounts:worker_job_detail' job.id %}">
                           {% trans "Candidates" %} {{ job.applications_count }}
-                        </button>
+                        </a>
 
                         {% if job.is_active %}
                           <button class="btn btn-soft2 btn-sm px-3" type="button">
@@ -332,7 +339,12 @@
                           </button>
                           <ul class="dropdown-menu dropdown-menu-end">
                             <li>
-                              <a class="dropdown-item" href="/worker/job/{{ job.id }}/?preview=1">
+                              <a class="dropdown-item" href="{% url 'accounts:worker_job_detail' job.id %}">
+                                📋 {% trans "Open candidates" %}
+                              </a>
+                            </li>
+                            <li>
+                              <a class="dropdown-item" href="{% url 'accounts:worker_job_detail' job.id %}?preview=1">
                                 👀 {% trans "View as worker" %}
                               </a>
                             </li>

@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 
 from apps.accounts.views import require_role, UZ_REGIONS
-from .models import Job, Profession
+from .models import Job, Profession, JobApplication
 
 
 @login_required
@@ -17,29 +17,28 @@ def worker_job_detail(request, job_id: int):
     if role not in ["worker", "employer"]:
         return HttpResponseForbidden("Access denied")
 
-    if role == "employer" and not preview:
-        return HttpResponseForbidden("Access denied")
-
     job = get_object_or_404(Job, id=job_id, is_active=True)
 
+    # Employer can only access own job
+    if role == "employer":
+        if job.employer != request.user:
+            return HttpResponseForbidden("Access denied")
+
+    # Employer preview edit mode
     if preview and request.method == "POST" and role == "employer":
         job.title = (request.POST.get("title") or "").strip()
         job.region = (request.POST.get("region") or "").strip()
         job.job_type = (request.POST.get("job_type") or "").strip()
         job.description = (request.POST.get("description") or "").strip()
         job.contact_phone = (request.POST.get("contact_phone") or "").strip()
-
-        # If pay_text is empty but they edited a generated pay_display, save it to pay_text
         job.pay_text = (request.POST.get("pay_text") or "").strip()
 
-        # Handle profession
         profession_id = (request.POST.get("profession") or "").strip()
         if profession_id:
             profession = Profession.objects.filter(id=profession_id).first()
             if profession:
                 job.profession = profession
 
-        # Handle Coordinates
         lat_raw = (request.POST.get("lat") or "").strip()
         lng_raw = (request.POST.get("lng") or "").strip()
 
@@ -54,24 +53,20 @@ def worker_job_detail(request, job_id: int):
         job.lat = to_float(lat_raw)
         job.lng = to_float(lng_raw)
 
-        # Handle Photos (Delete and Upload)
         for i in range(1, 5):
-            photo_field = f'photo{i}'
-            delete_field = f'delete_photo{i}'
+            photo_field = f"photo{i}"
+            delete_field = f"delete_photo{i}"
 
-            # If delete checkbox is checked, remove the photo
-            if request.POST.get(delete_field) == 'on':
+            if request.POST.get(delete_field) == "on":
                 old_photo = getattr(job, photo_field)
                 if old_photo:
                     old_photo.delete(save=False)
+                    setattr(job, photo_field, None)
 
-            # If a new photo is uploaded, set it
             if photo_field in request.FILES:
                 setattr(job, photo_field, request.FILES[photo_field])
 
         job.save()
-
-        # Stay on the preview page after saving
         return redirect(f"/worker/job/{job.id}/?preview=1")
 
     region_label_map = dict(UZ_REGIONS)
@@ -88,15 +83,33 @@ def worker_job_detail(request, job_id: int):
         pay_display = job.pay_text
 
     photos = []
-    if job.photo1: photos.append(job.photo1)
-    if job.photo2: photos.append(job.photo2)
-    if job.photo3: photos.append(job.photo3)
-    if job.photo4: photos.append(job.photo4)
+    if job.photo1:
+        photos.append(job.photo1)
+    if job.photo2:
+        photos.append(job.photo2)
+    if job.photo3:
+        photos.append(job.photo3)
+    if job.photo4:
+        photos.append(job.photo4)
 
     region_choices = UZ_REGIONS
     job_type_choices = Job.JobType.choices
     professions = Profession.objects.all().order_by("name")
     profession_name = job.profession.name if getattr(job, "profession", None) else ""
+
+    applicants = []
+    already_applied = False
+
+    if role == "employer":
+        applicants = (
+            JobApplication.objects
+            .filter(job=job)
+            .select_related("worker", "worker__worker_profile")
+            .order_by("-created_at")
+        )
+
+    if role == "worker":
+        already_applied = JobApplication.objects.filter(job=job, worker=request.user).exists()
 
     ctx = {
         "job": job,
@@ -109,9 +122,14 @@ def worker_job_detail(request, job_id: int):
         "job_type_choices": job_type_choices,
         "professions": professions,
         "profession_name": profession_name,
+        "applicants": applicants,
+        "already_applied": already_applied,
+        "is_employer_view": role == "employer",
+        "is_worker_view": role == "worker",
     }
 
     return render(request, "worker_job_detail.html", ctx)
+
 
 @login_required
 def job_detail(request, pk: int):

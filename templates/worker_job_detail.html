@@ -12,29 +12,143 @@
   <style>
     body { background:#f6f7fb; }
     .cardx { border-radius: 18px; overflow:hidden; }
-    .meta-line { display:flex; gap:10px; flex-wrap:wrap; color:#6c757d; align-items: center; }
-    .sticky-cta{ position: static; margin-top: 16px; }
-    .job-photo { width: 100%; height: 260px; object-fit: cover; background: #eef2f7; display:block; }
+    .meta-line { display:flex; gap:10px; flex-wrap:wrap; color:#6c757d; align-items:center; }
+    .sticky-cta { position: static; margin-top:16px; }
+    .job-photo { width:100%; height:260px; object-fit:cover; background:#eef2f7; display:block; }
 
     .photo-edit-slot {
-      position: relative; border: 1px dashed #ccc; border-radius: 10px; padding: 10px; margin-bottom: 10px; text-align: center; background: #fff;
+      position:relative;
+      border:1px dashed #ccc;
+      border-radius:10px;
+      padding:10px;
+      margin-bottom:10px;
+      text-align:center;
+      background:#fff;
     }
-    .photo-edit-slot img { max-height: 80px; object-fit: cover; width: 100%; border-radius: 6px; }
-    .photo-edit-slot .delete-label {
-      position: absolute; top: 5px; right: 5px; background: rgba(255, 255, 255, 0.9); padding: 2px 5px; border-radius: 5px; cursor: pointer; font-size: 12px; border: 1px solid #ddd;
-    }
-    .preview-banner{ margin-bottom: 14px; padding: 12px 14px; border-radius: 14px; background: #fff7ed; border: 1px solid #fed7aa; color: #9a3412; font-weight: 700; }
 
-    .icon-input-group { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-    .icon-input-group > span { width: 24px; text-align: center; }
-    .icon-input-group > input, .icon-input-group > select { flex: 1; }
+    .photo-edit-slot img {
+      max-height:80px;
+      object-fit:cover;
+      width:100%;
+      border-radius:6px;
+    }
+
+    .photo-edit-slot .delete-label {
+      position:absolute;
+      top:5px;
+      right:5px;
+      background:rgba(255,255,255,0.9);
+      padding:2px 5px;
+      border-radius:5px;
+      cursor:pointer;
+      font-size:12px;
+      border:1px solid #ddd;
+    }
+
+    .preview-banner {
+      margin-bottom:14px;
+      padding:12px 14px;
+      border-radius:14px;
+      background:#fff7ed;
+      border:1px solid #fed7aa;
+      color:#9a3412;
+      font-weight:700;
+    }
+
+    .icon-input-group {
+      display:flex;
+      align-items:center;
+      gap:8px;
+      margin-bottom:10px;
+    }
+
+    .icon-input-group > span {
+      width:24px;
+      text-align:center;
+    }
+
+    .icon-input-group > input,
+    .icon-input-group > select {
+      flex:1;
+    }
+
+    .toast-wrap {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    .taskin-toast {
+      min-width: 260px;
+      max-width: 420px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      color: #fff;
+      font-weight: 600;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.14);
+      animation: fadeSlideUp 0.25s ease, fadeOut 0.35s ease 3.2s forwards;
+    }
+
+    .taskin-toast-success {
+      background: #16a34a;
+    }
+
+    .taskin-toast-info {
+      background: #2563eb;
+    }
+
+    .taskin-toast-warning {
+      background: #d97706;
+    }
+
+    .taskin-toast-error,
+    .taskin-toast-danger {
+      background: #dc2626;
+    }
+
+    @keyframes fadeSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        transform: translateY(10px);
+        visibility: hidden;
+      }
+    }
   </style>
 </head>
 <body>
 
+{% if messages %}
+  <div class="toast-wrap">
+    {% for message in messages %}
+      <div class="taskin-toast taskin-toast-{{ message.tags|default:'info' }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
 <form method="POST" enctype="multipart/form-data" action="{% url 'accounts:worker_job_detail' job.id %}?preview=1">
   {% csrf_token %}
-  <div class="container py-4" style="max-width: 760px;">
+
+  <div class="container py-4" style="max-width:760px;">
 
     {% if preview_mode %}
       <a href="{% url 'accounts:employer_home' %}" class="text-decoration-none">← {% trans "Orqaga" %}</a>
@@ -98,13 +212,13 @@
         <div class="mt-4">
           <div class="icon-input-group">
             <span>📍</span>
-              <label>
-                  <select name="region" class="form-select">
-                    {% for value, label in region_choices %}
-                      <option value="{{ value }}" {% if job.region == value %}selected{% endif %}>{{ label }}</option>
-                    {% endfor %}
-                  </select>
-              </label>
+            <label style="width:100%;">
+              <select name="region" class="form-select">
+                {% for value, label in region_choices %}
+                  <option value="{{ value }}" {% if job.region == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+              </select>
+            </label>
           </div>
 
           <div class="icon-input-group">
@@ -112,7 +226,9 @@
             <select name="profession" class="form-select">
               <option value="">---------</option>
               {% for prof in professions %}
-                <option value="{{ prof.id }}" {% if job.profession.id == prof.id %}selected{% endif %}>{{ prof.name }}</option>
+                <option value="{{ prof.id }}" {% if job.profession and job.profession.id == prof.id %}selected{% endif %}>
+                  {{ prof.name }}
+                </option>
               {% endfor %}
             </select>
           </div>
@@ -130,11 +246,11 @@
 
         <div class="row g-2 mt-2">
           <div class="col-12 col-sm-6">
-            <label class="form-label text-muted mb-1" style="font-size: 13px;">Employer Phone:</label>
+            <label class="form-label text-muted mb-1" style="font-size:13px;">Employer Phone:</label>
             <input type="text" class="form-control form-control-sm" value="{{ job.employer.phone|default:'' }}" readonly>
           </div>
           <div class="col-12 col-sm-6">
-            <label class="form-label text-muted mb-1" style="font-size: 13px;">Employer ID:</label>
+            <label class="form-label text-muted mb-1" style="font-size:13px;">Employer ID:</label>
             <input type="text" class="form-control form-control-sm" value="{{ job.employer.id }}" readonly>
           </div>
         </div>
@@ -169,7 +285,7 @@
       {% else %}
         {% if photos and photos|length > 0 %}
           <div id="jobPhotos" class="carousel slide" data-bs-ride="carousel">
-             <div class="carousel-inner">
+            <div class="carousel-inner">
               {% for p in photos %}
                 <div class="carousel-item {% if forloop.first %}active{% endif %}">
                   <img class="job-photo" src="{{ p.url }}" alt="job photo">
@@ -185,6 +301,7 @@
 
         <div class="mt-3 p-2">
           <h3 class="mb-1">{{ job.title }}</h3>
+
           <div class="mt-2">
             <span class="badge text-bg-success rounded-pill px-3 py-2">{{ job.get_job_type_display }}</span>
             {% if job.is_active %}
@@ -196,21 +313,28 @@
 
           <div class="meta-line mt-3">
             <div>📍 <strong class="text-dark">{{ region_label }}</strong></div>
-            {% if profession_name %}<div>🧰 <strong class="text-dark">{{ profession_name }}</strong></div>{% endif %}
+            {% if profession_name %}
+              <div>🧰 <strong class="text-dark">{{ profession_name }}</strong></div>
+            {% endif %}
             <div>💰 <strong class="text-dark">{% if pay_display %}{{ pay_display }}{% else %}{{ job.pay_text }}{% endif %}</strong></div>
-            {% if job.created_at %}<div>🕒 {{ job.created_at|date:"d M Y" }}</div>{% endif %}
+            {% if job.created_at %}
+              <div>🕒 {{ job.created_at|date:"d M Y" }}</div>
+            {% endif %}
           </div>
 
           <hr class="my-4"/>
+
           <h5 class="mb-2">{% trans "Tavsif" %}</h5>
           <p class="text-secondary mb-0" style="white-space:pre-line;">{{ job.description|default:"Tavsif kiritilmagan." }}</p>
 
           <hr class="my-4"/>
+
           <div class="text-secondary">
             📞 {% trans "Telefon" %}: <strong class="text-dark">{{ job.contact_phone }}</strong>
           </div>
 
           <hr class="my-4"/>
+
           <h5 class="mb-2">{% trans "Lokatsiya" %}</h5>
           {% if job.lat and job.lng %}
             <div class="text-secondary mb-2">
@@ -229,18 +353,19 @@
 
     <div class="sticky-cta mt-3 mb-5">
       <div class="d-grid gap-2">
-
-      {% if preview_mode %}
-        <button type="submit" class="btn btn-success btn-lg">💾 {% trans "Saqlash" %}</button>
-      {% else %}
-        {% if job.contact_phone %}
-          <a class="btn btn-success btn-lg" href="tel:{{ job.contact_phone|cut:' ' }}">📞 {% trans "Qo‘ng‘iroq qilish" %}</a>
+        {% if preview_mode %}
+          <button type="submit" class="btn btn-success btn-lg">💾 {% trans "Saqlash" %}</button>
         {% else %}
-          <button class="btn btn-success btn-lg" disabled>📞 {% trans "Telefon yo‘q" %}</button>
-        {% endif %}
-        <a class="btn btn-outline-primary btn-lg" href="{% url 'accounts:worker_apply' %}?next={{ request.get_full_path|urlencode }}">✅ {% trans "Ariza yuborish" %}</a>
-      {% endif %}
+          {% if job.contact_phone %}
+            <a class="btn btn-success btn-lg" href="tel:{{ job.contact_phone|cut:' ' }}">📞 {% trans "Qo‘ng‘iroq qilish" %}</a>
+          {% else %}
+            <button class="btn btn-success btn-lg" disabled>📞 {% trans "Telefon yo‘q" %}</button>
+          {% endif %}
 
+          <a class="btn btn-outline-primary btn-lg" href="{% url 'accounts:worker_apply' job.id %}">
+            ✅ {% trans "Ariza yuborish" %}
+          </a>
+        {% endif %}
       </div>
     </div>
 
@@ -260,14 +385,14 @@
       const lngVal = editableLng.value;
       if (latVal && lngVal) {
         yandexMapLink.href = `https://yandex.com/maps/?pt=${lngVal},${latVal}&z=14&l=map`;
-        googleMapLink.href = `https://www.google.com/maps?q=$${latVal},${lngVal}`;
+        googleMapLink.href = `https://www.google.com/maps?q=${latVal},${lngVal}`;
       }
     }
   }
 
   if (editableLat && editableLng) {
-    editableLat.addEventListener('input', updateMapLinks);
-    editableLng.addEventListener('input', updateMapLinks);
+    editableLat.addEventListener("input", updateMapLinks);
+    editableLng.addEventListener("input", updateMapLinks);
   }
 </script>
 

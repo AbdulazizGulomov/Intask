@@ -2,13 +2,14 @@
 import json
 from functools import wraps
 
+from django.contrib import messages
 from django.utils.safestring import mark_safe
 from django.http import HttpResponseBadRequest, HttpResponseForbidden
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from django.db.models import Q, Count
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -16,7 +17,7 @@ from rest_framework.response import Response
 
 from apps.accounts.models import User, WorkerProfile
 from apps.accounts.auth.otp import verify_otp, normalize_phone
-from apps.jobs.models import Job, Profession
+from apps.jobs.models import Job, Profession, JobApplication
 
 
 ALLOWED_ROLES = {"worker", "employer"}
@@ -246,7 +247,13 @@ def worker_home(request):
 @login_required
 @require_role("employer")
 def employer_home(request):
-    jobs = Job.objects.filter(employer=request.user).order_by("-created_at")
+    jobs = (
+        Job.objects
+        .filter(employer=request.user)
+        .annotate(applications_count=Count("applications"))
+        .order_by("-created_at")
+    )
+
     region_label_map = dict(UZ_REGIONS)
 
     items = []
@@ -264,13 +271,17 @@ def employer_home(request):
                 "created_at": j.created_at,
                 "photo_url": _first_photo_url(j),
                 "detail_url": reverse("jobs:detail", args=[j.id]),
+                "applications_count": j.applications_count,
             }
         )
 
     return render(
         request,
         "employer_home.html",
-        {"display_name": get_display_name(request.user), "jobs": items},
+        {
+            "display_name": get_display_name(request.user),
+            "jobs": items,
+        },
     )
 
 
@@ -333,6 +344,35 @@ def otp_verify_web(request):
         next_url
         or (reverse("accounts:worker_home") if user.role == "worker" else reverse("accounts:employer_home"))
     )
+
+
+@login_required
+@require_role("worker")
+def worker_apply(request, job_id: int):
+    job = Job.objects.filter(id=job_id, is_active=True).select_related("employer").first()
+    if not job:
+        messages.error(request, "Ish topilmadi.")
+        return redirect("accounts:worker_home")
+
+    if not job.employer:
+        messages.error(request, "Bu ish uchun employer biriktirilmagan.")
+        return redirect("jobs:detail", pk=job.id)
+
+    application, created = JobApplication.objects.get_or_create(
+        job=job,
+        worker=request.user,
+        defaults={
+            "employer": job.employer,
+            "status": JobApplication.Status.PENDING,
+        },
+    )
+
+    if created:
+        messages.success(request, "Arizangiz muvaffaqiyatli yuborildi.")
+    else:
+        messages.info(request, "Siz allaqachon bu ishga ariza yuborgansiz.")
+
+    return redirect("jobs:detail", pk=job.id)
 
 
 @login_required

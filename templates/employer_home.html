@@ -20,7 +20,6 @@
   <div class="dash-shell">
     <div class="dash-frame">
 
-      <!-- Sidebar -->
       <aside class="side glass">
         <div class="side-head d-flex align-items-center justify-content-between">
           <div class="brand d-flex align-items-center gap-2">
@@ -57,7 +56,6 @@
           <a class="side-link" href="#">
             <span class="ico">👤</span>
             {% trans "Candidates" %}
-            <span class="pill-count ms-auto">3</span>
           </a>
 
           <a class="side-link" href="{% url 'accounts:workers_base' %}">
@@ -91,7 +89,6 @@
         </div>
       </aside>
 
-      <!-- Offcanvas sidebar -->
       <div class="offcanvas offcanvas-start glass offcanvas-glass" tabindex="-1" id="sidebarOffcanvas" aria-labelledby="sidebarOffcanvasLabel">
         <div class="offcanvas-header">
           <div class="brand d-flex align-items-center gap-2" id="sidebarOffcanvasLabel">
@@ -107,7 +104,6 @@
         </div>
 
         <div class="offcanvas-body">
-          <!-- Mobile language switcher -->
           <div class="lang-switch d-inline-flex align-items-center gap-2 mb-3">
             <form action="{% url 'set_language' %}" method="post">
               {% csrf_token %}
@@ -149,7 +145,6 @@
             <a class="side-link" href="#">
               <span class="ico">👤</span>
               {% trans "Candidates" %}
-              <span class="pill-count ms-auto">3</span>
             </a>
 
             <a class="side-link" href="{% url 'accounts:workers_base' %}">
@@ -177,7 +172,6 @@
         </div>
       </div>
 
-      <!-- Main -->
       <main class="main">
         <div class="top glass d-flex align-items-center justify-content-between gap-3">
           <div>
@@ -185,7 +179,6 @@
           </div>
 
           <div class="top-right d-flex align-items-center gap-3">
-            <!-- Desktop language switcher -->
             <div class="langs d-none d-md-flex align-items-center gap-2">
               <form action="{% url 'set_language' %}" method="post" class="m-0">
                 {% csrf_token %}
@@ -228,7 +221,6 @@
           </div>
         </div>
 
-        <!-- Search row -->
         <section class="search glass">
           <div class="row g-3 align-items-center">
             <div class="col-12 col-lg-9">
@@ -268,7 +260,6 @@
           </div>
         </section>
 
-        <!-- Content -->
         <section class="content-grid">
           <div class="row g-4">
 
@@ -285,9 +276,9 @@
                   <div class="job glass-soft">
                     <div class="d-flex align-items-start justify-content-between gap-3 flex-wrap">
                       <div class="d-flex align-items-start gap-3">
-                        {% if job.photo1 %}
+                        {% if job.photo_url %}
                           <img
-                            src="{{ job.photo1.url }}"
+                            src="{{ job.photo_url }}"
                             alt="{% trans 'Job image' %}"
                             style="width:56px;height:56px;border-radius:12px;object-fit:cover;border:1px solid rgba(255,255,255,0.25);">
                         {% else %}
@@ -302,32 +293,22 @@
                           <div class="job-title">{{ job.title }}</div>
 
                           <div class="job-meta">
-                            <span>📍 {{ job.region }}</span>
+                            <span>📍 {{ job.region_label }}</span>
                             <span class="dot">•</span>
-                            <span>
-                              {% if job.pay_min and job.pay_max %}
-                                {{ job.pay_min }}–{{ job.pay_max }} {{ job.pay_currency }}
-                              {% elif job.pay_min %}
-                                {{ job.pay_min }}+ {{ job.pay_currency }}
-                              {% elif job.pay_max %}
-                                ≤ {{ job.pay_max }} {{ job.pay_currency }}
-                              {% else %}
-                                {{ job.pay_text }}
-                              {% endif %}
-                            </span>
+                            <span>{{ job.pay|default:"—" }}</span>
                           </div>
 
                           <div class="job-meta mt-1">
                             <span>🕒 {{ job.created_at|date:"d.m.Y H:i" }}</span>
                             <span class="dot">•</span>
-                            <span>{{ job.get_job_type_display }}</span>
+                            <span>{{ job.type_label }}</span>
                           </div>
                         </div>
                       </div>
 
                       <div class="d-flex align-items-center gap-2">
                         <button class="btn btn-green btn-sm px-3" type="button">
-                          {% trans "Candidates" %}
+                          {% trans "Candidates" %} {{ job.applications_count }}
                         </button>
 
                         {% if job.is_active %}

@@ -42,7 +42,6 @@ class Job(models.Model):
         choices=JobType.choices,
     )
 
-    # NEW: profession
     profession = models.ForeignKey(
         "jobs.Profession",
         on_delete=models.SET_NULL,
@@ -52,7 +51,6 @@ class Job(models.Model):
         verbose_name=_("Profession"),
     )
 
-    # salary currency
     pay_currency = models.CharField(
         max_length=3,
         choices=Currency.choices,
@@ -73,7 +71,6 @@ class Job(models.Model):
         blank=True,
     )
 
-    # optional text pay
     pay_text = models.CharField(
         max_length=64,
         blank=True,
@@ -81,7 +78,6 @@ class Job(models.Model):
         help_text=_("Old salary text (optional), e.g. '6–8 mln so‘m'"),
     )
 
-    # photos
     photo1 = models.ImageField(upload_to="job_photos/", null=True, blank=True)
     photo2 = models.ImageField(upload_to="job_photos/", null=True, blank=True)
     photo3 = models.ImageField(upload_to="job_photos/", null=True, blank=True)
@@ -115,3 +111,40 @@ class Job(models.Model):
     def __str__(self):
         return f"{self.title} ({self.region})"
 
+
+class JobApplication(models.Model):
+    class Status(models.TextChoices):
+        PENDING = "pending", _("Pending")
+        ACCEPTED = "accepted", _("Accepted")
+        REJECTED = "rejected", _("Rejected")
+
+    job = models.ForeignKey(
+        "jobs.Job",
+        on_delete=models.CASCADE,
+        related_name="applications",
+    )
+    worker = models.ForeignKey(
+        "accounts.User",
+        on_delete=models.CASCADE,
+        related_name="job_applications",
+    )
+    employer = models.ForeignKey(
+        "accounts.User",
+        on_delete=models.CASCADE,
+        related_name="received_job_applications",
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=Status.choices,
+        default=Status.PENDING,
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("job", "worker")
+        ordering = ["-created_at"]
+        verbose_name = _("Job Application")
+        verbose_name_plural = _("Job Applications")
+
+    def __str__(self):
+        return f"{self.worker} -> {self.job.title}"

@@ -1,7 +1,7 @@
 # apps/accounts/urls.py
 from django.urls import path
 from apps.accounts import views
-from apps.jobs import views as job_views   # ✅ ADD THIS IMPORT
+from apps.jobs import views as job_views
 
 from .auth.api_views import send_otp_view, verify_otp_view
 from .views import me
@@ -10,6 +10,7 @@ from rest_framework_simplejwt.views import TokenRefreshView
 app_name = "accounts"
 
 urlpatterns = [
+
     # Role & start
     path("", views.role_select, name="role_select"),
     path("choose-role/<str:role>/", views.choose_role, name="choose_role"),
@@ -22,9 +23,11 @@ urlpatterns = [
     # Worker pages
     path("worker/", views.worker_home, name="worker_home"),
     path("worker/register/", views.worker_register, name="worker_register"),
-    path("worker/apply/", views.require_login_for_apply, name="worker_apply"),
 
-    # ✅ FIXED: use jobs app view
+    # ✅ FIXED APPLY ROUTE
+    path("worker/apply/<int:job_id>/", views.worker_apply, name="worker_apply"),
+
+    # Job detail
     path("worker/job/<int:job_id>/", job_views.worker_job_detail, name="worker_job_detail"),
 
     # Employer pages

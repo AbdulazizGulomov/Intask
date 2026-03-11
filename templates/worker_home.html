@@ -33,6 +33,27 @@
             <div class="divider"></div>
 
             <div class="filter-block">
+              <div class="filter-title">{% trans "Kasb" %}</div>
+
+              <details class="region-dropdown" {% if selected_professions %}open{% endif %}>
+                <summary class="region-summary">{% trans "Kasbni tanlang" %}</summary>
+                <div class="region-options">
+                  {% for p in professions %}
+                    <label class="check">
+                      <input type="checkbox"
+                             name="profession"
+                             value="{{ p.id }}"
+                             {% if p.id|stringformat:"s" in selected_professions %}checked{% endif %}>
+                      <span>{{ p.name }}</span>
+                    </label>
+                  {% endfor %}
+                </div>
+              </details>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="filter-block">
               <div class="filter-title">{% trans "Ish turi" %}</div>
 
               <details class="region-dropdown" {% if selected_types %}open{% endif %}>
@@ -68,6 +89,9 @@
           {% endfor %}
           {% for t in selected_types %}
             <input type="hidden" name="type" value="{{ t }}">
+          {% endfor %}
+          {% for p in selected_professions %}
+            <input type="hidden" name="profession" value="{{ p }}">
           {% endfor %}
 
           <div class="search-left">

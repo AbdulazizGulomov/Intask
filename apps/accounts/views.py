@@ -16,7 +16,7 @@ from rest_framework.response import Response
 
 from apps.accounts.models import User, WorkerProfile
 from apps.accounts.auth.otp import verify_otp, normalize_phone
-from apps.jobs.models import Job
+from apps.jobs.models import Job, Profession
 
 
 ALLOWED_ROLES = {"worker", "employer"}
@@ -156,19 +156,28 @@ def get_display_name(user) -> str:
 def worker_home(request):
     selected_regions = request.GET.getlist("region")
     selected_types = request.GET.getlist("type")
+    selected_professions = request.GET.getlist("profession")
     q = (request.GET.get("q") or "").strip()
 
     region_label_map = dict(UZ_REGIONS)
     regions = [{"value": k, "label": v, "checked": k in selected_regions} for k, v in UZ_REGIONS]
 
-    qs = Job.objects.filter(is_active=True)
+    professions = Profession.objects.all().order_by("name")
+
+    qs = Job.objects.filter(is_active=True).select_related("profession")
 
     if selected_regions:
         qs = qs.filter(region__in=selected_regions)
     if selected_types:
         qs = qs.filter(job_type__in=selected_types)
+    if selected_professions:
+        qs = qs.filter(profession_id__in=selected_professions)
     if q:
-        qs = qs.filter(Q(title__icontains=q) | Q(region__icontains=q))
+        qs = qs.filter(
+            Q(title__icontains=q) |
+            Q(region__icontains=q) |
+            Q(profession__name__icontains=q)
+        )
 
     qs = qs.order_by("-created_at")
 
@@ -176,8 +185,9 @@ def worker_home(request):
     for j in qs:
         region_label = region_label_map.get(j.region, j.region)
         type_label = j.get_job_type_display() if hasattr(j, "get_job_type_display") else j.job_type
+        profession_name = j.profession.name if getattr(j, "profession", None) else ""
 
-        detail_url = reverse("jobs:detail", args=[j.id])  # ✅ ALWAYS BUILD HERE
+        detail_url = reverse("jobs:detail", args=[j.id])
 
         filtered_jobs.append(
             {
@@ -187,17 +197,17 @@ def worker_home(request):
                 "region_label": region_label,
                 "type": j.job_type,
                 "type_label": type_label,
+                "profession_name": profession_name,
                 "pay": _pay_display(j),
                 "lat": j.lat,
                 "lng": j.lng,
                 "photo_url": _first_photo_url(j),
-                "detail_url": detail_url,  # ✅ for card click
+                "detail_url": detail_url,
             }
         )
 
     selected_region_labels = [region_label_map.get(r, r) for r in selected_regions]
 
-    # ✅ IMPORTANT: include detail_url in jobs_map too (for Yandex map balloon)
     jobs_map = []
     for j in filtered_jobs:
         if j.get("lat") is not None and j.get("lng") is not None:
@@ -210,7 +220,8 @@ def worker_home(request):
                     "lng": j["lng"],
                     "region_label": j["region_label"],
                     "job_type": j["type_label"],
-                    "detail_url": j["detail_url"],  # ✅ map uses this
+                    "profession_name": j["profession_name"],
+                    "detail_url": j["detail_url"],
                 }
             )
 
@@ -220,10 +231,12 @@ def worker_home(request):
         {
             "display_name": get_display_name(request.user),
             "regions": regions,
+            "professions": professions,
             "jobs": filtered_jobs,
             "selected_regions": selected_regions,
             "selected_region_labels": selected_region_labels,
             "selected_types": selected_types,
+            "selected_professions": selected_professions,
             "q": q,
             "jobs_map": mark_safe(json.dumps(jobs_map)),
         },

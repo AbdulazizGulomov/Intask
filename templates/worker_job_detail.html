@@ -380,13 +380,16 @@
 
             {% for app in applicants %}
               <div class="applicant-card">
-                <div class="applicant-name">
-                  {% if app.worker.worker_profile.first_name or app.worker.worker_profile.last_name %}
-                    {{ app.worker.worker_profile.first_name }} {{ app.worker.worker_profile.last_name }}
-                  {% else %}
-                    {% trans "Ishchi" %} #{{ app.worker.id }}
-                  {% endif %}
-                </div>
+<div class="applicant-name">
+  <a href="{% url 'accounts:worker_public_profile' app.worker.id %}"
+     class="text-decoration-none text-dark fw-bold">
+    {% if app.worker.worker_profile.first_name or app.worker.worker_profile.last_name %}
+      {{ app.worker.worker_profile.first_name }} {{ app.worker.worker_profile.last_name }}
+    {% else %}
+      {% trans "Ishchi" %} #{{ app.worker.id }}
+    {% endif %}
+  </a>
+</div>
 
                 <div class="applicant-meta">
                   <div>📞 {{ app.worker.phone|default:"No phone" }}</div>

@@ -80,8 +80,6 @@ def choose_role(request, role):
     next_url = reverse("accounts:worker_home") if role == "worker" else reverse("accounts:employer_home")
 
     if request.user.is_authenticated:
-        # Only sync session for existing authenticated user.
-        # Do not forcefully damage role logic unnecessarily.
         if getattr(request.user, "role", None) != role:
             request.user.role = role
             request.user.save(update_fields=["role"])
@@ -334,9 +332,6 @@ def otp_verify_web(request):
         },
     )
 
-    # IMPORTANT:
-    # For existing users, do NOT overwrite role blindly from session.
-    # Session may be stale and can cause employer/worker access issues.
     if created:
         request.session["user_role"] = user.role
     else:
@@ -461,3 +456,109 @@ def logout_view(request):
     logout(request)
     request.session.flush()
     return redirect(reverse("accounts:role_select"))
+
+
+@login_required
+def profile_edit(request):
+    user = request.user
+    role = getattr(user, "role", "worker")
+    profile = None
+    professions = Profession.objects.all().order_by("name")
+
+    if role == "worker":
+        profile, _ = WorkerProfile.objects.get_or_create(user=user)
+
+    if request.method == "POST":
+        if role == "worker":
+            first_name = (request.POST.get("first_name") or "").strip()
+            last_name = (request.POST.get("last_name") or "").strip()
+            age_raw = (request.POST.get("age") or "").strip()
+            gender = (request.POST.get("gender") or "").strip()
+            profession_id = (request.POST.get("profession") or "").strip()
+
+            if not first_name or not last_name or not age_raw or not gender:
+                return render(
+                    request,
+                    "profile_edit.html",
+                    {
+                        "error": "All fields are required",
+                        "profile": profile,
+                        "role": role,
+                        "professions": professions,
+                    },
+                )
+
+            try:
+                age = int(age_raw)
+            except ValueError:
+                return render(
+                    request,
+                    "profile_edit.html",
+                    {
+                        "error": "Age must be a number",
+                        "profile": profile,
+                        "role": role,
+                        "professions": professions,
+                    },
+                )
+
+            profile.first_name = first_name
+            profile.last_name = last_name
+            profile.age = age
+            profile.gender = gender
+
+            if profession_id:
+                profession = Profession.objects.filter(id=profession_id).first()
+                profile.profession = profession
+            else:
+                profile.profession = None
+
+            photo = request.FILES.get("photo")
+            if photo:
+                profile.photo = photo
+
+            certificate = request.FILES.get("certificate")
+            if certificate:
+                profile.certificate = certificate
+
+            profile.is_completed = True
+            profile.save()
+
+        else:
+            full_name = (request.POST.get("full_name") or "").strip()
+            if full_name:
+                user.first_name = full_name
+                user.save(update_fields=["first_name"])
+
+        messages.success(request, "Profile updated successfully.")
+        return redirect("accounts:profile_edit")
+
+    return render(
+        request,
+        "profile_edit.html",
+        {
+            "profile": profile,
+            "role": role,
+            "professions": professions,
+        },
+    )
+
+@login_required
+@require_role("employer")
+def worker_public_profile(request, user_id: int):
+    worker_user = User.objects.filter(id=user_id).first()
+    if not worker_user:
+        return HttpResponseBadRequest("Worker not found")
+
+    profile = WorkerProfile.objects.filter(user=worker_user).first()
+    if not profile:
+        return HttpResponseBadRequest("Worker profile not found")
+
+    return render(
+        request,
+        "worker_public_profile.html",
+        {
+            "worker_user": worker_user,
+            "profile": profile,
+        },
+    )

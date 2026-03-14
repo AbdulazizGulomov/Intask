@@ -7,6 +7,20 @@
 
 <div class="app-shell">
   <main class="page container-fluid">
+
+    <!-- TOP ACTION BAR -->
+    <div class="d-flex justify-content-end align-items-center gap-2 mb-3 flex-wrap">
+      <a href="{% url 'accounts:profile_edit' %}"
+         class="btn btn-outline-primary rounded-pill px-3">
+        👤 {% trans "Profile" %}
+      </a>
+
+      <a href="{% url 'accounts:logout' %}"
+         class="btn btn-outline-danger rounded-pill px-3">
+        ↩ {% trans "Chiqish" %}
+      </a>
+    </div>
+
     <div class="row g-4">
 
       <aside class="col-12 col-lg-4 col-xl-3">

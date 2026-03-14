@@ -535,3 +535,19 @@ msgstr "Iltimos, rasm faylini tanlang"
 #: .\templates\worker_register.html
 msgid "Fayl hajmi 5MB dan oshmasligi kerak"
 msgstr "Fayl hajmi 5 MB dan oshmasligi kerak"
+
+
+msgid "Nomzodlar"
+msgstr "Nomzodlar"
+
+msgid "Hozircha nomzodlar yo‘q."
+msgstr "Hozircha nomzodlar yo‘q."
+
+msgid "Pending"
+msgstr "Kutilmoqda"
+
+msgid "Accepted"
+msgstr "Qabul qilindi"
+
+msgid "Rejected"
+msgstr "Rad etildi"

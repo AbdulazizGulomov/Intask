@@ -30,15 +30,6 @@
             </div>
             <div class="brand-name">Intask</div>
           </div>
-
-          <button
-            class="icon-btn d-lg-none"
-            type="button"
-            data-bs-toggle="offcanvas"
-            data-bs-target="#sidebarOffcanvas"
-            aria-label="{% trans 'Open menu' %}">
-            <span class="hamburger"></span>
-          </button>
         </div>
 
         <nav class="side-nav d-none d-lg-block">
@@ -104,32 +95,6 @@
         </div>
 
         <div class="offcanvas-body">
-          <div class="lang-switch d-inline-flex align-items-center gap-2 mb-3">
-            <form action="{% url 'set_language' %}" method="post">
-              {% csrf_token %}
-              <input type="hidden" name="next" value="{{ request.get_full_path }}">
-              <button type="submit" name="language" value="uz" class="lang-chip {% if LANGUAGE_CODE == 'uz' %}active{% endif %}">
-                UZ
-              </button>
-            </form>
-
-            <form action="{% url 'set_language' %}" method="post">
-              {% csrf_token %}
-              <input type="hidden" name="next" value="{{ request.get_full_path }}">
-              <button type="submit" name="language" value="ru" class="lang-chip {% if LANGUAGE_CODE == 'ru' %}active{% endif %}">
-                RU
-              </button>
-            </form>
-
-            <form action="{% url 'set_language' %}" method="post">
-              {% csrf_token %}
-              <input type="hidden" name="next" value="{{ request.get_full_path }}">
-              <button type="submit" name="language" value="en" class="lang-chip {% if LANGUAGE_CODE == 'en' %}active{% endif %}">
-                EN
-              </button>
-            </form>
-          </div>
-
           <nav class="side-nav">
             <a class="side-link" href="#">
               <span class="ico">▦</span>
@@ -179,7 +144,7 @@
           </div>
 
           <div class="top-right d-flex align-items-center gap-3">
-            <div class="langs d-none d-md-flex align-items-center gap-2">
+            <div class="langs d-flex align-items-center gap-2">
               <form action="{% url 'set_language' %}" method="post" class="m-0">
                 {% csrf_token %}
                 <input type="hidden" name="next" value="{{ request.get_full_path }}">
@@ -216,7 +181,15 @@
               <button class="mini-ico" title="{% trans 'Profile' %}" aria-label="{% trans 'Profile' %}">
                 👤
               </button>
-              <div class="avatar" aria-hidden="true"></div>
+
+              <button
+                class="icon-btn d-lg-none"
+                type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#sidebarOffcanvas"
+                aria-label="{% trans 'Open menu' %}">
+                <span class="hamburger"></span>
+              </button>
             </div>
           </div>
         </div>

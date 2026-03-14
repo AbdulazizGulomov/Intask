@@ -469,3 +469,21 @@ msgstr "Please select an image file"
 
 msgid "Fayl hajmi 5MB dan oshmasligi kerak"
 msgstr "The file size must not exceed 5 MB"
+
+msgid "Nomzodlar"
+msgstr "Applicants"
+
+msgid "Hozircha nomzodlar yo‘q."
+msgstr "No applicants yet."
+
+msgid "Ishchi"
+msgstr "Worker"
+
+msgid "Pending"
+msgstr "Pending"
+
+msgid "Accepted"
+msgstr "Accepted"
+
+msgid "Rejected"
+msgstr "Rejected"

@@ -189,23 +189,23 @@
     <div class="card cardx shadow-sm mt-3 p-3">
 
       {% if preview_mode %}
-        <h5 class="mb-3">{% trans "Photos (edit)" %}</h5>
+        <h5 class="mb-3">{% trans "Rasmlar (tahrirlash)" %}</h5>
         <div class="row g-2 mb-4">
           {% for i in "1234" %}
             <div class="col-6 col-md-3">
               <div class="photo-edit-slot">
                 {% if i == "1" and job.photo1 %}
                   <img src="{{ job.photo1.url }}" alt="Photo 1">
-                  <label class="delete-label"><input type="checkbox" name="delete_photo1"> O'chirish</label>
+                  <label class="delete-label"><input type="checkbox" name="delete_photo1"> {% trans "O'chirish" %}</label>
                 {% elif i == "2" and job.photo2 %}
                   <img src="{{ job.photo2.url }}" alt="Photo 2">
-                  <label class="delete-label"><input type="checkbox" name="delete_photo2"> O'chirish</label>
+                  <label class="delete-label"><input type="checkbox" name="delete_photo2"> {% trans "O'chirish" %}</label>
                 {% elif i == "3" and job.photo3 %}
                   <img src="{{ job.photo3.url }}" alt="Photo 3">
-                  <label class="delete-label"><input type="checkbox" name="delete_photo3"> O'chirish</label>
+                  <label class="delete-label"><input type="checkbox" name="delete_photo3"> {% trans "O'chirish" %}</label>
                 {% elif i == "4" and job.photo4 %}
                   <img src="{{ job.photo4.url }}" alt="Photo 4">
-                  <label class="delete-label"><input type="checkbox" name="delete_photo4"> O'chirish</label>
+                  <label class="delete-label"><input type="checkbox" name="delete_photo4"> {% trans "O'chirish" %}</label>
                 {% endif %}
                 <input type="file" name="photo{{ i }}" class="form-control form-control-sm mt-2">
               </div>
@@ -214,12 +214,12 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label text-muted">Job Title</label>
+          <label class="form-label text-muted">{% trans "Ish sarlavhasi" %}</label>
           <input type="text" name="title" class="form-control" value="{{ job.title }}" required>
         </div>
 
         <div class="mb-3 d-flex align-items-center gap-2 flex-wrap">
-          <label class="form-label mb-0 text-muted">Status (edit labels)</label>
+          <label class="form-label mb-0 text-muted">{% trans "Holat (yorliqlarni tahrirlash)" %}</label>
 
           <select name="job_type" class="form-select w-auto text-bg-secondary border-0 rounded-pill">
             {% for value, label in job_type_choices %}
@@ -228,12 +228,12 @@
           </select>
 
           {% if job.is_active %}
-            <span class="badge text-bg-success rounded-pill px-3 py-2">Faol</span>
+            <span class="badge text-bg-success rounded-pill px-3 py-2">{% trans "Faol" %}</span>
           {% else %}
-            <span class="badge text-bg-danger rounded-pill px-3 py-2">Yopilgan</span>
+            <span class="badge text-bg-danger rounded-pill px-3 py-2">{% trans "Yopilgan" %}</span>
           {% endif %}
 
-          <span class="badge text-bg-warning text-dark rounded-pill px-3 py-2">Preview mode</span>
+          <span class="badge text-bg-warning text-dark rounded-pill px-3 py-2">{% trans "Preview mode" %}</span>
         </div>
 
         <div class="mt-4">
@@ -273,38 +273,38 @@
 
         <div class="row g-2 mt-2">
           <div class="col-12 col-sm-6">
-            <label class="form-label text-muted mb-1" style="font-size:13px;">Employer Phone:</label>
+            <label class="form-label text-muted mb-1" style="font-size:13px;">{% trans "Ish beruvchi telefoni" %}:</label>
             <input type="text" class="form-control form-control-sm" value="{{ job.employer.phone|default:'' }}" readonly>
           </div>
           <div class="col-12 col-sm-6">
-            <label class="form-label text-muted mb-1" style="font-size:13px;">Employer ID:</label>
+            <label class="form-label text-muted mb-1" style="font-size:13px;">{% trans "Ish beruvchi ID" %}:</label>
             <input type="text" class="form-control form-control-sm" value="{{ job.employer.id }}" readonly>
           </div>
         </div>
 
         <hr class="my-4"/>
 
-        <h5 class="mb-2">Tavsif</h5>
+        <h5 class="mb-2">{% trans "Tavsif" %}</h5>
         <textarea name="description" class="form-control" rows="5">{{ job.description }}</textarea>
 
         <hr class="my-4"/>
 
         <div class="d-flex align-items-center gap-2">
-          <span>📞 Telefon:</span>
+          <span>📞 {% trans "Telefon" %}:</span>
           <input type="tel" name="contact_phone" class="form-control w-auto" value="{{ job.contact_phone|default:'' }}">
         </div>
 
         <hr class="my-4"/>
 
-        <h5 class="mb-2">Lokatsiya</h5>
+        <h5 class="mb-2">{% trans "Lokatsiya" %}</h5>
         <div class="text-secondary mb-2">
-          Edit Coordinates
+          {% trans "Koordinatalarni tahrirlash" %}
           <div class="row g-2 mt-1">
             <div class="col-6">
-              <input type="text" id="editableLat" name="lat" class="form-control form-control-sm" value="{{ job.lat|default:'' }}" placeholder="Latitude">
+              <input type="text" id="editableLat" name="lat" class="form-control form-control-sm" value="{{ job.lat|default:'' }}" placeholder="{% trans 'Latitude' %}">
             </div>
             <div class="col-6">
-              <input type="text" id="editableLng" name="lng" class="form-control form-control-sm" value="{{ job.lng|default:'' }}" placeholder="Longitude">
+              <input type="text" id="editableLng" name="lng" class="form-control form-control-sm" value="{{ job.lng|default:'' }}" placeholder="{% trans 'Longitude' %}">
             </div>
           </div>
         </div>
@@ -367,12 +367,16 @@
             <div class="text-secondary mb-2">
               {% trans "Ish joyi koordinatalari" %}: <strong class="text-dark">{{ job.lat }}, {{ job.lng }}</strong>
             </div>
+          {% else %}
+            <div class="text-secondary mb-2">
+              {% trans "Lokatsiya kiritilmagan." %}
+            </div>
           {% endif %}
         </div>
 
         {% if is_employer_view %}
           <div class="applicants-box">
-            <h5 class="mb-3">📋 Applicants</h5>
+            <h5 class="mb-3">{% trans "Nomzodlar" %}</h5>
 
             {% for app in applicants %}
               <div class="applicant-card">
@@ -380,13 +384,13 @@
                   {% if app.worker.worker_profile.first_name or app.worker.worker_profile.last_name %}
                     {{ app.worker.worker_profile.first_name }} {{ app.worker.worker_profile.last_name }}
                   {% else %}
-                    Worker #{{ app.worker.id }}
+                    {% trans "Ishchi" %} #{{ app.worker.id }}
                   {% endif %}
                 </div>
 
                 <div class="applicant-meta">
                   <div>📞 {{ app.worker.phone|default:"No phone" }}</div>
-                  <div>📌 {{ app.status }}</div>
+                  <div>📌 {{ app.get_status_display }}</div>
                   <div>🕒 {{ app.created_at|date:"d M Y H:i" }}</div>
                   {% if app.worker.worker_profile.age %}
                     <div>🎂 {{ app.worker.worker_profile.age }}</div>
@@ -397,15 +401,15 @@
                 </div>
               </div>
             {% empty %}
-              <div class="text-muted">Hozircha arizachilar yo‘q.</div>
+              <div class="text-muted">{% trans "Hozircha nomzodlar yo‘q." %}</div>
             {% endfor %}
           </div>
         {% endif %}
       {% endif %}
 
       <div class="d-flex gap-2 flex-wrap mt-2 {% if preview_mode %}px-0{% else %}px-2{% endif %}">
-        <a id="yandexMapLink" class="btn btn-outline-secondary" target="_blank" href="https://yandex.com/maps/?pt={{ job.lng|default:'0' }},{{ job.lat|default:'0' }}&z=14&l=map">🗺️ Yandex Map</a>
-        <a id="googleMapLink" class="btn btn-outline-secondary" target="_blank" href="https://www.google.com/maps?q={{ job.lat|default:'0' }},{{ job.lng|default:'0' }}">📍 Google Map</a>
+        <a id="yandexMapLink" class="btn btn-outline-secondary" target="_blank" href="https://yandex.com/maps/?pt={{ job.lng|default:'0' }},{{ job.lat|default:'0' }}&z=14&l=map">🗺️ {% trans "Yandex Map" %}</a>
+        <a id="googleMapLink" class="btn btn-outline-secondary" target="_blank" href="https://www.google.com/maps?q={{ job.lat|default:'0' }},{{ job.lng|default:'0' }}">📍 {% trans "Google Map" %}</a>
       </div>
 
     </div>
@@ -435,7 +439,7 @@
 
           {% if is_employer_view %}
             <a class="btn btn-outline-warning btn-lg" href="{% url 'accounts:worker_job_detail' job.id %}?preview=1">
-              👁 Preview mode
+              👁 {% trans "Preview mode" %}
             </a>
           {% endif %}
         {% endif %}

@@ -596,6 +596,23 @@ msgstr "Пожалуйста, выберите файл изображения"
 msgid "Fayl hajmi 5MB dan oshmasligi kerak"
 msgstr "Размер файла не должен превышать 5 МБ"
 
+msgid "Nomzodlar"
+msgstr "Кандидаты"
+
+msgid "Hozircha nomzodlar yo‘q."
+msgstr "Пока нет кандидатов."
+
+msgid "Ishchi"
+msgstr "Работник"
+
+msgid "Pending"
+msgstr "В ожидании"
+
+msgid "Accepted"
+msgstr "Принят"
+
+msgid "Rejected"
+msgstr "Отклонён"
 #~ msgid "Optional: for human-friendly text."
 #~ msgstr "Необязательно: для удобного отображения текста."
 

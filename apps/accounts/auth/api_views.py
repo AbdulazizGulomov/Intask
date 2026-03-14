@@ -13,20 +13,24 @@ from apps.accounts.auth.serializers import SendOtpSerializer, VerifyOtpSerialize
 from .otp import send_otp, verify_otp, normalize_phone
 from apps.accounts.models import User
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 @api_view(["POST"])
 def send_otp_view(request):
-    print("===== SEND OTP VIEW DEBUG =====")
-    print("request.data =", request.data)
+    logger.info("SEND OTP REQUEST: %s", request.data)
 
     s = SendOtpSerializer(data=request.data)
+
     if not s.is_valid():
-        print("SEND SERIALIZER ERRORS =", s.errors)
-        print("================================")
+        logger.error("SEND OTP SERIALIZER ERROR: %s", s.errors)
         return Response(s.errors, status=status.HTTP_400_BAD_REQUEST)
 
     phone = normalize_phone(s.validated_data["phone"])
-    print("normalized phone =", phone)
+
+    logger.info("Normalized phone: %s", phone)
 
     code = send_otp(phone)
 
@@ -36,42 +40,36 @@ def send_otp_view(request):
     }
 
     if getattr(settings, "OTP_DEBUG_RETURN_CODE", False):
-        data["debug_code"] = code  # DEV only
+        data["debug_code"] = code
 
-    print("SEND OTP SUCCESS")
-    print("================================")
+    logger.info("OTP sent successfully")
+
     return Response(data, status=status.HTTP_200_OK)
 
 
 @api_view(["POST"])
 def verify_otp_view(request):
-    print("===== VERIFY OTP DEBUG =====")
-    print("request.data =", request.data)
-    print("raw phone =", request.data.get("phone"))
-    print("raw code =", request.data.get("code"))
-    print("raw next =", request.data.get("next"))
+    logger.info("VERIFY OTP REQUEST: %s", request.data)
 
     s = VerifyOtpSerializer(data=request.data)
+
     if not s.is_valid():
-        print("SERIALIZER ERRORS =", s.errors)
-        print("============================")
+        logger.error("VERIFY OTP SERIALIZER ERROR: %s", s.errors)
         return Response(s.errors, status=status.HTTP_400_BAD_REQUEST)
 
     phone = normalize_phone(s.validated_data["phone"])
     code = s.validated_data["code"]
 
-    print("normalized phone =", phone)
-    print("validated code =", code)
+    logger.info("Phone: %s Code: %s", phone, code)
 
     next_url = request.data.get("next") or "/"
 
-    otp_ok = verify_otp(phone, code)
-    print("verify_otp result =", otp_ok)
-
-    if not otp_ok:
-        print("FAIL: Invalid or expired code")
-        print("============================")
-        return Response({"detail": "Invalid or expired code"}, status=status.HTTP_400_BAD_REQUEST)
+    if not verify_otp(phone, code):
+        logger.warning("Invalid OTP for phone: %s", phone)
+        return Response(
+            {"detail": "Invalid or expired code"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     user, created = User.objects.get_or_create(
         phone=phone,
@@ -81,12 +79,12 @@ def verify_otp_view(request):
         },
     )
 
-    print("user =", user.id, "created =", created)
-
     if user.is_staff:
-        print("FAIL: admin tried OTP login")
-        print("============================")
-        return Response({"detail": "Admins cannot login via OTP"}, status=status.HTTP_403_FORBIDDEN)
+        logger.warning("Admin tried OTP login: %s", phone)
+        return Response(
+            {"detail": "Admins cannot login via OTP"},
+            status=status.HTTP_403_FORBIDDEN,
+        )
 
     login(request, user, backend="django.contrib.auth.backends.ModelBackend")
 
@@ -95,8 +93,7 @@ def verify_otp_view(request):
     gate_url = reverse("accounts:after_otp_redirect")
     gate_url = gate_url + "?" + urlencode({"next": next_url})
 
-    print("SUCCESS")
-    print("============================")
+    logger.info("OTP login success user=%s", user.id)
 
     return Response(
         {

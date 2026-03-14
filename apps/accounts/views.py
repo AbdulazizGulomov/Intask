@@ -42,8 +42,9 @@ UZ_REGIONS = [
 
 def require_role(*allowed_roles):
     """
-    Uses request.user.role first (if authenticated), then session fallback.
-    Keeps session role synced to avoid Access denied loops.
+    Uses authenticated user's role first.
+    Falls back to session role only if user role is missing.
+    Keeps session synced with actual authenticated user role.
     """
     def decorator(view_func):
         @wraps(view_func)
@@ -61,6 +62,7 @@ def require_role(*allowed_roles):
 
             request.session["user_role"] = role
             return view_func(request, *args, **kwargs)
+
         return _wrapped
     return decorator
 
@@ -78,9 +80,12 @@ def choose_role(request, role):
     next_url = reverse("accounts:worker_home") if role == "worker" else reverse("accounts:employer_home")
 
     if request.user.is_authenticated:
+        # Only sync session for existing authenticated user.
+        # Do not forcefully damage role logic unnecessarily.
         if getattr(request.user, "role", None) != role:
             request.user.role = role
             request.user.save(update_fields=["role"])
+
         request.session["user_role"] = role
         return redirect(next_url)
 
@@ -187,7 +192,6 @@ def worker_home(request):
         region_label = region_label_map.get(j.region, j.region)
         type_label = j.get_job_type_display() if hasattr(j, "get_job_type_display") else j.job_type
         profession_name = j.profession.name if getattr(j, "profession", None) else ""
-
         detail_url = reverse("jobs:detail", args=[j.id])
 
         filtered_jobs.append(
@@ -320,29 +324,46 @@ def otp_verify_web(request):
     if not verify_otp(phone, code):
         return render(request, "otp.html", {"error": "Invalid or expired code", "next": next_url})
 
-    role = request.session.get("user_role") or "worker"
+    requested_role = (request.session.get("user_role") or "").strip().lower()
 
     user, created = User.objects.get_or_create(
         phone=phone,
-        defaults={"role": role, "is_active": True},
+        defaults={
+            "role": requested_role if requested_role in ALLOWED_ROLES else "worker",
+            "is_active": True,
+        },
     )
 
-    if (not created) and role in ("worker", "employer") and user.role != role:
-        user.role = role
-        user.save(update_fields=["role"])
+    # IMPORTANT:
+    # For existing users, do NOT overwrite role blindly from session.
+    # Session may be stale and can cause employer/worker access issues.
+    if created:
+        request.session["user_role"] = user.role
+    else:
+        if getattr(user, "role", None) in ALLOWED_ROLES:
+            request.session["user_role"] = user.role
+        elif requested_role in ALLOWED_ROLES:
+            user.role = requested_role
+            user.save(update_fields=["role"])
+            request.session["user_role"] = user.role
+        else:
+            user.role = "worker"
+            user.save(update_fields=["role"])
+            request.session["user_role"] = user.role
 
     user.backend = "django.contrib.auth.backends.ModelBackend"
     login(request, user)
-    request.session["user_role"] = user.role
 
     if user.role == "worker":
         profile, _ = WorkerProfile.objects.get_or_create(user=user)
         if not profile.is_completed:
             return redirect("accounts:worker_register")
 
+    if next_url and next_url != "/":
+        return redirect(next_url)
+
     return redirect(
-        next_url
-        or (reverse("accounts:worker_home") if user.role == "worker" else reverse("accounts:employer_home"))
+        reverse("accounts:worker_home") if user.role == "worker" else reverse("accounts:employer_home")
     )
 
 
@@ -418,6 +439,9 @@ def after_otp_redirect(request):
     if not request.user.is_authenticated:
         return redirect("accounts:role_select")
 
+    if getattr(request.user, "role", None) in ALLOWED_ROLES:
+        request.session["user_role"] = request.user.role
+
     next_url = request.GET.get("next") or "/"
 
     if request.user.role == "worker":
@@ -425,7 +449,12 @@ def after_otp_redirect(request):
         if not profile.is_completed:
             return redirect("accounts:worker_register")
 
-    return redirect(next_url)
+    if next_url and next_url != "/":
+        return redirect(next_url)
+
+    return redirect(
+        reverse("accounts:worker_home") if request.user.role == "worker" else reverse("accounts:employer_home")
+    )
 
 
 def logout_view(request):

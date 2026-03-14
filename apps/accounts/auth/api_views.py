@@ -13,6 +13,36 @@ from apps.accounts.auth.serializers import SendOtpSerializer, VerifyOtpSerialize
 from .otp import send_otp, verify_otp, normalize_phone
 from apps.accounts.models import User
 
+
+@api_view(["POST"])
+def send_otp_view(request):
+    print("===== SEND OTP VIEW DEBUG =====")
+    print("request.data =", request.data)
+
+    s = SendOtpSerializer(data=request.data)
+    if not s.is_valid():
+        print("SEND SERIALIZER ERRORS =", s.errors)
+        print("================================")
+        return Response(s.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    phone = normalize_phone(s.validated_data["phone"])
+    print("normalized phone =", phone)
+
+    code = send_otp(phone)
+
+    data = {
+        "message": "OTP sent",
+        "phone": phone,
+    }
+
+    if getattr(settings, "OTP_DEBUG_RETURN_CODE", False):
+        data["debug_code"] = code  # DEV only
+
+    print("SEND OTP SUCCESS")
+    print("================================")
+    return Response(data, status=status.HTTP_200_OK)
+
+
 @api_view(["POST"])
 def verify_otp_view(request):
     print("===== VERIFY OTP DEBUG =====")
@@ -45,7 +75,10 @@ def verify_otp_view(request):
 
     user, created = User.objects.get_or_create(
         phone=phone,
-        defaults={"role": request.session.get("user_role") or "worker", "is_active": True},
+        defaults={
+            "role": request.session.get("user_role") or "worker",
+            "is_active": True,
+        },
     )
 
     print("user =", user.id, "created =", created)

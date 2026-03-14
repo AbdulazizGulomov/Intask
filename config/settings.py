@@ -128,12 +128,15 @@ LOGIN_URL = "/auth/otp/"
 # =====================
 CACHES = {
     "default": {
-        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-        "LOCATION": "taskin-otp-cache",
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
     }
 }
 
-OTP_TTL_SECONDS = 120
+OTP_TTL_SECONDS = 300
 
 # OTP behavior
 FAKE_OTP_ENABLED = False

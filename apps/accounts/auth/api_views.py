@@ -13,33 +13,34 @@ from apps.accounts.auth.serializers import SendOtpSerializer, VerifyOtpSerialize
 from .otp import send_otp, verify_otp, normalize_phone
 from apps.accounts.models import User
 
-
-@api_view(["POST"])
-def send_otp_view(request):
-    s = SendOtpSerializer(data=request.data)
-    s.is_valid(raise_exception=True)
-
-    phone = normalize_phone(s.validated_data["phone"])
-    code = send_otp(phone)
-
-    data = {"message": "OTP sent", "phone": phone}
-    if getattr(settings, "OTP_DEBUG_RETURN_CODE", False):
-        data["debug_code"] = code  # DEV only
-
-    return Response(data, status=status.HTTP_200_OK)
-
-
 @api_view(["POST"])
 def verify_otp_view(request):
+    print("===== VERIFY OTP DEBUG =====")
+    print("request.data =", request.data)
+    print("raw phone =", request.data.get("phone"))
+    print("raw code =", request.data.get("code"))
+    print("raw next =", request.data.get("next"))
+
     s = VerifyOtpSerializer(data=request.data)
-    s.is_valid(raise_exception=True)
+    if not s.is_valid():
+        print("SERIALIZER ERRORS =", s.errors)
+        print("============================")
+        return Response(s.errors, status=status.HTTP_400_BAD_REQUEST)
 
     phone = normalize_phone(s.validated_data["phone"])
     code = s.validated_data["code"]
 
-    next_url = request.data.get("next") or "/"  # where user wanted to go
+    print("normalized phone =", phone)
+    print("validated code =", code)
 
-    if not verify_otp(phone, code):
+    next_url = request.data.get("next") or "/"
+
+    otp_ok = verify_otp(phone, code)
+    print("verify_otp result =", otp_ok)
+
+    if not otp_ok:
+        print("FAIL: Invalid or expired code")
+        print("============================")
         return Response({"detail": "Invalid or expired code"}, status=status.HTTP_400_BAD_REQUEST)
 
     user, created = User.objects.get_or_create(
@@ -47,20 +48,22 @@ def verify_otp_view(request):
         defaults={"role": request.session.get("user_role") or "worker", "is_active": True},
     )
 
-    # block admin OTP
-    if user.is_staff:
-        return Response({"detail": "Admins cannot login via OTP"}, status=status.HTTP_403_FORBIDDEN)
+    print("user =", user.id, "created =", created)
 
-    # ✅ IMPORTANT: create Django session login (so /after-otp/ sees request.user)
+    if user.is_staff:
+        print("FAIL: admin tried OTP login")
+        print("============================")
+        return Response({"detail": "Admins cannot login via OTP"}, status=status.HTTP_403_FORBIDDEN)
 
     login(request, user, backend="django.contrib.auth.backends.ModelBackend")
 
-    # JWT tokens (optional for later mobile/API use)
     refresh = RefreshToken.for_user(user)
 
-    # ✅ IMPORTANT: always send user to gate after otp
     gate_url = reverse("accounts:after_otp_redirect")
     gate_url = gate_url + "?" + urlencode({"next": next_url})
+
+    print("SUCCESS")
+    print("============================")
 
     return Response(
         {
@@ -70,7 +73,7 @@ def verify_otp_view(request):
             "created": created,
             "access": str(refresh.access_token),
             "refresh": str(refresh),
-            "next": gate_url,  # ✅ redirect here
+            "next": gate_url,
         },
         status=status.HTTP_200_OK,
     )

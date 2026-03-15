@@ -102,6 +102,7 @@
     .taskin-toast-error,
     .taskin-toast-danger { background: #dc2626; }
 
+    /* ── Applicants box ── */
     .applicants-box {
       background: #fff;
       border: 1px solid #e5e7eb;
@@ -110,49 +111,71 @@
       margin-top: 20px;
     }
 
+    .applicants-box h5 {
+      font-weight: 800;
+      font-size: 16px;
+      color: #0d1b2a;
+      margin-bottom: 14px;
+    }
+
     .applicant-card {
       border: 1px solid #e5e7eb;
       border-radius: 14px;
-      padding: 14px;
+      padding: 14px 16px;
       background: #fafafa;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
+      transition: all 0.18s ease;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
     }
 
-    .applicant-card:last-child {
-      margin-bottom: 0;
+    .applicant-card:last-child { margin-bottom: 0; }
+
+    .applicant-card:hover {
+      background: #eef4ff;
+      border-color: #bfcfff;
+      box-shadow: 0 4px 18px rgba(67, 97, 238, 0.12);
+      transform: translateY(-2px);
+    }
+
+    .applicant-card:hover .applicant-name {
+      color: #4361EE;
     }
 
     .applicant-name {
       font-weight: 700;
+      font-size: 15px;
       color: #111827;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
+      transition: color 0.15s;
     }
 
     .applicant-meta {
       color: #6b7280;
-      font-size: 14px;
+      font-size: 13px;
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 10px;
+    }
+
+    .applicant-meta span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: #f3f4f6;
+      border-radius: 8px;
+      padding: 3px 9px;
+      font-weight: 500;
     }
 
     @keyframes fadeSlideUp {
-      from {
-        opacity: 0;
-        transform: translateY(14px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     @keyframes fadeOut {
-      to {
-        opacity: 0;
-        transform: translateY(10px);
-        visibility: hidden;
-      }
+      to { opacity: 0; transform: translateY(10px); visibility: hidden; }
     }
   </style>
 </head>
@@ -376,43 +399,40 @@
 
         {% if is_employer_view %}
           <div class="applicants-box">
-            <h5 class="mb-3">{% trans "Nomzodlar" %}</h5>
+            <h5>{% trans "Nomzodlar" %}</h5>
 
             {% for app in applicants %}
-              <div class="applicant-card">
-<div class="applicant-name">
-  <a href="{% url 'accounts:worker_public_profile' app.worker.id %}"
-     class="text-decoration-none text-dark fw-bold">
-    {% if app.worker.worker_profile.first_name or app.worker.worker_profile.last_name %}
-      {{ app.worker.worker_profile.first_name }} {{ app.worker.worker_profile.last_name }}
-    {% else %}
-      {% trans "Ishchi" %} #{{ app.worker.id }}
-    {% endif %}
-  </a>
-</div>
-
-                <div class="applicant-meta">
-                  <div>📞 {{ app.worker.phone|default:"No phone" }}</div>
-                  <div>📌 {{ app.get_status_display }}</div>
-                  <div>🕒 {{ app.created_at|date:"d M Y H:i" }}</div>
-                  {% if app.worker.worker_profile.age %}
-                    <div>🎂 {{ app.worker.worker_profile.age }}</div>
-                  {% endif %}
-                  {% if app.worker.worker_profile.gender %}
-                    <div>👤 {{ app.worker.worker_profile.gender }}</div>
+              <a href="{% url 'accounts:worker_public_profile' app.worker.id %}"
+                 class="applicant-card">
+                <div class="applicant-name">
+                  {% if app.worker.worker_profile.first_name or app.worker.worker_profile.last_name %}
+                    {{ app.worker.worker_profile.first_name }} {{ app.worker.worker_profile.last_name }}
+                  {% else %}
+                    {% trans "Ishchi" %} #{{ app.worker.id }}
                   {% endif %}
                 </div>
-              </div>
+                <div class="applicant-meta">
+                  <span>📞 {{ app.worker.phone|default:"No phone" }}</span>
+                  <span>📌 {{ app.get_status_display }}</span>
+                  <span>🕒 {{ app.created_at|date:"d M Y H:i" }}</span>
+                  {% if app.worker.worker_profile.age %}
+                    <span>🎂 {{ app.worker.worker_profile.age }}</span>
+                  {% endif %}
+                  {% if app.worker.worker_profile.gender %}
+                    <span>👤 {{ app.worker.worker_profile.gender }}</span>
+                  {% endif %}
+                </div>
+              </a>
             {% empty %}
-              <div class="text-muted">{% trans "Hozircha nomzodlar yo‘q." %}</div>
+              <div class="text-muted">{% trans "Hozircha nomzodlar yo'q." %}</div>
             {% endfor %}
           </div>
         {% endif %}
       {% endif %}
 
       <div class="d-flex gap-2 flex-wrap mt-2 {% if preview_mode %}px-0{% else %}px-2{% endif %}">
-        <a id="yandexMapLink" class="btn btn-outline-secondary" target="_blank" href="https://yandex.com/maps/?pt={{ job.lng|default:'0' }},{{ job.lat|default:'0' }}&z=14&l=map">🗺️ {% trans "Yandex Map" %}</a>
-        <a id="googleMapLink" class="btn btn-outline-secondary" target="_blank" href="https://www.google.com/maps?q={{ job.lat|default:'0' }},{{ job.lng|default:'0' }}">📍 {% trans "Google Map" %}</a>
+        <a id="yandexMapLink" class="btn btn-outline-secondary" target="_blank" href="https://yandex.com/maps/?pt={{ job.lng|default:'0' }},{{ job.lat|default:'0' }}&z=14&l=map">🗺️ {% trans "Yandex xarita" %}</a>
+        <a id="googleMapLink" class="btn btn-outline-secondary" target="_blank" href="https://www.google.com/maps?q={{ job.lat|default:'0' }},{{ job.lng|default:'0' }}">📍 {% trans "Google xarita" %}</a>
       </div>
 
     </div>
@@ -424,9 +444,9 @@
         {% else %}
           {% if is_worker_view %}
             {% if job.contact_phone %}
-              <a class="btn btn-success btn-lg" href="tel:{{ job.contact_phone|cut:' ' }}">📞 {% trans "Qo‘ng‘iroq qilish" %}</a>
+              <a class="btn btn-success btn-lg" href="tel:{{ job.contact_phone|cut:' ' }}">📞 {% trans "Qo'ng'iroq qilish" %}</a>
             {% else %}
-              <button class="btn btn-success btn-lg" disabled>📞 {% trans "Telefon yo‘q" %}</button>
+              <button class="btn btn-success btn-lg" disabled>📞 {% trans "Telefon yo'q" %}</button>
             {% endif %}
 
             {% if already_applied %}

@@ -7,17 +7,17 @@
 
 <div class="app-shell">
   <main class="page container-fluid">
-
     <div class="row g-4">
 
+      <!-- ══ SIDEBAR FILTERS ══ -->
       <aside class="col-12 col-lg-4 col-xl-3">
         <div class="panel">
           <div class="panel-title">{% trans "Filtrlar" %}</div>
 
           <form method="get" id="filtersForm">
+
             <div class="filter-block">
               <div class="filter-title">{% trans "Hudud" %}</div>
-
               <details class="region-dropdown" {% if selected_regions %}open{% endif %}>
                 <summary class="region-summary">{% trans "Hududni tanlang" %}</summary>
                 <div class="region-options">
@@ -35,16 +35,17 @@
 
             <div class="filter-block">
               <div class="filter-title">{% trans "Kasb" %}</div>
-
               <details class="region-dropdown" {% if selected_professions %}open{% endif %}>
                 <summary class="region-summary">{% trans "Kasbni tanlang" %}</summary>
                 <div class="region-options">
                   {% for p in professions %}
                     <label class="check">
-                      <input type="checkbox"
-                             name="profession"
-                             value="{{ p.id }}"
-                             {% if p.id|stringformat:"s" in selected_professions %}checked{% endif %}>
+                      <input
+                        type="checkbox"
+                        name="profession"
+                        value="{{ p.id }}"
+                        {% if p.id|stringformat:"s" in selected_professions %}checked{% endif %}
+                      >
                       <span>{{ p.name }}</span>
                     </label>
                   {% endfor %}
@@ -52,48 +53,20 @@
               </details>
             </div>
 
-            <div class="divider"></div>
+            {% if q %}<input type="hidden" name="q" value="{{ q }}">{% endif %}
 
-            <div class="filter-block">
-              <div class="filter-title">{% trans "Ish turi" %}</div>
-
-              <details class="region-dropdown" {% if selected_types %}open{% endif %}>
-                <summary class="region-summary">{% trans "Ish turini tanlang" %}</summary>
-                <div class="region-options">
-                  <label class="check">
-                    <input type="checkbox" name="type" value="doimiy" {% if "doimiy" in selected_types %}checked{% endif %}>
-                    <span>{% trans "Doimiy" %}</span>
-                  </label>
-
-                  <label class="check">
-                    <input type="checkbox" name="type" value="vaqtinchalik" {% if "vaqtinchalik" in selected_types %}checked{% endif %}>
-                    <span>{% trans "Vaqtinchalik" %}</span>
-                  </label>
-                </div>
-              </details>
-            </div>
-
-            {% if q %}
-              <input type="hidden" name="q" value="{{ q }}">
-            {% endif %}
-
-            <button class="btn-apply w-100 mt-3" type="submit">{% trans "Qo‘llash" %}</button>
+            <button class="btn-apply w-100 mt-3" type="submit">{% trans "Qo'llash" %}</button>
           </form>
         </div>
       </aside>
 
+      <!-- ══ MAIN SECTION ══ -->
       <section class="col-12 col-lg-8 col-xl-9">
 
+        <!-- Search -->
         <form class="searchbar" method="get">
-          {% for r in selected_regions %}
-            <input type="hidden" name="region" value="{{ r }}">
-          {% endfor %}
-          {% for t in selected_types %}
-            <input type="hidden" name="type" value="{{ t }}">
-          {% endfor %}
-          {% for p in selected_professions %}
-            <input type="hidden" name="profession" value="{{ p }}">
-          {% endfor %}
+          {% for r in selected_regions %}<input type="hidden" name="region" value="{{ r }}">{% endfor %}
+          {% for p in selected_professions %}<input type="hidden" name="profession" value="{{ p }}">{% endfor %}
 
           <div class="search-left">
             <span class="search-ico">🔎</span>
@@ -104,41 +77,38 @@
                      placeholder="{% trans 'Kasb yoki joyni qidiring...' %}">
             </label>
           </div>
-
           <button class="btn-search" type="submit">{% trans "Qidirish" %}</button>
           <button class="btn-search" type="button" id="nearMeBtn">📍 {% trans "Yaqin ishlar" %}</button>
         </form>
 
-        <div id="nearMeInfo"
-             style="display:none; margin:12px 0; padding:12px 14px;
-                    border-radius:12px; background:#eef6ff; font-weight:600;">
-        </div>
+        <!-- Near me info -->
+        <div id="nearMeInfo" style="display:none;"></div>
 
+        <!-- MAP -->
         <div id="yandexMap" style="width:100%; height:420px; border-radius:16px; overflow:hidden;"></div>
 
-        <script>
-          const JOBS_MAP = {{ jobs_map|default:"[]"|safe }};
-        </script>
-
+        <script>const JOBS_MAP = {{ jobs_map|default:"[]"|safe }};</script>
         <script src="https://api-maps.yandex.ru/2.1/?lang=en_US"></script>
-
         <script>
           function escapeHtml(s) {
             return String(s ?? "").replace(/[&<>"']/g, m => ({
-              "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#039;"
             }[m]));
           }
 
           function haversineKm(lat1, lon1, lat2, lon2) {
-            const R = 6371;
-            const dLat = (lat2 - lat1) * Math.PI / 180;
-            const dLon = (lon2 - lon1) * Math.PI / 180;
-            const a =
-              Math.sin(dLat/2) * Math.sin(dLat/2) +
-              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-              Math.sin(dLon/2) * Math.sin(dLon/2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            return R * c;
+            const R = 6371,
+                  dLat = (lat2 - lat1) * Math.PI / 180,
+                  dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) ** 2 +
+                      Math.cos(lat1 * Math.PI / 180) *
+                      Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon / 2) ** 2;
+            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
           }
 
           let map, collection;
@@ -150,7 +120,9 @@
               controls: ["zoomControl", "geolocationControl"]
             });
 
-            setTimeout(() => { try { map.container.fitToViewport(); } catch(e) {} }, 200);
+            setTimeout(() => {
+              try { map.container.fitToViewport(); } catch (e) {}
+            }, 200);
 
             collection = new ymaps.GeoObjectCollection();
             map.geoObjects.add(collection);
@@ -159,32 +131,34 @@
               if (job.lat == null || job.lng == null) return;
 
               const detailUrl = job.detail_url || "#";
-              const professionLine = job.profession_name
+              const profLine = job.profession_name
                 ? `<div style="margin-top:6px;">🧰 ${escapeHtml(job.profession_name)}</div>`
                 : "";
 
-              const balloon = `
-                <div style="min-width:240px">
-                  <div style="font-weight:800; font-size:14px;">${escapeHtml(job.title)}</div>
-                  <div style="margin-top:6px;">📍 ${escapeHtml(job.region_label)} • ${escapeHtml(job.job_type)}</div>
-                  ${professionLine}
-                  <div style="margin-top:8px; font-weight:900;">💰 ${escapeHtml(job.pay)}</div>
-                  <div style="margin-top:10px;">
-                    <a href="${detailUrl}" style="font-weight:700; text-decoration:none;">
-                      ➜ {% trans "Batafsil" %}
-                    </a>
-                  </div>
+              const balloon = `<div style="min-width:240px;font-family:sans-serif;">
+                <div style="font-weight:800;font-size:14px;">${escapeHtml(job.title)}</div>
+                <div style="margin-top:6px;color:#6b7280;">📍 ${escapeHtml(job.region_label)}</div>
+                ${profLine}
+                <div style="margin-top:8px;font-weight:800;color:#05a866;">💰 ${escapeHtml(job.pay)}</div>
+                <div style="margin-top:10px;">
+                  <a href="${detailUrl}" style="font-weight:700;color:#4361EE;">➜ {% trans "Batafsil" %}</a>
                 </div>
-              `;
+              </div>`;
 
-              const placemark = new ymaps.Placemark(
+              const pm = new ymaps.Placemark(
                 [job.lat, job.lng],
-                { hintContent: escapeHtml(job.pay), balloonContent: balloon, iconCaption: job.pay },
-                { preset: "islands#blueDotIconWithCaption" }
+                {
+                  hintContent: escapeHtml(job.pay),
+                  balloonContent: balloon,
+                  iconCaption: job.pay
+                },
+                {
+                  preset: "islands#blueDotIconWithCaption"
+                }
               );
 
-              placemark.properties.set("jobId", job.id);
-              collection.add(placemark);
+              pm.properties.set("jobId", job.id);
+              collection.add(pm);
             });
 
             if (JOBS_MAP.length) {
@@ -201,26 +175,25 @@
             btn.addEventListener("click", () => {
               if (!navigator.geolocation) {
                 info.style.display = "block";
-                info.textContent = "❌ Geolocation is not supported";
+                info.textContent = "❌ Geolocation not supported";
                 return;
               }
 
               btn.disabled = true;
               const oldText = btn.textContent;
               btn.textContent = "📍 ...";
-
               info.style.display = "block";
               info.textContent = "📍 Locating...";
 
               navigator.geolocation.getCurrentPosition(
                 (pos) => {
-                  const uLat = pos.coords.latitude;
-                  const uLng = pos.coords.longitude;
+                  const uLat = pos.coords.latitude,
+                        uLng = pos.coords.longitude;
 
                   const withDist = JOBS_MAP
                     .filter(j => j.lat != null && j.lng != null)
                     .map(j => ({ ...j, distKm: haversineKm(uLat, uLng, j.lat, j.lng) }))
-                    .sort((a,b) => a.distKm - b.distKm);
+                    .sort((a, b) => a.distKm - b.distKm);
 
                   if (!withDist.length) {
                     info.textContent = "⚠️ No jobs with coordinates";
@@ -233,7 +206,6 @@
                   info.innerHTML = `✅ {% trans "Yaqin ish" %}: <b>${escapeHtml(nearest.title)}</b> — <b>${nearest.distKm.toFixed(1)} km</b>`;
 
                   if (map) map.setCenter([uLat, uLng], 12);
-
                   if (collection) {
                     collection.each(pm => {
                       if (pm.properties.get("jobId") === nearest.id) pm.balloon.open();
@@ -244,7 +216,7 @@
                   btn.textContent = oldText;
                 },
                 (err) => {
-                  info.textContent = "❌ Location error: " + err.message;
+                  info.textContent = "❌ " + err.message;
                   btn.disabled = false;
                   btn.textContent = oldText;
                 },
@@ -254,44 +226,55 @@
           });
         </script>
 
-        <h2 class="section-title mt-3">{% trans "Tavsiya etilgan ishlar" %}</h2>
+        <!-- Job list -->
+        <h2 class="section-title">{% trans "Tavsiya etilgan ishlar" %}</h2>
 
         <div class="job-list">
           {% for job in jobs %}
             <a href="{{ job.detail_url }}"
-               class="job-card selectable-job text-decoration-none text-dark"
+               class="job-card selectable-job"
                data-job-id="{{ job.id }}"
                style="display:flex; gap:14px; align-items:center; justify-content:space-between;">
 
-              <div style="display:flex; gap:12px; align-items:center;">
+              <div style="display:flex; gap:12px; align-items:center; min-width:0;">
                 {% if job.photo_url %}
-                  <img src="{{ job.photo_url }}"
-                       alt="job"
-                       style="width:56px;height:56px;border-radius:14px;object-fit:cover;border:1px solid #e5e7eb;">
+                  <img src="{{ job.photo_url }}" alt="job"
+                       style="width:56px;height:56px;border-radius:12px;object-fit:cover;border:1px solid rgba(67,97,238,0.14);flex-shrink:0;">
                 {% else %}
-                  <div style="width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;
-                              border:1px solid #e5e7eb;background:#f8fafc;color:#94a3b8;font-weight:800;">
+                  <div style="width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+                              background:rgba(67,97,238,0.08);border:1px solid rgba(67,97,238,0.14);font-size:22px;flex-shrink:0;">
                     🧰
                   </div>
                 {% endif %}
 
-                <div>
+                <div style="min-width:0;">
                   {% if job.profession_name %}
-                    <div class="job-meta" style="margin-top:0; font-size:14px;">🧰 {{ job.profession_name }}</div>
+                    <div style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;
+                                padding:2px 9px;border-radius:999px;background:rgba(67,97,238,0.09);
+                                color:#3251d4;border:1px solid rgba(67,97,238,0.18);margin-bottom:4px;">
+                      🧰 {{ job.profession_name }}
+                    </div>
                   {% endif %}
+
                   <div class="job-title">{{ job.title }}</div>
-                  <div class="job-meta">📍 {{ job.region_label }} • {{ job.type_label|default:job.type }}</div>
+
+                  <div class="job-meta">
+                    <span>📍 {{ job.region_label }}</span>
+                  </div>
+
                   <div class="job-pay">💰 {{ job.pay }}</div>
                 </div>
               </div>
 
-              <span class="btn-cta detail-btn">{% trans "Batafsil" %}</span>
+              <span class="btn-cta detail-btn">{% trans "Batafsil" %} →</span>
             </a>
+
           {% empty %}
-            <div class="job-card">
-              <div>
-                <div class="job-title">{% trans "Natija topilmadi" %}</div>
-                <div class="job-meta">{% trans "Filtrlarni o‘zgartirib ko‘ring." %}</div>
+            <div class="job-card" style="text-align:center;padding:32px 20px;">
+              <div style="font-size:38px;margin-bottom:10px;">📭</div>
+              <div class="job-title">{% trans "Natija topilmadi" %}</div>
+              <div class="job-meta" style="justify-content:center;margin-top:6px;">
+                {% trans "Filtrlarni o'zgartirib ko'ring." %}
               </div>
             </div>
           {% endfor %}

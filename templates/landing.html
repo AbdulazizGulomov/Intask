@@ -14,44 +14,64 @@
 </head>
 <body>
 
-<!-- HEADER -->
-<header class="hdr" id="hdr"><div class="container">
-  <a href="{% url 'accounts:role_select' %}" class="logo">
-    <div class="logo-i">
-      <img src="{% static 'img/In_task.png' %}" alt="InTask" style="width:28px;height:28px;border-radius:6px">
-    </div>
-    <span class="logo-t">InTask</span>
-  </a>
-  <nav class="nav">
-    <a href="#cats">{% trans "Xizmatlar" %}</a>
-    <a href="#specs">{% trans "Ustalar" %}</a>
-    <a href="#jobsSec">{% trans "Yaqin buyurtmalar" %}</a>
-    <a href="#howSec">{% trans "Qanday ishlaydi" %}</a>
-  </nav>
-  <div class="hdr-r">
-    <div class="lang-sw">
-      <form action="{% url 'set_language' %}" method="post" style="margin:0;display:inline">
-        {% csrf_token %}
-        <input type="hidden" name="next" value="{{ request.path }}">
-        <button type="submit" name="language" value="uz" class="lng {% if CURRENT_LANGUAGE == 'uz' %}on{% endif %}">UZ</button>
-      </form>
-      <form action="{% url 'set_language' %}" method="post" style="margin:0;display:inline">
-        {% csrf_token %}
-        <input type="hidden" name="next" value="{{ request.path }}">
-        <button type="submit" name="language" value="ru" class="lng {% if CURRENT_LANGUAGE == 'ru' %}on{% endif %}">RU</button>
-      </form>
-      <form action="{% url 'set_language' %}" method="post" style="margin:0;display:inline">
-        {% csrf_token %}
-        <input type="hidden" name="next" value="{{ request.path }}">
-        <button type="submit" name="language" value="en" class="lng {% if CURRENT_LANGUAGE == 'en' %}on{% endif %}">EN</button>
-      </form>
-    </div>
-    <a href="{% url 'accounts:otp' %}" class="btn-o">{% trans "Kirish" %}</a>
-    <a href="{% url 'accounts:role_select' %}" class="btn-p">{% trans "Ro'yxatdan o'tish" %}</a>
-  </div>
-</div></header>
+<!-- ==================== HEADER ==================== -->
+<header class="hdr" id="hdr">
+  <div class="container">
+    <a href="{% url 'accounts:role_select' %}" class="logo">
+      <div class="logo-i">
+        <img src="{% static 'img/In_task.png' %}" alt="InTask" style="width:28px;height:28px;border-radius:6px">
+      </div>
+      <span class="logo-t">InTask</span>
+    </a>
 
-<!-- HERO BANNER -->
+    <nav class="nav">
+      <a href="#cats">{% trans "Xizmatlar" %}</a>
+      <a href="#specs">{% trans "Ustalar" %}</a>
+      <a href="#jobsSec">{% trans "Yaqin buyurtmalar" %}</a>
+      <a href="#howSec">{% trans "Qanday ishlaydi" %}</a>
+    </nav>
+
+    <div class="hdr-r">
+      <div class="lang-sw">
+        <form action="{% url 'set_language' %}" method="post" style="margin:0;display:inline">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.path }}">
+          <button type="submit" name="language" value="uz" class="lng {% if CURRENT_LANGUAGE == 'uz' %}on{% endif %}">UZ</button>
+        </form>
+        <form action="{% url 'set_language' %}" method="post" style="margin:0;display:inline">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.path }}">
+          <button type="submit" name="language" value="ru" class="lng {% if CURRENT_LANGUAGE == 'ru' %}on{% endif %}">RU</button>
+        </form>
+        <form action="{% url 'set_language' %}" method="post" style="margin:0;display:inline">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.path }}">
+          <button type="submit" name="language" value="en" class="lng {% if CURRENT_LANGUAGE == 'en' %}on{% endif %}">EN</button>
+        </form>
+      </div>
+      <a href="{% url 'accounts:otp' %}" class="btn-o">{% trans "Kirish" %}</a>
+      <a href="{% url 'accounts:role_select' %}" class="btn-p">{% trans "Ro'yxatdan o'tish" %}</a>
+      <button class="mob-menu-btn" id="mobMenuBtn" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ==================== MOB DROPDOWN ==================== -->
+<div class="mob-drop" id="mobDrop">
+  <a href="#cats" class="mob-drop-item" onclick="closeMobDrop()">Services</a>
+  <a href="#specs" class="mob-drop-item" onclick="closeMobDrop()">Masters</a>
+  <a href="#jobsSec" class="mob-drop-item" onclick="closeMobDrop()">Nearby Orders</a>
+  <a href="#howSec" class="mob-drop-item" onclick="closeMobDrop()">How it works</a>
+  <div class="mob-drop-btns">
+    <a href="{% url 'accounts:otp' %}" class="mob-drop-login">Login</a>
+    <a href="{% url 'accounts:role_select' %}" class="mob-drop-signup">Sign Up</a>
+  </div>
+</div>
+
+
+<!-- ==================== HERO BANNER ==================== -->
 <section class="hb" id="heroBanner">
   <div class="hb-bg">
     <div class="hb-circle hb-c1"></div>
@@ -71,12 +91,16 @@
       <p class="hb-desc">{% trans "Sun'iy intellekt yordamida 15 daqiqada siz yaqin atrofdagi eng yaxshi, tekshirilgan va ishonchli ustani topadi." %}</p>
       <div class="hb-search">
         <div class="hb-search-field">
-          <svg class="hb-search-icon" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <svg class="hb-search-icon" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
           <input type="text" placeholder="{% trans "Qanday xizmat kerak?" %}">
         </div>
         <div class="hb-search-div"></div>
         <div class="hb-search-field">
-          <svg class="hb-search-icon hb-pin-icon" viewBox="0 0 24 24" fill="#ef4444"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          <svg class="hb-search-icon hb-pin-icon" viewBox="0 0 24 24" fill="#ef4444">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+          </svg>
           <input type="text" placeholder="{% trans "Manzilingiz" %}">
         </div>
         <a href="{% url 'accounts:choose_role' 'employer' %}" class="hb-search-btn">{% trans "Usta topish" %} →</a>
@@ -90,6 +114,10 @@
       </div>
     </div>
     <div class="hb-right">
+      <div class="hb-online">
+        <span class="hb-online-dot"></span>
+        <span>10 {% trans "usta onlayn hozir" %}</span>
+      </div>
       <img src="{% static 'img/intask_worker.png' %}" alt="InTask usta" class="hb-worker">
       <div class="hb-stat hb-stat-masters">
         <div class="hb-stat-val hb-stat-green">5 000+</div>
@@ -103,60 +131,92 @@
         <div class="hb-stat-val hb-stat-blue">25K+</div>
         <div class="hb-stat-label">{% trans "Bajarilgan buyurtmalar" %}</div>
       </div>
-      <div class="hb-online">
-        <span class="hb-online-dot"></span>
-        <span>10 {% trans "usta onlayn hozir" %}</span>
-      </div>
     </div>
   </div>
 </section>
 
-<!-- HERO MAP -->
-<section class="hero" id="heroSec"><div id="heroMap"></div><div class="hero-grad-t"></div><div class="hero-grad-b"></div>
-  <div class="view-tog-float"><div class="view-tog">
-    <button class="vt-btn on" onclick="heroView('map')">🗺 {% trans "Xarita" %}</button>
-    <button class="vt-btn" onclick="heroView('list')">📋 {% trans "Ro'yxat" %}</button>
-  </div></div>
-  <div class="hero-panel"><div class="hero-card">
-    <h2>{% trans "Usta toping" %}</h2>
-    <p class="sub">{% trans "Sun'iy intellekt 15 daqiqada yaqin atrofdagi eng yaxshi ustani topadi" %}</p>
-    <div class="fg"><label>{% trans "XIZMAT" %}</label><div class="iw"><span class="ii">🔍</span>
-      <select class="fi">
-        <option>{% trans "Xizmatni tanlang" %}</option>
-        <option>{% trans "Elektrik" %}</option>
-        <option>{% trans "Santexnik" %}</option>
-        <option>{% trans "Mebel yig'ish" %}</option>
-        <option>{% trans "Kvartira ta'miri" %}</option>
-        <option>{% trans "Tozalash" %}</option>
-        <option>{% trans "Konditsioner" %}</option>
-      </select>
-    </div></div>
-    <div class="fr">
-      <div class="fg"><label>{% trans "QACHON" %}</label><div class="iw"><span class="ii">🕐</span>
-        <select class="fi">
-          <option>{% trans "Tezroq" %}</option>
-          <option>{% trans "Bugun" %}</option>
-          <option>{% trans "Ertaga" %}</option>
-        </select>
-      </div></div>
-      <div class="fg"><label>{% trans "TUR" %}</label><div class="iw"><span class="ii">💼</span>
-        <select class="fi">
-          <option>{% trans "Soatlik" %}</option>
-          <option>{% trans "Kelishilgan" %}</option>
-        </select>
-      </div></div>
+<!-- ==================== HERO MAP ==================== -->
+<section class="hero" id="heroSec">
+  <div id="heroMap"></div>
+  <div class="hero-grad-t"></div>
+  <div class="hero-grad-b"></div>
+  <div class="view-tog-float">
+    <div class="view-tog">
+      <button class="vt-btn on" onclick="heroView('map')">🗺 {% trans "Xarita" %}</button>
+      <button class="vt-btn" onclick="heroView('list')">📋 {% trans "Ro'yxat" %}</button>
     </div>
-    <div class="fg"><label>{% trans "MANZIL" %}</label><div class="iw"><span class="ii">📍</span>
-      <input class="fi" placeholder="{% trans "Manzilni kiriting..." %}" id="hAddr" oninput="aS(this.value,'hR')">
-    </div><div class="sr" id="hR"></div></div>
-    <a href="{% url 'accounts:choose_role' 'employer' %}" class="btn-s" style="display:block;text-align:center;text-decoration:none">{% trans "Usta topish" %} →</a>
-    <button class="gps-hero" onclick="dGPS()">📍 {% trans "Joylashuvni aniqlash" %}</button>
-  </div></div>
+  </div>
+  <div class="hero-panel">
+    <div class="hero-card">
+      <h2>{% trans "Usta toping" %}</h2>
+      <p class="sub">{% trans "Sun'iy intellekt 15 daqiqada yaqin atrofdagi eng yaxshi ustani topadi" %}</p>
+      <div class="fg">
+        <label>{% trans "XIZMAT" %}</label>
+        <div class="iw">
+          <span class="ii">🔍</span>
+          <select class="fi">
+            <option>{% trans "Xizmatni tanlang" %}</option>
+            <option>{% trans "Elektrik" %}</option>
+            <option>{% trans "Santexnik" %}</option>
+            <option>{% trans "Mebel yig'ish" %}</option>
+            <option>{% trans "Kvartira ta'miri" %}</option>
+            <option>{% trans "Tozalash" %}</option>
+            <option>{% trans "Konditsioner" %}</option>
+          </select>
+        </div>
+      </div>
+      <div class="fr">
+        <div class="fg">
+          <label>{% trans "QACHON" %}</label>
+          <div class="iw">
+            <span class="ii">🕐</span>
+            <select class="fi">
+              <option>{% trans "Tezroq" %}</option>
+              <option>{% trans "Bugun" %}</option>
+              <option>{% trans "Ertaga" %}</option>
+            </select>
+          </div>
+        </div>
+        <div class="fg">
+          <label>{% trans "TUR" %}</label>
+          <div class="iw">
+            <span class="ii">💼</span>
+            <select class="fi">
+              <option>{% trans "Soatlik" %}</option>
+              <option>{% trans "Kelishilgan" %}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="fg">
+        <label>{% trans "MANZIL" %}</label>
+        <div class="iw">
+          <span class="ii">📍</span>
+          <input class="fi" placeholder="{% trans "Manzilni kiriting..." %}" id="hAddr" oninput="aS(this.value,'hR')">
+        </div>
+        <div class="sr" id="hR"></div>
+      </div>
+      <a href="{% url 'accounts:choose_role' 'employer' %}" class="btn-s" style="display:block;text-align:center">{% trans "Usta topish" %} →</a>
+      <button class="gps-hero" onclick="dGPS()">📍 {% trans "Joylashuvni aniqlash" %}</button>
+    </div>
+  </div>
 
   <div class="hero-masters">
-    <div class="hm" onclick="hM&&hM.setView([41.315,69.285],16)"><div class="hm-av" style="background:linear-gradient(135deg,#1a56db,#3b82f6)">А</div><div><div class="hm-nm">Aziz K.</div><div class="hm-sp">{% trans "Elektrik" %} · 5 {% trans "yil" %}</div></div><div class="hm-rt"><div class="hm-stars">★ 4.9</div><div class="hm-dist">12 {% trans "min" %}</div></div></div>
-    <div class="hm" onclick="hM&&hM.setView([41.308,69.265],16)"><div class="hm-av" style="background:linear-gradient(135deg,#059669,#34d399)">Д</div><div><div class="hm-nm">Dmitriy L.</div><div class="hm-sp">{% trans "Santexnik" %} · 8 {% trans "yil" %}</div></div><div class="hm-rt"><div class="hm-stars">★ 4.8</div><div class="hm-dist">18 {% trans "min" %}</div></div></div>
-    <div class="hm" onclick="hM&&hM.setView([41.318,69.295],16)"><div class="hm-av" style="background:linear-gradient(135deg,#d97706,#fbbf24)">Б</div><div><div class="hm-nm">Baxrom U.</div><div class="hm-sp">{% trans "Ta'mir" %} · 12 {% trans "yil" %}</div></div><div class="hm-rt"><div class="hm-stars">★ 4.9</div><div class="hm-dist">8 {% trans "min" %}</div></div></div>
+    <div class="hm" onclick="hM&&hM.setView([41.315,69.285],16)">
+      <div class="hm-av" style="background:linear-gradient(135deg,#1a56db,#3b82f6)">А</div>
+      <div><div class="hm-nm">Aziz K.</div><div class="hm-sp">{% trans "Elektrik" %} · 5 {% trans "yil" %}</div></div>
+      <div class="hm-rt"><div class="hm-stars">★ 4.9</div><div class="hm-dist">12 {% trans "min" %}</div></div>
+    </div>
+    <div class="hm" onclick="hM&&hM.setView([41.308,69.265],16)">
+      <div class="hm-av" style="background:linear-gradient(135deg,#059669,#34d399)">Д</div>
+      <div><div class="hm-nm">Dmitriy L.</div><div class="hm-sp">{% trans "Santexnik" %} · 8 {% trans "yil" %}</div></div>
+      <div class="hm-rt"><div class="hm-stars">★ 4.8</div><div class="hm-dist">18 {% trans "min" %}</div></div>
+    </div>
+    <div class="hm" onclick="hM&&hM.setView([41.318,69.295],16)">
+      <div class="hm-av" style="background:linear-gradient(135deg,#d97706,#fbbf24)">Б</div>
+      <div><div class="hm-nm">Baxrom U.</div><div class="hm-sp">{% trans "Ta'mir" %} · 12 {% trans "yil" %}</div></div>
+      <div class="hm-rt"><div class="hm-stars">★ 4.9</div><div class="hm-dist">8 {% trans "min" %}</div></div>
+    </div>
   </div>
 
   <div class="hero-status">
@@ -169,33 +229,33 @@
   </div>
 </section>
 
-<!-- HERO LIST VIEW -->
-<section class="hero-list" id="heroList"><div class="container">
-  <div class="hl-top">
-    <div>
-      <h2 class="sec-h" style="margin-bottom:2px">{% trans "Yaqin atrofdagi ustalar" %}</h2>
-      <p class="hl-count"><b>10</b> {% trans "usta Toshkentda onlayn" %}</p>
-    </div>
-    <div style="display:flex;align-items:center;gap:12px">
-      <div class="hl-filters">
-        <button class="hl-fil on">{% trans "Barchasi" %}</button>
-        <button class="hl-fil">⚡ {% trans "Elektrik" %}</button>
-        <button class="hl-fil">🔧 {% trans "Santexnik" %}</button>
-        <button class="hl-fil">🏠 {% trans "Ta'mir" %}</button>
-        <button class="hl-fil">🪑 {% trans "Mebel" %}</button>
+<!-- ==================== HERO LIST VIEW ==================== -->
+<section class="hero-list" id="heroList">
+  <div class="container">
+    <div class="hl-top">
+      <div>
+        <h2 class="sec-h" style="margin-bottom:2px">{% trans "Yaqin atrofdagi ustalar" %}</h2>
+        <p class="hl-count"><b>10</b> {% trans "usta Toshkentda onlayn" %}</p>
       </div>
-      <div class="view-tog">
-        <button class="vt-btn" onclick="heroView('map')">🗺 {% trans "Xarita" %}</button>
-        <button class="vt-btn on" onclick="heroView('list')">📋 {% trans "Ro'yxat" %}</button>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <div class="hl-filters">
+          <button class="hl-fil on">{% trans "Barchasi" %}</button>
+          <button class="hl-fil">⚡ {% trans "Elektrik" %}</button>
+          <button class="hl-fil">🔧 {% trans "Santexnik" %}</button>
+          <button class="hl-fil">🏠 {% trans "Ta'mir" %}</button>
+          <button class="hl-fil">🪑 {% trans "Mebel" %}</button>
+        </div>
+        <div class="view-tog">
+          <button class="vt-btn" onclick="heroView('map')">🗺 {% trans "Xarita" %}</button>
+          <button class="vt-btn on" onclick="heroView('list')">📋 {% trans "Ro'yxat" %}</button>
+        </div>
       </div>
     </div>
+    <div class="ml-grid" id="masterGrid"></div>
   </div>
-  <div class="ml-grid" id="masterGrid"></div>
-</div></section>
+</section>
 
-<!-- ══════════════════════════════════════════════════════
-     BANNER SECTION — between hero map & nearest jobs
-     ══════════════════════════════════════════════════════ -->
+<!-- ==================== BANNER SECTION ==================== -->
 <section class="bn" id="bannerSec">
   <div class="bn-bg"></div>
   <div class="bn-circles">
@@ -204,7 +264,6 @@
     <div class="bn-cr bn-cr3"></div>
   </div>
   <div class="container bn-wrap">
-    <!-- Left: text + CTA -->
     <div class="bn-txt">
       <h2>
         {% trans "Tez va ishonchli" %}
@@ -213,10 +272,11 @@
       <p>{% trans "Ushbu platforma orqali mijozlar ustalarni tez va oson topishlari mumkin bo'ladi, buyurtmalar esa shaffof va xavfsiz tarzda amalga oshiriladi. Har bir usta uchun raqamli professional tarjimahal shakllantiriladi, bu esa uning tajribasini va ishonchliligini ko'rsatib beradi." %}</p>
       <a href="{% url 'accounts:choose_role' 'employer' %}" class="bn-cta">
         {% trans "Usta topish" %}
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
       </a>
     </div>
-    <!-- Right: worker + floating stats -->
     <div class="bn-right">
       <img src="{% static 'img/intask_electric2.png' %}" alt="InTask elektrik usta" class="bn-worker">
       <div class="bn-stat bn-s1">
@@ -239,199 +299,313 @@
   </div>
 </section>
 
-<!-- NEAREST JOBS -->
-<section class="jobs" id="jobsSec"><div class="container">
-  <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
-    <div>
-      <span class="sec-tag">📍 {% trans "Yaqin atrofda" %}</span>
-      <h2 class="sec-h">{% trans "Yaqin buyurtmalar" %}</h2>
-      <p style="color:var(--g5);font-size:14px;margin:0">{% trans "Toshkentdagi faol buyurtmalar" %}</p>
+<!-- ==================== NEAREST JOBS ==================== -->
+<section class="jobs" id="jobsSec">
+  <div class="container">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+      <div>
+        <span class="sec-tag">📍 {% trans "Yaqin atrofda" %}</span>
+        <h2 class="sec-h">{% trans "Yaqin buyurtmalar" %}</h2>
+        <p style="color:var(--g5);font-size:14px;margin:0">{% trans "Toshkentdagi faol buyurtmalar" %}</p>
+      </div>
+      <div class="view-tog">
+        <button class="vt-btn on" onclick="jobsView('map')">🗺 {% trans "Xarita" %}</button>
+        <button class="vt-btn" onclick="jobsView('list')">📋 {% trans "Ro'yxat" %}</button>
+      </div>
     </div>
-    <div class="view-tog">
-      <button class="vt-btn on" onclick="jobsView('map')">🗺 {% trans "Xarita" %}</button>
-      <button class="vt-btn" onclick="jobsView('list')">📋 {% trans "Ro'yxat" %}</button>
-    </div>
-  </div>
-  <div class="jobs-map-content" id="jobsMapContent">
-    <div class="jobs-grid">
-      <div class="job-list" id="jobList"></div>
-      <div class="jobs-map-wrap">
-        <div id="jobsMap"></div>
-        <div class="jobs-legend">
-          <div class="jl-t">{% trans "Xaritadagi buyurtmalar" %}</div>
-          <div class="jl-i"><div class="jl-d" style="background:#dc2626"></div> {% trans "Shoshilinch" %}</div>
-          <div class="jl-i"><div class="jl-d" style="background:#22c55e"></div> {% trans "Rejalashtirilgan" %}</div>
-          <div class="jl-i"><div class="jl-d" style="background:#1a56db"></div> {% trans "Siz" %}</div>
+    <div class="jobs-map-content" id="jobsMapContent">
+      <div class="jobs-grid">
+        <div class="job-list" id="jobList"></div>
+        <div class="jobs-map-wrap">
+          <div id="jobsMap"></div>
+          <div class="jobs-legend">
+            <div class="jl-t">{% trans "Xaritadagi buyurtmalar" %}</div>
+            <div class="jl-i"><div class="jl-d" style="background:#dc2626"></div> {% trans "Shoshilinch" %}</div>
+            <div class="jl-i"><div class="jl-d" style="background:#22c55e"></div> {% trans "Rejalashtirilgan" %}</div>
+            <div class="jl-i"><div class="jl-d" style="background:#1a56db"></div> {% trans "Siz" %}</div>
+          </div>
         </div>
       </div>
     </div>
+    <div class="jobs-list-full" id="jobsListFull">
+      <div class="jl-grid" id="jobsFullGrid"></div>
+    </div>
   </div>
-  <div class="jobs-list-full" id="jobsListFull">
-    <div class="jl-grid" id="jobsFullGrid"></div>
-  </div>
-</div></section>
+</section>
 
-<!-- CATEGORIES -->
-<section class="sec" id="cats"><div class="container">
-  <span class="sec-tag">{% trans "Xizmatlar" %}</span>
-  <h2 class="sec-h">{% trans "Ommabop xizmatlar" %}</h2>
-  <p class="sec-sub">{% trans "Kategoriyani tanlang va 2 daqiqada buyurtma bering" %}</p>
-  <div class="cat-g">
-    <a class="cat-c reveal" href="{% url 'accounts:choose_role' 'employer' %}">
-      <div class="cat-im" style="background:linear-gradient(135deg,#dbeafe,#93c5fd,#3b82f6)">
-        <svg class="cat-sv" viewBox="0 0 400 240"><rect width="400" height="240" fill="rgba(30,64,175,.08)"/><rect x="170" y="70" width="60" height="80" rx="8" fill="#1e40af" opacity=".85"/><rect x="183" y="90" width="10" height="20" rx="3" fill="#fff"/><rect x="207" y="90" width="10" height="20" rx="3" fill="#fff"/><polygon points="200,28 186,68 198,68 190,102 218,56 204,56 214,28" fill="#fbbf24"/></svg>
-        <div class="cat-ic">⚡</div>
-      </div>
-      <div class="cat-in"><div><div class="cat-nm">{% trans "Elektrik" %}</div><div class="cat-ct">420+</div></div><div class="cat-ar">›</div></div>
-    </a>
-    <a class="cat-c reveal" href="{% url 'accounts:choose_role' 'employer' %}">
-      <div class="cat-im" style="background:linear-gradient(135deg,#d1fae5,#6ee7b7,#059669)">
-        <svg class="cat-sv" viewBox="0 0 400 240"><rect width="400" height="240" fill="rgba(6,95,70,.06)"/><rect x="200" y="100" width="80" height="20" rx="4" fill="#065f46" opacity=".7"/><rect x="180" y="95" width="25" height="30" rx="4" fill="#065f46" opacity=".85"/><circle cx="190" cy="110" r="15" fill="none" stroke="#065f46" stroke-width="3.5" opacity=".6"/><ellipse cx="220" cy="145" rx="4" ry="6" fill="#38bdf8" opacity=".7"/></svg>
-        <div class="cat-ic">🔧</div>
-      </div>
-      <div class="cat-in"><div><div class="cat-nm">{% trans "Santexnik" %}</div><div class="cat-ct">380+</div></div><div class="cat-ar">›</div></div>
-    </a>
-    <a class="cat-c reveal" href="{% url 'accounts:choose_role' 'employer' %}">
-      <div class="cat-im" style="background:linear-gradient(135deg,#fef3c7,#fbbf24,#d97706)">
-        <svg class="cat-sv" viewBox="0 0 400 240"><rect width="400" height="240" fill="rgba(146,64,14,.08)"/><rect x="160" y="80" width="80" height="8" rx="2" fill="#92400e" opacity=".85"/><rect x="160" y="80" width="8" height="70" rx="2" fill="#92400e" opacity=".85"/><rect x="155" y="148" width="90" height="10" rx="3" fill="#92400e" opacity=".85"/><rect x="162" y="158" width="6" height="50" rx="2" fill="#92400e" opacity=".7"/><rect x="232" y="158" width="6" height="50" rx="2" fill="#92400e" opacity=".7"/></svg>
-        <div class="cat-ic">🪑</div>
-      </div>
-      <div class="cat-in"><div><div class="cat-nm">{% trans "Mebel yig'ish" %}</div><div class="cat-ct">250+</div></div><div class="cat-ar">›</div></div>
-    </a>
-    <a class="cat-c reveal" href="{% url 'accounts:choose_role' 'employer' %}">
-      <div class="cat-im" style="background:linear-gradient(135deg,#fce7f3,#f472b6,#db2777)">
-        <svg class="cat-sv" viewBox="0 0 400 240"><rect width="400" height="240" fill="rgba(131,24,67,.08)"/><polygon points="200,40 130,90 270,90" fill="#831843" opacity=".8"/><rect x="145" y="90" width="110" height="90" fill="#831843" opacity=".7"/><rect x="180" y="120" width="40" height="60" rx="4" fill="#fce7f3" opacity=".9"/></svg>
-        <div class="cat-ic">🏠</div>
-      </div>
-      <div class="cat-in"><div><div class="cat-nm">{% trans "Kvartira ta'miri" %}</div><div class="cat-ct">560+</div></div><div class="cat-ar">›</div></div>
-    </a>
-  </div>
-</div></section>
-
-<!-- TRUST -->
-<section class="tru"><div class="container"><div class="tru-g">
-  <div class="tru-i reveal"><div class="tru-ic ti1">⚡</div><div><div class="tru-tt">{% trans "Tez tanlash" %}</div><div class="tru-d">{% trans "Sun'iy intellekt algoritmi 15 daqiqada" %}</div></div></div>
-  <div class="tru-i reveal"><div class="tru-ic ti2">✓</div><div><div class="tru-tt">{% trans "Tekshirilgan ustalar" %}</div><div class="tru-d">{% trans "Hujjatlar tasdiqlangan" %}</div></div></div>
-  <div class="tru-i reveal"><div class="tru-ic ti3">💳</div><div><div class="tru-tt">{% trans "Xavfsiz to'lov" %}</div><div class="tru-d">Payme, Click, {% trans "naqd" %}</div></div></div>
-  <div class="tru-i reveal"><div class="tru-ic ti4">🤖</div><div><div class="tru-tt">{% trans "AI yordamchi" %}</div><div class="tru-d">{% trans "24/7 aloqada" %}</div></div></div>
-</div></div></section>
-
-<!-- SPECIALISTS -->
-<section class="sec" id="specs"><div class="container">
-  <span class="sec-tag">{% trans "Ustalar" %}</span>
-  <h2 class="sec-h">{% trans "Ommabop mutaxassislar" %}</h2>
-  <p class="sec-sub">{% trans "Toshkentning eng yaxshi ustalari" %}</p>
-  <div class="sp-g">
-    <div class="sp-c reveal"><div class="sp-top"><div class="sp-av" style="background:linear-gradient(135deg,#1a56db,#3b82f6)">А<span class="sp-v">✓</span></div><div><div class="sp-nm">Aziz Karimov</div><div class="sp-sc">{% trans "Elektrik" %} · 5 {% trans "yil" %}</div></div></div><div class="sp-mt"><div class="sp-rt"><span class="sp-st">★</span><span class="sp-rn">4.9</span><span class="sp-rv">(127)</span></div><div class="sp-pr">80 000 so'm/{% trans "soat" %}</div></div><div class="sp-tags"><span class="sp-tg">{% trans "Rozetka" %}</span><span class="sp-tg">{% trans "Simlar" %}</span><span class="sp-tg">{% trans "Shitlar" %}</span></div><a href="{% url 'accounts:choose_role' 'employer' %}" class="btn-sp" style="display:block;text-align:center;text-decoration:none">{% trans "Tanlash" %}</a></div>
-    <div class="sp-c reveal"><div class="sp-top"><div class="sp-av" style="background:linear-gradient(135deg,#059669,#34d399)">Д<span class="sp-v">✓</span></div><div><div class="sp-nm">Dmitriy Li</div><div class="sp-sc">{% trans "Santexnik" %} · 8 {% trans "yil" %}</div></div></div><div class="sp-mt"><div class="sp-rt"><span class="sp-st">★</span><span class="sp-rn">4.8</span><span class="sp-rv">(94)</span></div><div class="sp-pr">70 000 so'm/{% trans "soat" %}</div></div><div class="sp-tags"><span class="sp-tg">{% trans "Kran" %}</span><span class="sp-tg">{% trans "Quvurlar" %}</span><span class="sp-tg">{% trans "Boyler" %}</span></div><a href="{% url 'accounts:choose_role' 'employer' %}" class="btn-sp" style="display:block;text-align:center;text-decoration:none">{% trans "Tanlash" %}</a></div>
-    <div class="sp-c reveal"><div class="sp-top"><div class="sp-av" style="background:linear-gradient(135deg,#d97706,#fbbf24)">Б<span class="sp-v">✓</span></div><div><div class="sp-nm">Baxrom Usmonov</div><div class="sp-sc">{% trans "Ta'mir" %} · 12 {% trans "yil" %}</div></div></div><div class="sp-mt"><div class="sp-rt"><span class="sp-st">★</span><span class="sp-rn">4.9</span><span class="sp-rv">(203)</span></div><div class="sp-pr">100 000 so'm/{% trans "soat" %}</div></div><div class="sp-tags"><span class="sp-tg">{% trans "Plitka" %}</span><span class="sp-tg">{% trans "Gipskarton" %}</span><span class="sp-tg">{% trans "Bo'yash" %}</span></div><a href="{% url 'accounts:choose_role' 'employer' %}" class="btn-sp" style="display:block;text-align:center;text-decoration:none">{% trans "Tanlash" %}</a></div>
-  </div>
-</div></section>
-
-<!-- HOW IT WORKS -->
-<section class="how" id="howSec"><div class="container">
-  <div style="text-align:center">
-    <span class="sec-tag">{% trans "Jarayon" %}</span>
-    <h2 class="sec-h">{% trans "Qanday ishlaydi" %}</h2>
-    <p class="sec-sub">{% trans "Natijagacha 4 qadam" %}</p>
-  </div>
-  <div class="how-g">
-    <div class="how-c reveal"><div class="how-n">📝</div><div class="how-l">{% trans "QADAM" %} 1</div><div class="how-t">{% trans "Vazifani tasvirlang" %}</div><div class="how-d">{% trans "AI kategoriyani aniqlaydi" %}</div></div>
-    <div class="how-c reveal"><div class="how-n">🤖</div><div class="how-l">{% trans "QADAM" %} 2</div><div class="how-t">{% trans "AI tanlaydi" %}</div><div class="how-d">{% trans "Reyting va geo bo'yicha" %}</div></div>
-    <div class="how-c reveal"><div class="how-n">🔨</div><div class="how-l">{% trans "QADAM" %} 3</div><div class="how-t">{% trans "Bajarilishi" %}</div><div class="how-d">{% trans "Usta ishni bajaradi" %}</div></div>
-    <div class="how-c reveal"><div class="how-n">⭐</div><div class="how-l">{% trans "QADAM" %} 4</div><div class="how-t">{% trans "To'lov" %}</div><div class="how-d">{% trans "To'lang va baholang" %}</div></div>
-  </div>
-</div></section>
-
-<!-- STATS -->
-<section class="sec"><div class="container"><div class="stats-g">
-  <div class="st-c reveal"><div class="st-n" data-c="5000">0</div><div class="st-l">{% trans "Ustalar" %}</div></div>
-  <div class="st-c reveal"><div class="st-n" data-c="25000">0</div><div class="st-l">{% trans "Buyurtmalar" %}</div></div>
-  <div class="st-c reveal"><div class="st-n" data-c="48" data-d="1">0</div><div class="st-l">{% trans "Reyting" %}</div></div>
-  <div class="st-c reveal"><div class="st-n" data-c="15" data-s=" {% trans 'min' %}">0</div><div class="st-l">{% trans "Tanlash vaqti" %}</div></div>
-</div></div></section>
-
-<!-- CTA -->
-<section style="padding:0 0 60px"><div class="container"><div class="cta-c reveal">
-  <div>
-    <h3 class="cta-t">{% trans "Siz ustamisiz? Qo'shiling!" %}</h3>
-    <p class="cta-s">{% trans "Buyurtmalar oling va InTask Academy'da karyerangizni rivojlantiring" %}</p>
-  </div>
-  <a href="{% url 'accounts:choose_role' 'worker' %}" class="btn-ct" style="text-decoration:none">{% trans "Usta bo'lish" %} →</a>
-</div></div></section>
-
-<!-- FOOTER -->
-<footer class="ftr"><div class="container">
-  <div class="ftr-g">
-    <div>
-      <a href="/" class="logo">
-        <div class="logo-i"><img src="{% static 'img/In_task.png' %}" alt="InTask" style="width:24px;height:24px;border-radius:4px"></div>
-        <span class="logo-t" style="color:#fff">InTask</span>
+<!-- ==================== CATEGORIES ==================== -->
+<section class="sec" id="cats">
+  <div class="container">
+    <span class="sec-tag">{% trans "Xizmatlar" %}</span>
+    <h2 class="sec-h">{% trans "Ommabop xizmatlar" %}</h2>
+    <p class="sec-sub">{% trans "Kategoriyani tanlang va 2 daqiqada buyurtma bering" %}</p>
+    <div class="cat-g">
+      <a class="cat-c reveal" href="{% url 'accounts:choose_role' 'employer' %}">
+        <div class="cat-im" style="background:linear-gradient(135deg,#dbeafe,#93c5fd,#3b82f6)">
+          <svg class="cat-sv" viewBox="0 0 400 240"><rect width="400" height="240" fill="rgba(30,64,175,.08)"/><rect x="170" y="70" width="60" height="80" rx="8" fill="#1e40af" opacity=".85"/><rect x="183" y="90" width="10" height="20" rx="3" fill="#fff"/><rect x="207" y="90" width="10" height="20" rx="3" fill="#fff"/><polygon points="200,28 186,68 198,68 190,102 218,56 204,56 214,28" fill="#fbbf24"/></svg>
+          <div class="cat-ic">⚡</div>
+        </div>
+        <div class="cat-in"><div><div class="cat-nm">{% trans "Elektrik" %}</div><div class="cat-ct">420+</div></div><div class="cat-ar">›</div></div>
       </a>
-      <p class="ftr-bd">{% trans "O'zbekiston uchun AI xizmat platformasi." %}</p>
-    </div>
-    <div>
-      <h4 class="ftr-h">{% trans "Buyurtmachilar" %}</h4>
-      <div class="ftr-l">
-        <a href="#">{% trans "Qanday buyurtma berish" %}</a>
-        <a href="#">{% trans "Kategoriyalar" %}</a>
-        <a href="#">{% trans "Ko'p so'raladigan savollar" %}</a>
-      </div>
-    </div>
-    <div>
-      <h4 class="ftr-h">{% trans "Ustalar" %}</h4>
-      <div class="ftr-l">
-        <a href="{% url 'accounts:choose_role' 'worker' %}">{% trans "Usta bo'lish" %}</a>
-        <a href="#">Academy</a>
-        <a href="#">{% trans "Sertifikatsiya" %}</a>
-      </div>
-    </div>
-    <div>
-      <h4 class="ftr-h">{% trans "Aloqa" %}</h4>
-      <div class="ftr-l">
-        <a>📍 {% trans "Toshkent" %}</a>
-        <a>📞 +998 71 123 45 67</a>
-        <a>✉️ info@intask.uz</a>
-      </div>
+      <a class="cat-c reveal" href="{% url 'accounts:choose_role' 'employer' %}">
+        <div class="cat-im" style="background:linear-gradient(135deg,#d1fae5,#6ee7b7,#059669)">
+          <svg class="cat-sv" viewBox="0 0 400 240"><rect width="400" height="240" fill="rgba(6,95,70,.06)"/><rect x="200" y="100" width="80" height="20" rx="4" fill="#065f46" opacity=".7"/><rect x="180" y="95" width="25" height="30" rx="4" fill="#065f46" opacity=".85"/><circle cx="190" cy="110" r="15" fill="none" stroke="#065f46" stroke-width="3.5" opacity=".6"/><ellipse cx="220" cy="145" rx="4" ry="6" fill="#38bdf8" opacity=".7"/></svg>
+          <div class="cat-ic">🔧</div>
+        </div>
+        <div class="cat-in"><div><div class="cat-nm">{% trans "Santexnik" %}</div><div class="cat-ct">380+</div></div><div class="cat-ar">›</div></div>
+      </a>
+      <a class="cat-c reveal" href="{% url 'accounts:choose_role' 'employer' %}">
+        <div class="cat-im" style="background:linear-gradient(135deg,#fef3c7,#fbbf24,#d97706)">
+          <svg class="cat-sv" viewBox="0 0 400 240"><rect width="400" height="240" fill="rgba(146,64,14,.08)"/><rect x="160" y="80" width="80" height="8" rx="2" fill="#92400e" opacity=".85"/><rect x="160" y="80" width="8" height="70" rx="2" fill="#92400e" opacity=".85"/><rect x="155" y="148" width="90" height="10" rx="3" fill="#92400e" opacity=".85"/><rect x="162" y="158" width="6" height="50" rx="2" fill="#92400e" opacity=".7"/><rect x="232" y="158" width="6" height="50" rx="2" fill="#92400e" opacity=".7"/></svg>
+          <div class="cat-ic">🪑</div>
+        </div>
+        <div class="cat-in"><div><div class="cat-nm">{% trans "Mebel yig'ish" %}</div><div class="cat-ct">250+</div></div><div class="cat-ar">›</div></div>
+      </a>
+      <a class="cat-c reveal" href="{% url 'accounts:choose_role' 'employer' %}">
+        <div class="cat-im" style="background:linear-gradient(135deg,#fce7f3,#f472b6,#db2777)">
+          <svg class="cat-sv" viewBox="0 0 400 240"><rect width="400" height="240" fill="rgba(131,24,67,.08)"/><polygon points="200,40 130,90 270,90" fill="#831843" opacity=".8"/><rect x="145" y="90" width="110" height="90" fill="#831843" opacity=".7"/><rect x="180" y="120" width="40" height="60" rx="4" fill="#fce7f3" opacity=".9"/></svg>
+          <div class="cat-ic">🏠</div>
+        </div>
+        <div class="cat-in"><div><div class="cat-nm">{% trans "Kvartira ta'miri" %}</div><div class="cat-ct">560+</div></div><div class="cat-ar">›</div></div>
+      </a>
     </div>
   </div>
-  <div class="ftr-b">
-    <span>© 2026 InTask</span>
-    <span>{% trans "Maxfiylik" %} · {% trans "Shartlar" %}</span>
-  </div>
-</div></footer>
+</section>
 
-<!-- ORDER MODAL -->
-<div class="mo" id="oMod" onclick="if(event.target===this)cM()"><div class="mod">
-  <div class="mod-h"><h3 class="mod-t">{% trans "Buyurtma berish" %}</h3><button class="mod-x" onclick="cM()">✕</button></div>
-  <div class="mod-b">
-    <div class="fg"><label>🤖 {% trans "Vazifani tasvirlang" %}</label><textarea class="fi" id="aiTI" placeholder="{% trans "Masalan: vannadagi kranlarni almashtirish kerak" %}" oninput="aiAn(this.value)" style="min-height:60px;padding-left:14px"></textarea></div>
-    <div class="ai-an" id="aiA"><div class="ai-ah"><span>🤖</span> {% trans "AI tahlil" %}</div><div id="aiTg"></div><div class="ai-ad" id="aiDt"></div></div>
-    <div class="fg"><label>{% trans "Kategoriya" %}</label><select class="fi" id="mCat" style="padding-left:14px"><option>{% trans "Tanlang" %}</option><option>{% trans "Elektrik" %}</option><option>{% trans "Santexnik" %}</option><option>{% trans "Mebel yig'ish" %}</option><option>{% trans "Kvartira ta'miri" %}</option><option>{% trans "Tozalash" %}</option><option>{% trans "Konditsioner" %}</option></select></div>
-    <div class="fg"><label>📍 {% trans "Manzil" %}</label><input class="fi" id="mAddr" placeholder="{% trans "Toshkent, Navoiy ko'chasi, 25" %}" style="padding-left:14px"></div>
-    <div class="mod-map"><div id="modMap"></div></div>
-    <div class="fg"><label>🕐 {% trans "Vaqt" %}</label><select class="fi" style="padding-left:14px"><option>{% trans "Iloji boricha tezroq" %}</option><option>{% trans "Bugun" %}, 14:00</option><option>{% trans "Ertaga" %}, 10:00</option></select></div>
-    <div class="fg"><label>{% trans "Tur" %}</label><div class="wt"><button class="wt-b on" onclick="tw(this)">{% trans "Soatlik" %}</button><button class="wt-b" onclick="tw(this)">{% trans "Kelishilgan" %}</button></div></div>
-    <div class="pe"><div class="pe-l">{% trans "Taxminiy narx" %}:</div><div class="pe-v" id="mPr">180 000 — 230 000 so'm</div></div>
-    <a href="{% url 'accounts:choose_role' 'employer' %}" class="btn-ord" style="display:block;text-align:center;text-decoration:none">{% trans "Buyurtma berish" %} →</a>
+<!-- ==================== TRUST ==================== -->
+<section class="tru">
+  <div class="container">
+    <div class="tru-g">
+      <div class="tru-i reveal"><div class="tru-ic ti1">⚡</div><div><div class="tru-tt">{% trans "Tez tanlash" %}</div><div class="tru-d">{% trans "Sun'iy intellekt algoritmi 15 daqiqada" %}</div></div></div>
+      <div class="tru-i reveal"><div class="tru-ic ti2">✓</div><div><div class="tru-tt">{% trans "Tekshirilgan ustalar" %}</div><div class="tru-d">{% trans "Hujjatlar tasdiqlangan" %}</div></div></div>
+      <div class="tru-i reveal"><div class="tru-ic ti3">💳</div><div><div class="tru-tt">{% trans "Xavfsiz to'lov" %}</div><div class="tru-d">Payme, Click, {% trans "naqd" %}</div></div></div>
+      <div class="tru-i reveal"><div class="tru-ic ti4">🤖</div><div><div class="tru-tt">{% trans "AI yordamchi" %}</div><div class="tru-d">{% trans "24/7 aloqada" %}</div></div></div>
+    </div>
   </div>
-</div></div>
+</section>
+
+<!-- ==================== SPECIALISTS ==================== -->
+<section class="sec" id="specs">
+  <div class="container">
+    <span class="sec-tag">{% trans "Ustalar" %}</span>
+    <h2 class="sec-h">{% trans "Ommabop mutaxassislar" %}</h2>
+    <p class="sec-sub">{% trans "Toshkentning eng yaxshi ustalari" %}</p>
+    <div class="sp-g">
+      <div class="sp-c reveal">
+        <div class="sp-top"><div class="sp-av" style="background:linear-gradient(135deg,#1a56db,#3b82f6)">А<span class="sp-v">✓</span></div><div><div class="sp-nm">Aziz Karimov</div><div class="sp-sc">{% trans "Elektrik" %} · 5 {% trans "yil" %}</div></div></div>
+        <div class="sp-mt"><div class="sp-rt"><span class="sp-st">★</span><span class="sp-rn">4.9</span><span class="sp-rv">(127)</span></div><div class="sp-pr">80 000 so'm/{% trans "soat" %}</div></div>
+        <div class="sp-tags"><span class="sp-tg">{% trans "Rozetka" %}</span><span class="sp-tg">{% trans "Simlar" %}</span><span class="sp-tg">{% trans "Shitlar" %}</span></div>
+        <a href="{% url 'accounts:choose_role' 'employer' %}" class="btn-sp" style="display:block;text-align:center">{% trans "Tanlash" %}</a>
+      </div>
+      <div class="sp-c reveal">
+        <div class="sp-top"><div class="sp-av" style="background:linear-gradient(135deg,#059669,#34d399)">Д<span class="sp-v">✓</span></div><div><div class="sp-nm">Dmitriy Li</div><div class="sp-sc">{% trans "Santexnik" %} · 8 {% trans "yil" %}</div></div></div>
+        <div class="sp-mt"><div class="sp-rt"><span class="sp-st">★</span><span class="sp-rn">4.8</span><span class="sp-rv">(94)</span></div><div class="sp-pr">70 000 so'm/{% trans "soat" %}</div></div>
+        <div class="sp-tags"><span class="sp-tg">{% trans "Kran" %}</span><span class="sp-tg">{% trans "Quvurlar" %}</span><span class="sp-tg">{% trans "Boyler" %}</span></div>
+        <a href="{% url 'accounts:choose_role' 'employer' %}" class="btn-sp" style="display:block;text-align:center">{% trans "Tanlash" %}</a>
+      </div>
+      <div class="sp-c reveal">
+        <div class="sp-top"><div class="sp-av" style="background:linear-gradient(135deg,#d97706,#fbbf24)">Б<span class="sp-v">✓</span></div><div><div class="sp-nm">Baxrom Usmonov</div><div class="sp-sc">{% trans "Ta'mir" %} · 12 {% trans "yil" %}</div></div></div>
+        <div class="sp-mt"><div class="sp-rt"><span class="sp-st">★</span><span class="sp-rn">4.9</span><span class="sp-rv">(203)</span></div><div class="sp-pr">100 000 so'm/{% trans "soat" %}</div></div>
+        <div class="sp-tags"><span class="sp-tg">{% trans "Plitka" %}</span><span class="sp-tg">{% trans "Gipskarton" %}</span><span class="sp-tg">{% trans "Bo'yash" %}</span></div>
+        <a href="{% url 'accounts:choose_role' 'employer' %}" class="btn-sp" style="display:block;text-align:center">{% trans "Tanlash" %}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== HOW IT WORKS ==================== -->
+<section class="how" id="howSec">
+  <div class="container">
+    <div style="text-align:center">
+      <span class="sec-tag">{% trans "Jarayon" %}</span>
+      <h2 class="sec-h">{% trans "Qanday ishlaydi" %}</h2>
+      <p class="sec-sub">{% trans "Natijagacha 4 qadam" %}</p>
+    </div>
+    <div class="how-g">
+      <div class="how-c reveal"><div class="how-n">📝</div><div class="how-l">{% trans "QADAM" %} 1</div><div class="how-t">{% trans "Vazifani tasvirlang" %}</div><div class="how-d">{% trans "AI kategoriyani aniqlaydi" %}</div></div>
+      <div class="how-c reveal"><div class="how-n">🤖</div><div class="how-l">{% trans "QADAM" %} 2</div><div class="how-t">{% trans "AI tanlaydi" %}</div><div class="how-d">{% trans "Reyting va geo bo'yicha" %}</div></div>
+      <div class="how-c reveal"><div class="how-n">🔨</div><div class="how-l">{% trans "QADAM" %} 3</div><div class="how-t">{% trans "Bajarilishi" %}</div><div class="how-d">{% trans "Usta ishni bajaradi" %}</div></div>
+      <div class="how-c reveal"><div class="how-n">⭐</div><div class="how-l">{% trans "QADAM" %} 4</div><div class="how-t">{% trans "To'lov" %}</div><div class="how-d">{% trans "To'lang va baholang" %}</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== STATS ==================== -->
+<section class="sec">
+  <div class="container">
+    <div class="stats-g">
+      <div class="st-c reveal"><div class="st-n" data-c="5000">0</div><div class="st-l">{% trans "Ustalar" %}</div></div>
+      <div class="st-c reveal"><div class="st-n" data-c="25000">0</div><div class="st-l">{% trans "Buyurtmalar" %}</div></div>
+      <div class="st-c reveal"><div class="st-n" data-c="48" data-d="1">0</div><div class="st-l">{% trans "Reyting" %}</div></div>
+      <div class="st-c reveal"><div class="st-n" data-c="15" data-s=" {% trans 'min' %}">0</div><div class="st-l">{% trans "Tanlash vaqti" %}</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CTA ==================== -->
+<section style="padding:0 0 60px">
+  <div class="container">
+    <div class="cta-c reveal">
+      <div>
+        <h3 class="cta-t">{% trans "Siz ustamisiz? Qo'shiling!" %}</h3>
+        <p class="cta-s">{% trans "Buyurtmalar oling va InTask Academy'da karyerangizni rivojlantiring" %}</p>
+      </div>
+      <a href="{% url 'accounts:choose_role' 'worker' %}" class="btn-ct" style="text-decoration:none">{% trans "Usta bo'lish" %} →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="ftr">
+  <div class="container">
+    <div class="ftr-g">
+      <div>
+        <a href="/" class="logo">
+          <div class="logo-i"><img src="{% static 'img/In_task.png' %}" alt="InTask" style="width:24px;height:24px;border-radius:4px"></div>
+          <span class="logo-t" style="color:#fff">InTask</span>
+        </a>
+        <p class="ftr-bd">{% trans "O'zbekiston uchun AI xizmat platformasi." %}</p>
+      </div>
+      <div>
+        <h4 class="ftr-h">{% trans "Buyurtmachilar" %}</h4>
+        <div class="ftr-l">
+          <a href="#">{% trans "Qanday buyurtma berish" %}</a>
+          <a href="#">{% trans "Kategoriyalar" %}</a>
+          <a href="#">{% trans "Ko'p so'raladigan savollar" %}</a>
+        </div>
+      </div>
+      <div>
+        <h4 class="ftr-h">{% trans "Ustalar" %}</h4>
+        <div class="ftr-l">
+          <a href="{% url 'accounts:choose_role' 'worker' %}">{% trans "Usta bo'lish" %}</a>
+          <a href="#">Academy</a>
+          <a href="#">{% trans "Sertifikatsiya" %}</a>
+        </div>
+      </div>
+      <div>
+        <h4 class="ftr-h">{% trans "Aloqa" %}</h4>
+        <div class="ftr-l">
+          <a>📍 {% trans "Toshkent" %}</a>
+          <a>📞 +998 71 123 45 67</a>
+          <a>✉️ info@intask.uz</a>
+        </div>
+      </div>
+    </div>
+    <div class="ftr-b">
+      <span>© 2026 InTask</span>
+      <span>{% trans "Maxfiylik" %} · {% trans "Shartlar" %}</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ==================== ORDER MODAL ==================== -->
+<div class="mo" id="oMod" onclick="if(event.target===this)cM()">
+  <div class="mod">
+    <div class="mod-h">
+      <h3 class="mod-t">{% trans "Buyurtma berish" %}</h3>
+      <button class="mod-x" onclick="cM()">✕</button>
+    </div>
+    <div class="mod-b">
+      <div class="fg">
+        <label>🤖 {% trans "Vazifani tasvirlang" %}</label>
+        <textarea class="fi" id="aiTI" placeholder="{% trans "Masalan: vannadagi kranlarni almashtirish kerak" %}" oninput="aiAn(this.value)" style="min-height:60px;padding-left:14px"></textarea>
+      </div>
+      <div class="ai-an" id="aiA">
+        <div class="ai-ah"><span>🤖</span> {% trans "AI tahlil" %}</div>
+        <div id="aiTg"></div>
+        <div class="ai-ad" id="aiDt"></div>
+      </div>
+      <div class="fg">
+        <label>{% trans "Kategoriya" %}</label>
+        <select class="fi" id="mCat" style="padding-left:14px">
+          <option>{% trans "Tanlang" %}</option>
+          <option>{% trans "Elektrik" %}</option>
+          <option>{% trans "Santexnik" %}</option>
+          <option>{% trans "Mebel yig'ish" %}</option>
+          <option>{% trans "Kvartira ta'miri" %}</option>
+          <option>{% trans "Tozalash" %}</option>
+          <option>{% trans "Konditsioner" %}</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>📍 {% trans "Manzil" %}</label>
+        <input class="fi" id="mAddr" placeholder="{% trans "Toshkent, Navoiy ko'chasi, 25" %}" style="padding-left:14px">
+      </div>
+      <div class="mod-map"><div id="modMap"></div></div>
+      <div class="fg">
+        <label>🕐 {% trans "Vaqt" %}</label>
+        <select class="fi" style="padding-left:14px">
+          <option>{% trans "Iloji boricha tezroq" %}</option>
+          <option>{% trans "Bugun" %}, 14:00</option>
+          <option>{% trans "Ertaga" %}, 10:00</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>{% trans "Tur" %}</label>
+        <div class="wt">
+          <button class="wt-b on" onclick="tw(this)">{% trans "Soatlik" %}</button>
+          <button class="wt-b" onclick="tw(this)">{% trans "Kelishilgan" %}</button>
+        </div>
+      </div>
+      <div class="pe">
+        <div class="pe-l">{% trans "Taxminiy narx" %}:</div>
+        <div class="pe-v" id="mPr">180 000 — 230 000 so'm</div>
+      </div>
+      <a href="{% url 'accounts:choose_role' 'employer' %}" class="btn-ord" style="display:block;text-align:center">{% trans "Buyurtma berish" %} →</a>
+    </div>
+  </div>
+</div>
 <div class="toast" id="tst">✅ {% trans "Buyurtma yaratildi! AI usta qidirmoqda..." %}</div>
 
-<!-- AI CHATBOT -->
+<!-- ==================== AI CHATBOT ==================== -->
 <div class="ai-fab" id="aF" onclick="tC()">🤖<span class="ai-bdg">1</span></div>
 <div class="ai-ch" id="aC">
-  <div class="ai-hd"><div class="ai-av">🤖</div><div><div class="ai-ht">InTask {% trans "AI yordamchi" %}</div><div class="ai-hs">{% trans "Onlayn" %}</div></div><div class="ai-cx" onclick="tC()">✕</div></div>
-  <div class="ai-bd" id="aBd"><div class="ai-m bot"><div class="ai-ml">🤖 InTask AI</div>{% trans "Salom! Usta topishda, narxni baholashda yoki buyurtma berishda yordam beraman. Nima kerak?" %}</div></div>
+  <div class="ai-hd">
+    <div class="ai-av">🤖</div>
+    <div>
+      <div class="ai-ht">InTask {% trans "AI yordamchi" %}</div>
+      <div class="ai-hs">{% trans "Onlayn" %}</div>
+    </div>
+    <div class="ai-cx" onclick="tC()">✕</div>
+  </div>
+  <div class="ai-bd" id="aBd">
+    <div class="ai-m bot">
+      <div class="ai-ml">🤖 InTask AI</div>
+      {% trans "Salom! Usta topishda, narxni baholashda yoki buyurtma berishda yordam beraman. Nima kerak?" %}
+    </div>
+  </div>
   <div class="ai-sg" id="aSg">
     <button class="ai-sb" onclick="aI('{% trans "Elektrik kerak" %}')">⚡ {% trans "Elektrik" %}</button>
     <button class="ai-sb" onclick="aI('{% trans "Narxlar" %}')">💰 {% trans "Narxlar" %}</button>
     <button class="ai-sb" onclick="aI('{% trans "Qanday buyurtma berish" %}')">📝 {% trans "Buyurtma" %}</button>
     <button class="ai-sb" onclick="aI('{% trans "Kafolatlar" %}')">🛡 {% trans "Kafolatlar" %}</button>
   </div>
-  <div class="ai-ip"><label for="aIn"></label><input class="ai-in" id="aIn" placeholder="{% trans "Yozing..." %}" onkeydown="if(event.key==='Enter')aSI()"><button class="ai-sn" onclick="aSI()">→</button></div>
+  <div class="ai-ip">
+    <label for="aIn"></label>
+    <input class="ai-in" id="aIn" placeholder="{% trans "Yozing..." %}" onkeydown="if(event.key==='Enter')aSI()">
+    <button class="ai-sn" onclick="aSI()">→</button>
+  </div>
 </div>
 
+<script>
+  const mobBtn = document.getElementById('mobMenuBtn');
+  const mobDrop = document.getElementById('mobDrop');
+
+  function closeMobDrop() {
+    mobDrop.classList.remove('on');
+    mobBtn.classList.remove('open');
+  }
+
+  mobBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = mobDrop.classList.contains('on');
+    isOpen ? closeMobDrop() : (mobDrop.classList.add('on'), mobBtn.classList.add('open'));
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!mobDrop.contains(e.target) && e.target !== mobBtn) closeMobDrop();
+  });
+</script>
 <script src="{% static 'js/landing.js' %}"></script>
 </body>
 </html>

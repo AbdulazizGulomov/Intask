@@ -87,9 +87,6 @@
   </div>
 </div>
 
-</div>
-
-
 <!-- ==================== HERO BANNER ==================== -->
 <section class="hb" id="heroBanner">
   <div class="hb-bg">
@@ -615,13 +612,12 @@
     mobBtn.classList.remove('open');
   }
 
-  mobBtn.addEventListener('click', (e) => {
+  mobBtn.addEventListener('click', function(e) {
     e.stopPropagation();
-    const isOpen = mobDrop.classList.contains('on');
-    isOpen ? closeMobDrop() : (mobDrop.classList.add('on'), mobBtn.classList.add('open'));
+    mobDrop.classList.contains('on') ? closeMobDrop() : (mobDrop.classList.add('on'), mobBtn.classList.add('open'));
   });
 
-  document.addEventListener('click', (e) => {
+  document.addEventListener('click', function(e) {
     if (!mobDrop.contains(e.target) && e.target !== mobBtn) closeMobDrop();
   });
 </script>

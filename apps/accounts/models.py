@@ -4,6 +4,9 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
+from apps import jobs
+from apps.accounts import auth
+
 
 class UserManager(BaseUserManager):
     def create_user(self, phone=None, username=None, password=None, **extra_fields):
@@ -125,6 +128,7 @@ class WorkerProfile(models.Model):
         choices=Gender.choices,
         null=True,
         blank=True,
+
     )
 
     full_name = models.CharField(max_length=120, blank=True)

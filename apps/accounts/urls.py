@@ -12,7 +12,9 @@ app_name = "accounts"
 
 urlpatterns = [
     # Role & start
-    path("", views.role_select, name="role_select"),
+    # path("", views.landing_page, name="landing_page"),
+    path("", views.landing_page, name="landing_page"),
+    path("select-role/", views.role_select, name="role_select"),
     path("choose-role/<str:role>/", views.choose_role, name="choose_role"),
     path("after-otp/", views.after_otp_redirect, name="after_otp_redirect"),
 

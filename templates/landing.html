@@ -60,14 +60,33 @@
 
 <!-- ==================== MOB DROPDOWN ==================== -->
 <div class="mob-drop" id="mobDrop">
-  <a href="#cats" class="mob-drop-item" onclick="closeMobDrop()">Services</a>
-  <a href="#specs" class="mob-drop-item" onclick="closeMobDrop()">Masters</a>
-  <a href="#jobsSec" class="mob-drop-item" onclick="closeMobDrop()">Nearby Orders</a>
-  <a href="#howSec" class="mob-drop-item" onclick="closeMobDrop()">How it works</a>
-  <div class="mob-drop-btns">
-    <a href="{% url 'accounts:otp' %}" class="mob-drop-login">Login</a>
-    <a href="{% url 'accounts:role_select' %}" class="mob-drop-signup">Sign Up</a>
+  <a href="#cats" class="mob-drop-item" onclick="closeMobDrop()">{% trans "Xizmatlar" %}</a>
+  <a href="#specs" class="mob-drop-item" onclick="closeMobDrop()">{% trans "Ustalar" %}</a>
+  <a href="#jobsSec" class="mob-drop-item" onclick="closeMobDrop()">{% trans "Yaqin buyurtmalar" %}</a>
+  <a href="#howSec" class="mob-drop-item" onclick="closeMobDrop()">{% trans "Qanday ishlaydi" %}</a>
+  <div class="mob-drop-lang">
+    <form action="{% url 'set_language' %}" method="post" style="margin:0;flex:1">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.path }}">
+      <button type="submit" name="language" value="uz" class="mob-drop-lng {% if CURRENT_LANGUAGE == 'uz' %}on{% endif %}">UZ</button>
+    </form>
+    <form action="{% url 'set_language' %}" method="post" style="margin:0;flex:1">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.path }}">
+      <button type="submit" name="language" value="ru" class="mob-drop-lng {% if CURRENT_LANGUAGE == 'ru' %}on{% endif %}">RU</button>
+    </form>
+    <form action="{% url 'set_language' %}" method="post" style="margin:0;flex:1">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.path }}">
+      <button type="submit" name="language" value="en" class="mob-drop-lng {% if CURRENT_LANGUAGE == 'en' %}on{% endif %}">EN</button>
+    </form>
   </div>
+  <div class="mob-drop-btns">
+    <a href="{% url 'accounts:otp' %}" class="mob-drop-login">{% trans "Kirish" %}</a>
+    <a href="{% url 'accounts:role_select' %}" class="mob-drop-signup">{% trans "Ro'yxatdan o'tish" %} →</a>
+  </div>
+</div>
+
 </div>
 
 

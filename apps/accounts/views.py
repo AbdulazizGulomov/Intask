@@ -69,9 +69,7 @@ def require_role(*allowed_roles):
 def landing_page(request):
     """Public landing page — no login required."""
     return render(request, "landing.html")
-# def landing_page(request):
-#     """Public landing page — no login required."""
-#     return render(request, "landing2.html")
+
 def role_select(request):
     return render(request, "role_select.html")
 

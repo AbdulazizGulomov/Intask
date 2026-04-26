@@ -1,208 +1,215 @@
-const TK=[41.311,69.279];
-const MS=[
-  {n:'Азиз К.',s:'Электрик',lt:41.315,ln:69.285,r:4.9,c:'#1a56db'},
-  {n:'Дмитрий Л.',s:'Сантехник',lt:41.308,ln:69.265,r:4.8,c:'#059669'},
-  {n:'Бахром У.',s:'Ремонт',lt:41.318,ln:69.295,r:4.9,c:'#d97706'},
-  {n:'Сардор М.',s:'Кондиционеры',lt:41.305,ln:69.250,r:4.7,c:'#6366f1'},
-  {n:'Нодир А.',s:'Электрик',lt:41.322,ln:69.270,r:4.6,c:'#1a56db'},
-  {n:'Олег П.',s:'Мебель',lt:41.300,ln:69.290,r:4.8,c:'#d97706'},
-  {n:'Жасур Т.',s:'Сантехник',lt:41.325,ln:69.260,r:4.5,c:'#059669'},
-  {n:'Ильяс Р.',s:'Ремонт',lt:41.312,ln:69.240,r:4.9,c:'#d97706'},
-  {n:'Камол Н.',s:'Электрик',lt:41.328,ln:69.278,r:4.7,c:'#1a56db'},
-  {n:'Рустам Х.',s:'Клининг',lt:41.298,ln:69.272,r:4.8,c:'#8b5cf6'},
-];
-const JOBS=[
-  {id:1,icon:'⚡',cat:'Электрик',task:'Установка розеток',type:'Почасовая',price:'80 000 сўм/ч',time:'Сегодня, 14:00',ppl:'1 мастер',addr:'Мирзо Улугбек, ул. Б. Ипак Йули, 42',urg:true,lt:41.3265,ln:69.3050,c:'#dc2626'},
-  {id:2,icon:'🔧',cat:'Сантехник',task:'Замена смесителя',type:'Сдельная',price:'120 000 сўм',time:'Завтра, 10:00',ppl:'1 мастер',addr:'Чиланзар, кв. 7, д. 15',urg:false,lt:41.3055,ln:69.2280,c:'#059669'},
-  {id:3,icon:'🏠',cat:'Ремонт',task:'Укладка плитки',type:'Сдельная',price:'350 000 сўм',time:'Пн–Ср',ppl:'2 мастера',addr:'Юнусабад, кв. 4, ул. Янги Шахар',urg:false,lt:41.3380,ln:69.2750,c:'#d97706'},
-  {id:4,icon:'❄️',cat:'Кондиционеры',task:'Монтаж сплит-системы',type:'Сдельная',price:'250 000 сўм',time:'Сегодня, 16:00',ppl:'1 мастер',addr:'Сергели, ул. Зарафшон, 22',urg:true,lt:41.2550,ln:69.2280,c:'#6366f1'},
-  {id:5,icon:'🪑',cat:'Мебель',task:'Сборка кухни IKEA',type:'Сдельная',price:'200 000 сўм',time:'Завтра, 09:00',ppl:'1 мастер',addr:'Шайхантахур, ул. Навои, 48',urg:false,lt:41.3200,ln:69.2520,c:'#92400e'},
-  {id:6,icon:'🧹',cat:'Клининг',task:'Генеральная уборка',type:'3 комнаты',price:'180 000 сўм',time:'Сегодня, 12:00',ppl:'2 мастера',addr:'Яккасарай, ул. Ш. Руставели, 12',urg:true,lt:41.2980,ln:69.2680,c:'#16a34a'},
-];
+/* ================================================================
+   InTask — Landing JS
+   Leaflet map with Tashkent orders, filter pills, sidebar sync,
+   and tile → photo highlight interaction
+   ================================================================ */
 
-let hM,jM,mM,uMk,mMk,st,jobMarkers={};
+// ==================== MAP + FILTERS + SIDEBAR ====================
+(function () {
+  'use strict';
 
-// ====== TILE LAYER — using CartoDB (no 403!) ======
-const TILES='https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
-const TILE_ATTR='&copy; <a href="https://carto.com">CARTO</a>';
+  // 20 real Tashkent orders covering 12 districts
+  const orders = [
+    { lat: 41.2829, lng: 69.2034, cat: 'plumber',    icon: '🔧', title: 'Santexnik kerak',       area: 'Chilonzor',       price: '80 000 UZS'  },
+    { lat: 41.3563, lng: 69.2898, cat: 'electrician',icon: '⚡', title: "Rozetka o'rnatish",     area: 'Yunusobod',       price: '120 000 UZS' },
+    { lat: 41.3259, lng: 69.3434, cat: 'cleaning',   icon: '🧽', title: 'Chuqur tozalash',       area: "Mirzo Ulug'bek",  price: '150 000 UZS' },
+    { lat: 41.2916, lng: 69.2716, cat: 'ac',         icon: '❄️', title: 'Split-sistema',          area: 'Yakkasaroy',      price: '180 000 UZS' },
+    { lat: 41.3250, lng: 69.2491, cat: 'repair',     icon: '🎨', title: "Devor bo'yash",         area: 'Shayxontohur',    price: '450 000 UZS' },
+    { lat: 41.3376, lng: 69.2128, cat: 'plumber',    icon: '🔧', title: 'Kran almashtirish',     area: 'Olmazor',         price: '95 000 UZS'  },
+    { lat: 41.2943, lng: 69.2831, cat: 'electrician',icon: '⚡', title: "Lyustra o'rnatish",     area: 'Mirobod',         price: '110 000 UZS' },
+    { lat: 41.3091, lng: 69.3250, cat: 'cleaning',   icon: '🧽', title: 'Oyna tozalash',         area: 'Yashnobod',       price: '170 000 UZS' },
+    { lat: 41.3156, lng: 69.1917, cat: 'ac',         icon: '❄️', title: 'Konditsioner servis',  area: 'Uchtepa',         price: '190 000 UZS' },
+    { lat: 41.3263, lng: 69.2394, cat: 'repair',     icon: '🎨', title: 'Plitka yotqizish',      area: 'Chorsu',          price: '380 000 UZS' },
+    { lat: 41.3111, lng: 69.2797, cat: 'plumber',    icon: '🔧', title: "Bolier ta'mir",         area: 'Amir Temur',      price: '85 000 UZS'  },
+    { lat: 41.3446, lng: 69.3583, cat: 'electrician',icon: '⚡', title: "Sim o'tkazish",         area: 'TTZ',             price: '105 000 UZS' },
+    { lat: 41.2410, lng: 69.2582, cat: 'cleaning',   icon: '🧽', title: 'Umumiy tozalash',       area: 'Yangihayot',      price: '140 000 UZS' },
+    { lat: 41.3389, lng: 69.2283, cat: 'repair',     icon: '🎨', title: "Shift ta'miri",         area: 'Beruniy',         price: '320 000 UZS' },
+    { lat: 41.3210, lng: 69.2576, cat: 'ac',         icon: '❄️', title: "Freon to'ldirish",     area: 'Hadra',           price: '200 000 UZS' },
+    { lat: 41.2974, lng: 69.2700, cat: 'plumber',    icon: '🔧', title: "Unitaz o'rnatish",     area: 'Oybek',           price: '160 000 UZS' },
+    { lat: 41.3087, lng: 69.2634, cat: 'electrician',icon: '⚡', title: "Shit yig'ish",          area: 'Paxtakor',        price: '115 000 UZS' },
+    { lat: 41.3119, lng: 69.2700, cat: 'cleaning',   icon: '🧽', title: 'Xona tozalash',         area: 'Mustaqillik',     price: '130 000 UZS' },
+    { lat: 41.3278, lng: 69.2789, cat: 'repair',     icon: '🎨', title: 'Gipskarton shift',      area: 'Darxon',          price: '400 000 UZS' },
+    { lat: 41.3175, lng: 69.2900, cat: 'ac',         icon: '❄️', title: "Klimat o'rnatish",     area: 'Pushkin',         price: '175 000 UZS' }
+  ];
 
-function init(){
-  if(typeof L==='undefined')return;
+  // Map init — guarded so page doesn't crash if Leaflet fails to load
+  if (typeof L === 'undefined' || !document.getElementById('mapEl')) return;
 
-  // Hero map
-  hM=L.map('heroMap',{zoomControl:false,attributionControl:false}).setView(TK,14);
-  L.tileLayer(TILES,{maxZoom:19,attribution:TILE_ATTR}).addTo(hM);
-  MS.forEach(m=>{
-    const ic=L.divIcon({className:'m-mk',html:m.n[0],iconSize:[34,34]});
-    ic.options.className+=' ';
-    const el=L.marker([m.lt,m.ln],{icon:L.divIcon({className:'m-mk',html:m.n[0],iconSize:[34,34]})}).addTo(hM);
-    el.bindPopup(`<div style="font-family:Manrope,sans-serif;text-align:center"><b>${m.n}</b><br><span style="color:#6b7280;font-size:12px">${m.s} · ★${m.r}</span></div>`);
-    el.getElement().style.background=m.c;
-  });
+  const map = L.map('mapEl', { zoomControl: true, scrollWheelZoom: false })
+    .setView([41.3111, 69.2797], 12);
 
-  // Jobs map
-  jM=L.map('jobsMap',{zoomControl:true,attributionControl:false}).setView(TK,13);
-  L.tileLayer(TILES,{maxZoom:19,attribution:TILE_ATTR}).addTo(jM);
+  // Avoid hijacking page scroll
+  map.on('click', () => map.scrollWheelZoom.enable());
+  map.on('mouseout', () => map.scrollWheelZoom.disable());
 
-  JOBS.forEach(j=>{
-    const mk=L.marker([j.lt,j.ln],{icon:L.divIcon({className:'j-mk',html:j.icon,iconSize:[38,38]})}).addTo(jM);
-    mk.bindPopup(`<div style="font-family:Manrope,sans-serif"><b>${j.task}</b><br><span style="color:#6b7280;font-size:12px">${j.cat} · ${j.price}</span><br><span style="font-size:11px;color:#9ca3af">📍 ${j.addr}</span></div>`);
-    mk.getElement().style.background=j.c;
-    jobMarkers[j.id]=mk;
-  });
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; OpenStreetMap &copy; CARTO',
+    subdomains: 'abcd',
+    maxZoom: 19
+  }).addTo(map);
 
-  // Add user location marker
-  L.marker(TK,{icon:L.divIcon({className:'c-mk',html:'📍',iconSize:[36,36]})}).addTo(jM).bindPopup('<b>Ваше местоположение</b>');
-
-  // Build job cards
-  const jl=document.getElementById('jobList');
-  jl.innerHTML=JOBS.map(j=>`
-    <div class="job-card" data-id="${j.id}" onmouseenter="hlJob(${j.id})" onmouseleave="ulJob(${j.id})" onclick="flyJob(${j.id})">
-      <div class="job-top"><div class="job-cat"><div class="job-ic ${j.urg?'ji-r':'ji-g'}">${j.icon}</div><div><div class="job-cn">${j.task}</div><div class="job-cs">${j.cat} · ${j.type}</div></div></div><div class="job-pr">${j.price}</div></div>
-      <div class="job-det"><span class="job-d">🕐 ${j.time}</span><span class="job-d">👤 ${j.ppl}</span>${j.urg?'<span class="job-urg">🔴 Срочный</span>':'<span class="job-pln">🟢 Плановый</span>'}</div>
-      <div class="job-bottom"><span class="job-addr">📍 ${j.addr}</span><button class="job-btn">Принять →</button></div>
-    </div>`).join('');
-
-  if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>sLoc(p.coords.latitude,p.coords.longitude),()=>{},{timeout:5000});
-}
-
-function hlJob(id){
-  document.querySelectorAll('.job-card').forEach(c=>c.classList.remove('active'));
-  document.querySelector('[data-id="'+id+'"]').classList.add('active');
-  const mk=jobMarkers[id];
-  if(mk&&mk.getElement())mk.getElement().classList.add('hl');
-  if(mk)mk.openPopup();
-}
-function ulJob(id){
-  const mk=jobMarkers[id];if(mk&&mk.getElement())mk.getElement().classList.remove('hl');
-}
-function flyJob(id){
-  const j=JOBS.find(x=>x.id===id);if(j)jM.flyTo([j.lt,j.ln],16,{duration:0.8});
-}
-
-function sLoc(lat,lng){hM.setView([lat,lng],15)}
-
-function dGPS(){
-  if(!navigator.geolocation)return;
-  navigator.geolocation.getCurrentPosition(p=>{
-    const lat=p.coords.latitude,lng=p.coords.longitude;
-    hM.setView([lat,lng],15);
-    jM.setView([lat,lng],15);
-    L.marker([lat,lng],{icon:L.divIcon({className:'c-mk',html:'📍',iconSize:[36,36]})}).addTo(hM).bindPopup('<b>Вы здесь</b>').openPopup();
-  },()=>{},{timeout:10000,enableHighAccuracy:true});
-}
-
-// Address search — using Photon (no 403 like Nominatim)
-function aS(v,rid){clearTimeout(st);const b=document.getElementById(rid);if(v.length<3){b.classList.remove('on');b.innerHTML='';return}
-  st=setTimeout(()=>{fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(v+' Tashkent')}&limit=5&lang=default`).then(r=>r.json()).then(d=>{
-    const res=d.features||[];if(!res.length){b.classList.remove('on');return}
-    window['_'+rid]=res;
-    b.innerHTML=res.map((r,i)=>{const p=r.properties;return`<div class="sr-i" onclick="pA('${rid}',${i})">${p.name||''} ${p.street||''} ${p.city||'Tashkent'}</div>`}).join('');
-    b.classList.add('on');
-  }).catch(()=>{})},500)}
-
-function pA(rid,i){const r=window['_'+rid][i],b=document.getElementById(rid);b.classList.remove('on');
-  const p=r.properties,c=r.geometry.coordinates,name=`${p.name||''} ${p.street||''} ${p.city||''}`.trim();
-  const inp=b.parentElement.querySelector('input');if(inp)inp.value=name;
-  if(rid==='hR'){hM.setView([c[1],c[0]],16);L.marker([c[1],c[0]],{icon:L.divIcon({className:'c-mk',html:'📍',iconSize:[36,36]})}).addTo(hM).bindPopup(name).openPopup()}}
-
-// AI Analysis
-const ADB={'электрик|розетк|проводк|свет|щит|люстр':{c:'Электрик',p:'60 000 — 150 000 сўм',t:'1–3 ч',x:'Допуск',tip:'Мастер с сертификатом'},'сантехн|смесител|кран|труб|унитаз|бойлер|течь':{c:'Сантехник',p:'50 000 — 200 000 сўм',t:'1–4 ч',x:'',tip:'Фото поможет оценить точнее'},'мебел|сборк|шкаф|кроват|стол|полк|комод':{c:'Сборка мебели',p:'80 000 — 250 000 сўм',t:'2–5 ч',x:'',tip:'Укажите количество единиц'},'ремонт|штукатур|покрас|обо|плитк|гипсокартон|потолок|пол|стен':{c:'Ремонт квартир',p:'200 000 — 1 500 000 сўм',t:'1–14 дн',x:'',tip:'Рекомендуем командный заказ'},'кондиционер|сплит|климат|фреон':{c:'Кондиционеры',p:'150 000 — 400 000 сўм',t:'2–4 ч',x:'Сертификат',tip:'Заказывайте заранее'},'уборк|клининг|мойк|чистк|генеральн':{c:'Клининг',p:'100 000 — 350 000 сўм',t:'2–6 ч',x:'',tip:'Укажите площадь'}};
-let aTO;
-function aiAn(v){clearTimeout(aTO);const p=document.getElementById('aiA');if(v.length<5){p.classList.remove('on');return}
-  aTO=setTimeout(()=>{const l=v.toLowerCase();let m=null;for(const[k,d]of Object.entries(ADB)){if(k.split('|').some(w=>l.includes(w))){m=d;break}}if(!m){p.classList.remove('on');return}
-  p.classList.add('on');let t=`<span class="ai-tg ai-tc">📁 ${m.c}</span><span class="ai-tg ai-tp">💰 ${m.p}</span><span class="ai-tg ai-tt">⏱ ${m.t}</span>`;if(m.x)t+=`<span class="ai-tg ai-tx">📜 ${m.x}</span>`;document.getElementById('aiTg').innerHTML=t;document.getElementById('aiDt').textContent='💡 '+m.tip;document.getElementById('mCat').value=m.c;document.getElementById('mPr').textContent=m.p},500)}
-
-// AI Chat
-const AR={'электрик|розетк|свет':['420+ электриков! ⚡\nОт 60 000 сўм · ~12 мин',1],'сантехн|кран|труб':['380+ сантехников! 🔧\nОт 50 000 сўм',0],'цен|стоимост|сколько':['⚡ Электрик: от 60 000\n🔧 Сантехник: от 50 000\n🪑 Мебель: от 80 000\n🏠 Ремонт: от 200 000',0],'заказ|оформит|как':['1️⃣ Опишите задачу\n2️⃣ Укажите адрес\n3️⃣ Нажмите «Заказать»\nИИ подберёт за 15 мин!',1],'гарант|безопас':['✅ Верификация\n✅ Лицензии\n✅ Арбитраж 🛡',0],'привет|салам|хай':['Привет! 👋\n🔍 Найти мастера\n💰 Цены\n📝 Заказать',0]};
-function tC(){const c=document.getElementById('aC'),f=document.getElementById('aF');c.classList.toggle('on');f.classList.toggle('hid',c.classList.contains('on'));if(c.classList.contains('on'))document.getElementById('aIn').focus()}
-function aSI(){const i=document.getElementById('aIn');if(!i.value.trim())return;aI(i.value.trim());i.value=''}
-function aI(t){const bd=document.getElementById('aBd');bd.innerHTML+=`<div class="ai-m usr">${t}</div>`;bd.scrollTop=bd.scrollHeight;document.getElementById('aSg').style.display='none';bd.innerHTML+=`<div class="ai-ty" id="aiT"><span></span><span></span><span></span></div>`;bd.scrollTop=bd.scrollHeight;
-  let rsp='🤔 Уточните: мастер, цена или заказ?',act=0;const l=t.toLowerCase();for(const[k,d]of Object.entries(AR)){if(k.split('|').some(w=>l.includes(w))){rsp=d[0];act=d[1];break}}
-  setTimeout(()=>{const tp=document.getElementById('aiT');if(tp)tp.remove();let h=`<div class="ai-m bot"><div class="ai-ml">🤖 InTask AI</div>${rsp.replace(/\n/g,'<br>')}`;if(act)h+=`<br><br><button onclick="tC();oM()" style="padding:6px 12px;border-radius:8px;border:none;background:linear-gradient(135deg,#1a56db,#142563);color:#fff;font-weight:700;font-size:11px;cursor:pointer">📝 Заказать →</button>`;h+=`</div>`;bd.innerHTML+=h;bd.scrollTop=bd.scrollHeight},600+Math.random()*500)}
-
-// VIEW TOGGLES
-function heroView(mode){
-  const map=document.getElementById('heroSec'),list=document.getElementById('heroList');
-  if(mode==='map'){map.style.display='block';list.classList.remove('on')}
-  else{map.style.display='none';list.classList.add('on');buildMasterGrid()}
-  document.querySelectorAll('.view-tog-float .vt-btn, #heroList .vt-btn').forEach(b=>{b.classList.remove('on');if(b.textContent.includes(mode==='map'?'Карта':'Список'))b.classList.add('on')});
-}
-function jobsView(mode){
-  const mc=document.getElementById('jobsMapContent'),lf=document.getElementById('jobsListFull');
-  if(mode==='map'){mc.classList.remove('off');mc.style.display='block';lf.classList.remove('on');lf.style.display='none';if(jM)jM.invalidateSize()}
-  else{mc.classList.add('off');mc.style.display='none';lf.classList.add('on');lf.style.display='block';buildJobsGrid()}
-  document.querySelectorAll('#jobsSec .vt-btn').forEach(b=>{b.classList.remove('on');if(b.textContent.includes(mode==='map'?'Карта':'Список'))b.classList.add('on')});
-}
-
-function buildMasterGrid(){
-  const g=document.getElementById('masterGrid');
-  if(g.children.length>0)return;
-  g.innerHTML=MS.map(m=>`
-    <div class="ml-card" onclick="oM()">
-      <div class="ml-top">
-        <div class="ml-av" style="background:${m.c}">${m.n[0]}</div>
-        <div><div class="ml-nm">${m.n}</div><div class="ml-sp">${m.s}</div></div>
-      </div>
-      <div class="ml-meta">
-        <div><span class="ml-rt"><span class="ml-star">★</span> ${m.r}</span> <span class="ml-rv">(${Math.floor(50+Math.random()*150)} отзывов)</span></div>
-        <div class="ml-pr">от ${Math.floor(60+Math.random()*60)} 000 сўм/ч</div>
-      </div>
-      <div class="ml-det">
-        <span class="ml-d">📍 ${Math.floor(5+Math.random()*20)} мин от вас</span>
-        <span class="ml-d">✅ Верифицирован</span>
-        <span class="ml-d">📋 ${Math.floor(50+Math.random()*200)} заказов</span>
-      </div>
-      <button class="ml-btn">Выбрать мастера →</button>
-    </div>`).join('');
-  // Filter buttons
-  document.querySelectorAll('.hl-fil').forEach(b=>b.addEventListener('click',function(){
-    document.querySelectorAll('.hl-fil').forEach(x=>x.classList.remove('on'));this.classList.add('on');
-    const filter=this.textContent.trim();
-    document.querySelectorAll('.ml-card').forEach(c=>{
-      if(filter==='Все')c.style.display='';
-      else c.style.display=c.querySelector('.ml-sp').textContent.includes(filter.slice(2))?'':'none';
+  const markers = [];
+  orders.forEach((o, i) => {
+    const pin = L.divIcon({
+      html: `<div class="im-pin"><span>${o.icon}</span></div>`,
+      className: '',
+      iconSize: [34, 34],
+      iconAnchor: [17, 34]
     });
-  }));
-}
+    const m = L.marker([o.lat, o.lng], { icon: pin })
+      .addTo(map)
+      .bindPopup(`
+        <div style="font-family:Manrope,sans-serif;min-width:170px">
+          <strong style="font-size:13px;color:#0f172a">${o.icon} ${o.title}</strong><br>
+          <span style="color:#64748b;font-size:12px">${o.area}</span><br>
+          <span style="color:#4f6ee6;font-weight:600;font-size:13px">${o.price}</span>
+        </div>`);
+    m._cat = o.cat;
+    m._idx = i;
+    markers.push(m);
+  });
 
-function buildJobsGrid(){
-  const g=document.getElementById('jobsFullGrid');
-  if(g.children.length>0)return;
-  g.innerHTML=JOBS.map(j=>`
-    <div class="jl-card ${j.urg?'urg-card':'pln-card'}">
-      <div class="jl-card-top">
-        <div class="jl-card-cat">
-          <div class="jl-card-ic" style="background:${j.urg?'#fef2f2':'#f0fdf4'}">${j.icon}</div>
-          <div><div class="jl-card-nm">${j.task}</div><div class="jl-card-sub">${j.cat} · ${j.type}</div></div>
+  const sideList  = document.getElementById('sideList');
+  const sideCount = document.getElementById('sideCount');
+  const statCount = document.getElementById('statCount');
+
+  function renderSide(list) {
+    sideList.innerHTML = list.map(o => `
+      <div class="order" data-idx="${o._idx}">
+        <div class="order-head">
+          <div class="order-ic">${o.icon}</div>
+          <div class="order-title">${o.title}</div>
         </div>
-        <div><div class="jl-card-pr">${j.price}</div>${j.urg?'<div class="jl-card-pr-sub" style="color:#dc2626">🔴 Срочный</div>':'<div class="jl-card-pr-sub" style="color:#22c55e">🟢 Плановый</div>'}</div>
+        <div class="order-meta">
+          <span>📍 ${o.area}</span>
+          <b>${o.price}</b>
+        </div>
       </div>
-      <div class="jl-card-info">
-        <span class="jl-card-d">🕐 ${j.time}</span>
-        <span class="jl-card-d">👤 ${j.ppl}</span>
-        <span class="jl-card-d">📏 ${(Math.random()*5+0.5).toFixed(1)} км</span>
-      </div>
-      <div class="jl-card-addr">📍 ${j.addr}</div>
-      <div class="jl-card-btns">
-        <button class="jl-card-btn jl-card-btn-primary" onclick="oM()">Принять заказ →</button>
-        <button class="jl-card-btn jl-card-btn-secondary">Подробнее</button>
-      </div>
-    </div>`).join('');
-}
+    `).join('');
+    sideCount.textContent = list.length;
+    statCount.textContent = list.length;
 
-function setL(b){document.querySelectorAll('.lng').forEach(x=>x.classList.remove('on'));b.classList.add('on')}
-function tw(b){document.querySelectorAll('.wt-b').forEach(x=>x.classList.remove('on'));b.classList.add('on')}
-function oM(){document.getElementById('oMod').classList.add('on');document.body.style.overflow='hidden';setTimeout(()=>{if(typeof L==='undefined')return;if(!mM){mM=L.map('modMap',{zoomControl:false,attributionControl:false}).setView(TK,14);L.tileLayer(TILES,{maxZoom:19}).addTo(mM);MS.slice(0,4).forEach(m=>{L.marker([m.lt,m.ln],{icon:L.divIcon({className:'m-mk',html:m.n[0],iconSize:[34,34]})}).addTo(mM).getElement().style.background=m.c});mM.on('click',function(e){if(mMk)mM.removeLayer(mMk);mMk=L.marker(e.latlng,{icon:L.divIcon({className:'c-mk',html:'📍',iconSize:[36,36]})}).addTo(mM);document.getElementById('mAddr').value=`${e.latlng.lat.toFixed(5)}, ${e.latlng.lng.toFixed(5)}`})}mM.invalidateSize()},150)}
-function cM(){document.getElementById('oMod').classList.remove('on');document.body.style.overflow=''}
-function sO(){cM();const t=document.getElementById('tst');t.style.display='block';setTimeout(()=>{t.style.display='none'},4000)}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')cM()});
-window.addEventListener('scroll',()=>{document.getElementById('hdr').classList.toggle('scrolled',window.scrollY>10)});
-const obs=new IntersectionObserver(en=>{en.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');obs.unobserve(e.target)}})},{threshold:.1,rootMargin:'0px 0px -40px 0px'});
-document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
-const cO=new IntersectionObserver(en=>{en.forEach(e=>{if(!e.isIntersecting)return;const el=e.target,tg=+el.dataset.c,d=el.dataset.d,sf=el.dataset.s||'',du=2000,s=performance.now();function tk(n){const p=Math.min((n-s)/du,1),ea=1-Math.pow(1-p,3);if(d)el.textContent=(ea*tg/10).toFixed(1)+sf;else if(tg>=1000)el.textContent=Math.round(ea*tg).toLocaleString('ru-RU')+'+ '+sf;else el.textContent=Math.round(ea*tg)+sf;if(p<1)requestAnimationFrame(tk)}requestAnimationFrame(tk);cO.unobserve(el)})},{threshold:.5});
-document.querySelectorAll('.st-n[data-c]').forEach(el=>cO.observe(el));
-document.addEventListener('click',e=>{if(!e.target.closest('.sr')&&!e.target.closest('.iw'))document.querySelectorAll('.sr').forEach(d=>d.classList.remove('on'))});
+    sideList.querySelectorAll('.order').forEach(el => {
+      el.addEventListener('click', () => {
+        const idx = +el.dataset.idx;
+        const o = orders[idx];
+        map.flyTo([o.lat, o.lng], 15, { duration: 0.8 });
+        markers[idx].openPopup();
+      });
+    });
+  }
 
-function tryI(n){if(typeof L!=='undefined')init();else if(n>0)setTimeout(()=>tryI(n-1),500);else{['heroMap','jobsMap'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;background:#e5e7eb;color:#6b7280;font-size:14px;text-align:center;padding:20px">Карта загружается...<br>Проверьте интернет</div>'})}}
-window.addEventListener('DOMContentLoaded',()=>tryI(20));
+  renderSide(orders.map((o, i) => ({ ...o, _idx: i })));
+
+  // Filter pills
+  document.querySelectorAll('.fil').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.fil').forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+      const cat = btn.dataset.cat;
+      const filtered = [];
+      markers.forEach((m, i) => {
+        if (cat === 'all' || m._cat === cat) {
+          m.addTo(map);
+          filtered.push({ ...orders[i], _idx: i });
+        } else {
+          map.removeLayer(m);
+        }
+      });
+      renderSide(filtered);
+    });
+  });
+})();
+
+
+// ==================== TILE → PHOTO HIGHLIGHT SYNC ====================
+(function () {
+  'use strict';
+
+  // Which left-side service tile activates which right-side photo.
+  // If value is null, no photo lights up (tile still highlights on its own).
+  const serviceToPhoto = {
+    electrician:   null,         // no photo for electrician yet
+    plumber:       'plumber',
+    ac:            'ac',
+    cleaning:      'cleaning',
+    furniture:     'furniture',
+    ironing:       null,
+    'deep-clean':  'cleaning',
+    repair:        null
+  };
+
+  const tiles  = document.querySelectorAll('.tile[data-service]');
+  const photos = document.querySelectorAll('.ph[data-photo]');
+  if (!tiles.length || !photos.length) return;
+
+  // Track how many times each tile has been clicked.
+  // First click = preview (highlight). Second click on the same tile = follow the link.
+  const clickCount = new WeakMap();
+
+  tiles.forEach(tile => {
+    tile.addEventListener('click', (e) => {
+      const service = tile.dataset.service;
+      const photoTarget = serviceToPhoto[service];
+      const isActive = tile.classList.contains('is-active');
+
+      // If this tile is already active and user clicks it again → allow the link to fire
+      if (isActive) {
+        return;
+      }
+
+      // First click on a fresh tile: prevent navigation, show preview
+      if (tile.tagName === 'A') {
+        e.preventDefault();
+      }
+
+      // Clear any previously active tile + photo
+      tiles.forEach(t => t.classList.remove('is-active'));
+      photos.forEach(p => p.classList.remove('is-active'));
+
+      // Activate the clicked tile
+      tile.classList.add('is-active');
+
+      // Highlight matching photo (if one exists for this service)
+      if (photoTarget) {
+        const match = document.querySelector(`.ph[data-photo="${photoTarget}"]`);
+        if (match) match.classList.add('is-active');
+      }
+    });
+  });
+
+  // Click a photo on the right → activate the matching tile on the left
+  photos.forEach(photo => {
+    photo.addEventListener('click', () => {
+      const photoKey = photo.dataset.photo;
+      // Find which service tile maps to this photo
+      const serviceKey = Object.keys(serviceToPhoto).find(
+        k => serviceToPhoto[k] === photoKey
+      );
+      if (!serviceKey) return;
+
+      const tile = document.querySelector(`.tile[data-service="${serviceKey}"]`);
+      if (!tile) return;
+
+      // If tile is already active, ignore the photo click (prevents accidental nav)
+      if (tile.classList.contains('is-active')) {
+        tiles.forEach(t => t.classList.remove('is-active'));
+        photos.forEach(p => p.classList.remove('is-active'));
+        return;
+      }
+
+      // Otherwise, simulate a preview click on the tile
+      tiles.forEach(t => t.classList.remove('is-active'));
+      photos.forEach(p => p.classList.remove('is-active'));
+      tile.classList.add('is-active');
+      photo.classList.add('is-active');
+    });
+  });
+
+  // Clicking anywhere outside the picker or collage clears the active state
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('.picker') || e.target.closest('.hero-r')) return;
+    tiles.forEach(t => t.classList.remove('is-active'));
+    photos.forEach(p => p.classList.remove('is-active'));
+  });
+})();

@@ -7,10 +7,13 @@ from apps.jobs import views as job_views
 from .auth.api_views import send_otp_view, verify_otp_view
 from .views import me
 from rest_framework_simplejwt.views import TokenRefreshView
-
+from django.shortcuts import render
 app_name = "accounts"
 
 urlpatterns = [
+
+
+path("landing-new/", lambda request: render(request, "landing_new.html"), name="landing_new"),
     # Role & start
     # path("", views.landing_page, name="landing_page"),
     path("", views.landing_page, name="landing_page"),

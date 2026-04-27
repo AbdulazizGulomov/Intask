@@ -8,37 +8,14 @@
 (function () {
   'use strict';
 
-  // 20 real Tashkent orders covering 12 districts
-  const orders = [
-    { lat: 41.2829, lng: 69.2034, cat: 'plumber',    icon: '🔧', title: 'Santexnik kerak',       area: 'Chilonzor',       price: '80 000 UZS'  },
-    { lat: 41.3563, lng: 69.2898, cat: 'electrician',icon: '⚡', title: "Rozetka o'rnatish",     area: 'Yunusobod',       price: '120 000 UZS' },
-    { lat: 41.3259, lng: 69.3434, cat: 'cleaning',   icon: '🧽', title: 'Chuqur tozalash',       area: "Mirzo Ulug'bek",  price: '150 000 UZS' },
-    { lat: 41.2916, lng: 69.2716, cat: 'ac',         icon: '❄️', title: 'Split-sistema',          area: 'Yakkasaroy',      price: '180 000 UZS' },
-    { lat: 41.3250, lng: 69.2491, cat: 'repair',     icon: '🎨', title: "Devor bo'yash",         area: 'Shayxontohur',    price: '450 000 UZS' },
-    { lat: 41.3376, lng: 69.2128, cat: 'plumber',    icon: '🔧', title: 'Kran almashtirish',     area: 'Olmazor',         price: '95 000 UZS'  },
-    { lat: 41.2943, lng: 69.2831, cat: 'electrician',icon: '⚡', title: "Lyustra o'rnatish",     area: 'Mirobod',         price: '110 000 UZS' },
-    { lat: 41.3091, lng: 69.3250, cat: 'cleaning',   icon: '🧽', title: 'Oyna tozalash',         area: 'Yashnobod',       price: '170 000 UZS' },
-    { lat: 41.3156, lng: 69.1917, cat: 'ac',         icon: '❄️', title: 'Konditsioner servis',  area: 'Uchtepa',         price: '190 000 UZS' },
-    { lat: 41.3263, lng: 69.2394, cat: 'repair',     icon: '🎨', title: 'Plitka yotqizish',      area: 'Chorsu',          price: '380 000 UZS' },
-    { lat: 41.3111, lng: 69.2797, cat: 'plumber',    icon: '🔧', title: "Bolier ta'mir",         area: 'Amir Temur',      price: '85 000 UZS'  },
-    { lat: 41.3446, lng: 69.3583, cat: 'electrician',icon: '⚡', title: "Sim o'tkazish",         area: 'TTZ',             price: '105 000 UZS' },
-    { lat: 41.2410, lng: 69.2582, cat: 'cleaning',   icon: '🧽', title: 'Umumiy tozalash',       area: 'Yangihayot',      price: '140 000 UZS' },
-    { lat: 41.3389, lng: 69.2283, cat: 'repair',     icon: '🎨', title: "Shift ta'miri",         area: 'Beruniy',         price: '320 000 UZS' },
-    { lat: 41.3210, lng: 69.2576, cat: 'ac',         icon: '❄️', title: "Freon to'ldirish",     area: 'Hadra',           price: '200 000 UZS' },
-    { lat: 41.2974, lng: 69.2700, cat: 'plumber',    icon: '🔧', title: "Unitaz o'rnatish",     area: 'Oybek',           price: '160 000 UZS' },
-    { lat: 41.3087, lng: 69.2634, cat: 'electrician',icon: '⚡', title: "Shit yig'ish",          area: 'Paxtakor',        price: '115 000 UZS' },
-    { lat: 41.3119, lng: 69.2700, cat: 'cleaning',   icon: '🧽', title: 'Xona tozalash',         area: 'Mustaqillik',     price: '130 000 UZS' },
-    { lat: 41.3278, lng: 69.2789, cat: 'repair',     icon: '🎨', title: 'Gipskarton shift',      area: 'Darxon',          price: '400 000 UZS' },
-    { lat: 41.3175, lng: 69.2900, cat: 'ac',         icon: '❄️', title: "Klimat o'rnatish",     area: 'Pushkin',         price: '175 000 UZS' }
-  ];
+  const orders = window.systemOrders || [];
+  const workers = window.systemWorkers || [];
 
-  // Map init — guarded so page doesn't crash if Leaflet fails to load
   if (typeof L === 'undefined' || !document.getElementById('mapEl')) return;
 
   const map = L.map('mapEl', { zoomControl: true, scrollWheelZoom: false })
     .setView([41.3111, 69.2797], 12);
 
-  // Avoid hijacking page scroll
   map.on('click', () => map.scrollWheelZoom.enable());
   map.on('mouseout', () => map.scrollWheelZoom.disable());
 
@@ -48,37 +25,70 @@
     maxZoom: 19
   }).addTo(map);
 
-  const markers = [];
-  orders.forEach((o, i) => {
-    const pin = L.divIcon({
-      html: `<div class="im-pin"><span>${o.icon}</span></div>`,
-      className: '',
-      iconSize: [34, 34],
-      iconAnchor: [17, 34]
-    });
-    const m = L.marker([o.lat, o.lng], { icon: pin })
-      .addTo(map)
-      .bindPopup(`
-        <div style="font-family:Manrope,sans-serif;min-width:170px">
-          <strong style="font-size:13px;color:#0f172a">${o.icon} ${o.title}</strong><br>
-          <span style="color:#64748b;font-size:12px">${o.area}</span><br>
-          <span style="color:#4f6ee6;font-weight:600;font-size:13px">${o.price}</span>
-        </div>`);
-    m._cat = o.cat;
-    m._idx = i;
-    markers.push(m);
-  });
+  let currentMode = 'orders';
+  let activeCat = 'all';
+  let activeMarkers = [];
 
-  const sideList  = document.getElementById('sideList');
+  const sideList = document.getElementById('sideList');
   const sideCount = document.getElementById('sideCount');
   const statCount = document.getElementById('statCount');
 
-  function renderSide(list) {
-    sideList.innerHTML = list.map(o => `
+  const mapModeToggle = document.getElementById('mapModeToggle');
+  const mapTitle = document.getElementById('mapTitle');
+  const mapActionBtn = document.getElementById('mapActionBtn');
+  const lblOrders = document.getElementById('lblOrders');
+  const lblWorkers = document.getElementById('lblWorkers');
+  const sideTitle = document.getElementById('sideTitle');
+
+  function renderMap() {
+    activeMarkers.forEach(m => map.removeLayer(m));
+    activeMarkers = [];
+
+    let dataset = currentMode === 'orders' ? orders : workers;
+    let filtered = dataset.filter(d => activeCat === 'all' || d.cat === activeCat);
+
+    filtered.forEach((o, i) => {
+      function getRC(r) {
+        let v = parseFloat(r);
+        if(v >= 4.8) return '#ea580c'; // Deep Orange
+        if(v >= 4.6) return '#f97316'; // Orange
+        if(v >= 4.3) return '#f59e0b'; // Amber
+        return '#fbbf24'; // Yellow
+      }
+      const isWorker = currentMode === 'workers';
+      const rColor = isWorker ? getRC(o.rating) : '';
+      const pinHtml = isWorker 
+        ? `<div class="im-pin worker-pin" style="background: ${rColor}; box-shadow: 0 4px 12px ${rColor}80; border: 2.5px solid #fff;"></div>`
+        : `<div class="im-pin" style="display:flex; align-items:center; justify-content:center;"><span>${o.icon}</span></div>`;
+
+      const pin = L.divIcon({
+        html: pinHtml,
+        className: '',
+        iconSize: [36, 36],
+        iconAnchor: [18, 36]
+      });
+
+      const popupHtml = currentMode === 'workers'
+        ? `<div style="font-family:Manrope,sans-serif;min-width:170px"><strong style="font-size:14px;color:#0f172a">${o.title} <span style="color:#eab308;margin-left:4px;font-size:13px;">★ ${o.rating}</span></strong><br><span style="color:#64748b;font-size:12px">${o.service} • ${o.area}</span><br><span style="color:#4f6ee6;font-weight:600;font-size:13px">${o.price}</span></div>`
+        : `<div style="font-family:Manrope,sans-serif;min-width:170px"><strong style="font-size:13px;color:#0f172a">${o.icon} ${o.title}</strong><br><span style="color:#64748b;font-size:12px">${o.area}</span><br><span style="color:#4f6ee6;font-weight:600;font-size:13px">${o.price}</span></div>`;
+
+      const m = L.marker([o.lat, o.lng], { icon: pin })
+        .addTo(map)
+        .bindPopup(popupHtml);
+
+      o._idx = i;
+      m._o = o;
+      activeMarkers.push(m);
+    });
+
+    sideList.innerHTML = filtered.map(o => `
       <div class="order" data-idx="${o._idx}">
         <div class="order-head">
-          <div class="order-ic">${o.icon}</div>
-          <div class="order-title">${o.title}</div>
+          ${currentMode === 'workers' ? '' : `<div class="order-ic">${o.icon}</div>`}
+          <div class="order-title" style="${currentMode === 'workers' ? 'display:flex; justify-content:space-between; width:100%; align-items:center;' : ''}">
+            <span>${o.title}</span>
+            ${currentMode === 'workers' ? `<span style="color:#eab308; font-size:13px; font-weight:600;">★ ${o.rating}</span>` : ''}
+          </div>
         </div>
         <div class="order-meta">
           <span>📍 ${o.area}</span>
@@ -86,37 +96,49 @@
         </div>
       </div>
     `).join('');
-    sideCount.textContent = list.length;
-    statCount.textContent = list.length;
+
+    sideCount.textContent = filtered.length;
+    if (statCount) statCount.textContent = filtered.length;
 
     sideList.querySelectorAll('.order').forEach(el => {
       el.addEventListener('click', () => {
         const idx = +el.dataset.idx;
-        const o = orders[idx];
-        map.flyTo([o.lat, o.lng], 15, { duration: 0.8 });
-        markers[idx].openPopup();
+        map.flyTo([filtered[idx].lat, filtered[idx].lng], 15, { duration: 0.8 });
+        activeMarkers[idx].openPopup();
       });
     });
   }
 
-  renderSide(orders.map((o, i) => ({ ...o, _idx: i })));
+  renderMap();
+
+  if (mapModeToggle) {
+    mapModeToggle.addEventListener('change', (e) => {
+      currentMode = e.target.checked ? 'workers' : 'orders';
+
+      if (lblOrders) lblOrders.classList.toggle('active', currentMode === 'orders');
+      if (lblWorkers) lblWorkers.classList.toggle('active', currentMode === 'workers');
+
+      if (currentMode === 'workers') {
+        if (mapTitle) mapTitle.innerHTML = 'Toshkentda yaqin ustalar';
+        if (mapActionBtn) mapActionBtn.innerHTML = 'Usta qidiring →';
+        if (sideTitle) sideTitle.innerHTML = 'Faol ustalar';
+      } else {
+        if (mapTitle) mapTitle.innerHTML = 'Toshkentda yaqin buyurtmalar';
+        if (mapActionBtn) mapActionBtn.innerHTML = 'Usta sifatida qo\'shiling →';
+        if (sideTitle) sideTitle.innerHTML = 'Faol buyurtmalar';
+      }
+
+      renderMap();
+    });
+  }
 
   // Filter pills
   document.querySelectorAll('.fil').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.fil').forEach(b => b.classList.remove('on'));
       btn.classList.add('on');
-      const cat = btn.dataset.cat;
-      const filtered = [];
-      markers.forEach((m, i) => {
-        if (cat === 'all' || m._cat === cat) {
-          m.addTo(map);
-          filtered.push({ ...orders[i], _idx: i });
-        } else {
-          map.removeLayer(m);
-        }
-      });
-      renderSide(filtered);
+      activeCat = btn.dataset.cat;
+      renderMap();
     });
   });
 })();
@@ -129,17 +151,17 @@
   // Which left-side service tile activates which right-side photo.
   // If value is null, no photo lights up (tile still highlights on its own).
   const serviceToPhoto = {
-    electrician:   null,         // no photo for electrician yet
-    plumber:       'plumber',
-    ac:            'ac',
-    cleaning:      'cleaning',
-    furniture:     'furniture',
-    ironing:       null,
-    'deep-clean':  'cleaning',
-    repair:        null
+    electrician: null,         // no photo for electrician yet
+    plumber: 'plumber',
+    ac: 'ac',
+    cleaning: 'cleaning',
+    furniture: 'furniture',
+    ironing: null,
+    'deep-clean': 'cleaning',
+    repair: null
   };
 
-  const tiles  = document.querySelectorAll('.tile[data-service]');
+  const tiles = document.querySelectorAll('.tile[data-service]');
   const photos = document.querySelectorAll('.ph[data-photo]');
   if (!tiles.length || !photos.length) return;
 

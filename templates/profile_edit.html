@@ -95,7 +95,9 @@
 
           <div class="mb-3">
             <label class="form-label">First name</label>
-            <input type="text" name="first_name" class="form-control" value="{{ profile.first_name|default:'' }}">
+              <label>
+                  <input type="text" name="first_name" class="form-control" value="{{ profile.first_name|default:'' }}">
+              </label>
           </div>
 
           <div class="mb-3">
@@ -110,23 +112,27 @@
 
           <div class="mb-3">
             <label class="form-label">Gender</label>
-            <select name="gender" class="form-select">
-              <option value="">Select</option>
-              <option value="male" {% if profile.gender == "male" %}selected{% endif %}>Male</option>
-              <option value="female" {% if profile.gender == "female" %}selected{% endif %}>Female</option>
-            </select>
+              <label>
+                  <select name="gender" class="form-select">
+                    <option value="">Select</option>
+                    <option value="male" {% if profile.gender == "male" %}selected{% endif %}>Male</option>
+                    <option value="female" {% if profile.gender == "female" %}selected{% endif %}>Female</option>
+                  </select>
+              </label>
           </div>
 
           <div class="mb-3">
             <label class="form-label">Profession</label>
-            <select name="profession" class="form-select">
-              <option value="">Select profession</option>
-              {% for p in professions %}
-                <option value="{{ p.id }}" {% if profile.profession and profile.profession.id == p.id %}selected{% endif %}>
-                  {{ p.name }}
-                </option>
-              {% endfor %}
-            </select>
+              <label>
+                  <select name="profession" class="form-select">
+                    <option value="">Select profession</option>
+                    {% for p in professions %}
+                      <option value="{{ p.id }}" {% if profile.profession and profile.profession.id == p.id %}selected{% endif %}>
+                        {{ p.name }}
+                      </option>
+                    {% endfor %}
+                  </select>
+              </label>
           </div>
 
           <div class="mb-3">
@@ -142,7 +148,9 @@
         {% else %}
           <div class="mb-4">
             <label class="form-label">Display name</label>
-            <input type="text" name="full_name" class="form-control" value="{{ request.user.first_name|default:'' }}">
+              <label>
+                  <input type="text" name="full_name" class="form-control" value="{{ request.user.first_name|default:'' }}">
+              </label>
           </div>
         {% endif %}
 

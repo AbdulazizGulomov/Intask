@@ -1,7 +1,8 @@
-{% load static i18n %}
+{% load static i18n custom_i18n %}
 {% get_current_language as LANGUAGE_CODE %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,18 +10,16 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
 
   <!-- Leaflet CSS -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-    crossorigin=""
-  >
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 
   <link rel="stylesheet" href="{% static 'css/landing_new.css' %}">
 </head>
+
 <body>
   <div class="landing-page">
 
@@ -33,10 +32,10 @@
           </a>
 
           <nav class="main-nav">
-            <a href="#services">{% trans "Xizmatlar" %}</a>
-            <a href="#masters">{% trans "Ustalar" %}</a>
-            <a href="#orders">{% trans "Yaqin buyurtmalar" %}</a>
-            <a href="#how">{% trans "Qanday ishlaydi" %}</a>
+            <a href="#services">{% t 'xizmatlar' %}</a>
+            <a href="#masters">{% t 'ustalar' %}</a>
+            <a href="#orders">{% t 'yaqin_buyurtmalar' %}</a>
+            <a href="#how">{% t 'qanday_ishlaydi' %}</a>
           </nav>
         </div>
 
@@ -70,41 +69,41 @@
       <section class="hero-section">
         <div class="container hero-grid">
           <div class="hero-content">
-            <div class="hero-badge">{% trans "O‘zbekistondagi №1 ustalar platformasi" %}</div>
+            <div class="hero-badge">{% t 'o_zbekistondagi_1_ustalar_platformasi' %}</div>
 
             <h1>
-              {% trans "Har qanday vazifa uchun" %}
+              {% t 'har_qanday_vazifa_uchun' %}
               <br>
-              {% trans "ustani toping" %}
+              {% t 'ustani_toping' %}
             </h1>
 
             <p>
-              {% trans "Sun’iy intellekt 15 daqiqa ichida sizga eng yaxshi va ishonchli ustani topib beradi." %}
+              {% t 'sun_iy_intellekt_15_daqiqa_ichida_sizga_' %}
             </p>
 
             <div class="hero-search">
-              <div class="search-field">{% trans "Qanday xizmat kerak?" %}</div>
-              <div class="search-field">{% trans "Manzilingiz" %}</div>
-              <button class="search-btn">{% trans "Ustani topish" %}</button>
+              <div class="search-field">{% t 'qanday_xizmat_kerak' %}</div>
+              <div class="search-field">{% t 'manzilingiz' %}</div>
+              <button class="search-btn">{% t 'ustani_topish' %}</button>
             </div>
 
             <div class="hero-features">
-              <span>{% trans "Tekshirilgan ustalar" %}</span>
-              <span>{% trans "Kafolatlangan xizmat" %}</span>
-              <span>{% trans "15 daqiqada" %}</span>
+              <span>{% t 'tekshirilgan_ustalar' %}</span>
+              <span>{% t 'kafolatlangan_xizmat' %}</span>
+              <span>{% t '15_daqiqada' %}</span>
             </div>
           </div>
 
-{#          <div class="hero-map-real-wrap">#}
-{#            <div id="heroMap" class="hero-map-real"></div>#}
-{#          </div>#}
-<div class="hero-map-real-wrap" id="heroMapWrap">
-  <button type="button" class="map-toggle-btn" id="mapToggleBtn">
-    Kattalashtirish
-  </button>
+          {# <div class="hero-map-real-wrap">#}
+            {# <div id="heroMap" class="hero-map-real"></div>#}
+            {# </div>#}
+          <div class="hero-map-real-wrap" id="heroMapWrap">
+            <button type="button" class="map-toggle-btn" id="mapToggleBtn">
+              {% t 'kattalashtirish' %}
+            </button>
 
-  <div id="heroMap" class="hero-map-real"></div>
-</div>
+            <div id="heroMap" class="hero-map-real"></div>
+          </div>
         </div>
       </section>
     </main>
@@ -112,12 +111,23 @@
   </div>
 
   <!-- Leaflet JS -->
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-    crossorigin=""
-  ></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
+  <script>
+    window.landingNewI18n = {
+      elektrikUsta: "{% t 'elektrik_usta' %}",
+      santexnik: "{% t 'santexnik' %}",
+      toshkentMarkazi: "{% t 'toshkent_markazi' %}",
+      mebelYigish: "{% t 'mebel_yig_39_ish' %}", // Or custom key
+      min: "{% t 'daq' %}",
+      kichraytirish: "{% t 'kichraytirish' %}",
+      kattalashtirish: "{% t 'kattalashtirish' %}",
+      mastersLabel: "{% t 'tekshirilgan_usta' %}",
+      ordersLabel: "{% t 'buyurtma' %}"
+    };
+  </script>
   <script src="{% static 'js/landing_new.js' %}"></script>
 </body>
+
 </html>

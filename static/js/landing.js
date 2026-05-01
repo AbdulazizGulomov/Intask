@@ -4,6 +4,22 @@
    and tile → photo highlight interaction
    ================================================================ */
 
+// ==================== THEME TOGGLE ====================
+(function () {
+  const themeToggle = document.getElementById('theme-toggle');
+  if (!themeToggle) return;
+
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+
+  themeToggle.addEventListener('click', () => {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+  });
+})();
+
 // ==================== MAP + FILTERS + SIDEBAR ====================
 (function () {
   'use strict';
@@ -11,7 +27,20 @@
   const orders = window.systemOrders || [];
   const workers = window.systemWorkers || [];
 
-  if (typeof L === 'undefined' || !document.getElementById('mapEl')) return;
+  function applyTranslations() {
+    const i18n = window.i18n || {};
+    document.querySelectorAll('[data-t]').forEach(el => {
+      const key = el.getAttribute('data-t');
+      if (i18n[key]) {
+        el.innerHTML = i18n[key];
+      }
+    });
+  }
+
+  if (typeof L === 'undefined' || !document.getElementById('mapEl')) {
+    applyTranslations();
+    return;
+  }
 
   const map = L.map('mapEl', { zoomControl: true, scrollWheelZoom: false })
     .setView([41.3111, 69.2797], 12);
@@ -47,32 +76,46 @@
     let dataset = currentMode === 'orders' ? orders : workers;
     let filtered = dataset.filter(d => activeCat === 'all' || d.cat === activeCat);
 
+    const catIcons = {
+      plumber: '🔧',
+      electrician: '⚡',
+      cleaning: '🧽',
+      repair: '🎨',
+      ac: '❄️'
+    };
+
     filtered.forEach((o, i) => {
       function getRC(r) {
         let v = parseFloat(r);
-        if(v >= 4.8) return '#ea580c'; // Deep Orange
-        if(v >= 4.6) return '#f97316'; // Orange
-        if(v >= 4.3) return '#f59e0b'; // Amber
+        if (v >= 4.8) return '#ea580c'; // Deep Orange
+        if (v >= 4.6) return '#f97316'; // Orange
+        if (v >= 4.3) return '#f59e0b'; // Amber
         return '#fbbf24'; // Yellow
       }
       const isWorker = currentMode === 'workers';
       const rColor = isWorker ? getRC(o.rating) : '';
-      const pinHtml = isWorker 
-        ? `<div class="im-pin worker-pin" style="background: ${rColor}; box-shadow: 0 4px 12px ${rColor}80; border: 2.5px solid #fff;"></div>`
+      const wIcon = isWorker ? (catIcons[o.cat] || '👤') : o.icon;
+
+      const pinHtml = isWorker
+        ? `<div class="im-pin worker-pin" style="background: ${rColor}; box-shadow: 0 4px 12px ${rColor}80; border: 2.5px solid #fff; display:flex; align-items:center; justify-content:center;"></div>`
         : `<div class="im-pin" style="display:flex; align-items:center; justify-content:center;"><span>${o.icon}</span></div>`;
 
       const pin = L.divIcon({
         html: pinHtml,
         className: '',
-        iconSize: [36, 36],
-        iconAnchor: [18, 36]
+        iconSize: isWorker ? [24, 24] : [36, 36],
+        iconAnchor: isWorker ? [12, 12] : [18, 36]
       });
 
       const popupHtml = currentMode === 'workers'
         ? `<div style="font-family:Manrope,sans-serif;min-width:170px"><strong style="font-size:14px;color:#0f172a">${o.title} <span style="color:#eab308;margin-left:4px;font-size:13px;">★ ${o.rating}</span></strong><br><span style="color:#64748b;font-size:12px">${o.service} • ${o.area}</span><br><span style="color:#4f6ee6;font-weight:600;font-size:13px">${o.price}</span></div>`
         : `<div style="font-family:Manrope,sans-serif;min-width:170px"><strong style="font-size:13px;color:#0f172a">${o.icon} ${o.title}</strong><br><span style="color:#64748b;font-size:12px">${o.area}</span><br><span style="color:#4f6ee6;font-weight:600;font-size:13px">${o.price}</span></div>`;
 
-      const m = L.marker([o.lat, o.lng], { icon: pin })
+      // Add Jitter for workers to avoid overlap
+      const lat = o.lat + (isWorker ? (Math.random() - 0.5) * 0.002 : 0);
+      const lng = o.lng + (isWorker ? (Math.random() - 0.5) * 0.002 : 0);
+
+      const m = L.marker([lat, lng], { icon: pin })
         .addTo(map)
         .bindPopup(popupHtml);
 
@@ -81,10 +124,12 @@
       activeMarkers.push(m);
     });
 
-    sideList.innerHTML = filtered.map(o => `
+    sideList.innerHTML = filtered.map(o => {
+      const wIcon = currentMode === 'workers' ? (catIcons[o.cat] || '👤') : o.icon;
+      return `
       <div class="order" data-idx="${o._idx}">
         <div class="order-head">
-          ${currentMode === 'workers' ? '' : `<div class="order-ic">${o.icon}</div>`}
+          <div class="order-ic">${wIcon}</div>
           <div class="order-title" style="${currentMode === 'workers' ? 'display:flex; justify-content:space-between; width:100%; align-items:center;' : ''}">
             <span>${o.title}</span>
             ${currentMode === 'workers' ? `<span style="color:#eab308; font-size:13px; font-weight:600;">★ ${o.rating}</span>` : ''}
@@ -95,7 +140,7 @@
           <b>${o.price}</b>
         </div>
       </div>
-    `).join('');
+    `}).join('');
 
     sideCount.textContent = filtered.length;
     if (statCount) statCount.textContent = filtered.length;
@@ -103,13 +148,14 @@
     sideList.querySelectorAll('.order').forEach(el => {
       el.addEventListener('click', () => {
         const idx = +el.dataset.idx;
-        map.flyTo([filtered[idx].lat, filtered[idx].lng], 15, { duration: 0.8 });
+        map.flyTo(activeMarkers[idx].getLatLng(), 15, { duration: 0.8 });
         activeMarkers[idx].openPopup();
       });
     });
   }
 
   renderMap();
+  applyTranslations();
 
   if (mapModeToggle) {
     mapModeToggle.addEventListener('change', (e) => {
@@ -118,14 +164,22 @@
       if (lblOrders) lblOrders.classList.toggle('active', currentMode === 'orders');
       if (lblWorkers) lblWorkers.classList.toggle('active', currentMode === 'workers');
 
+      // Update titles
+      const i18n = window.i18n || {};
       if (currentMode === 'workers') {
-        if (mapTitle) mapTitle.innerHTML = 'Toshkentda yaqin ustalar';
-        if (mapActionBtn) mapActionBtn.innerHTML = 'Usta qidiring →';
-        if (sideTitle) sideTitle.innerHTML = 'Faol ustalar';
+        if (mapTitle) mapTitle.innerHTML = i18n.workersMapTitle || 'Yaqin ustalar';
+        if (mapActionBtn) mapActionBtn.innerHTML = i18n.workersMapAction || 'Usta qidiring';
+        if (sideTitle) sideTitle.innerHTML = i18n.workersSideTitle || 'Faol ustalar';
       } else {
-        if (mapTitle) mapTitle.innerHTML = 'Toshkentda yaqin buyurtmalar';
-        if (mapActionBtn) mapActionBtn.innerHTML = 'Usta sifatida qo\'shiling →';
-        if (sideTitle) sideTitle.innerHTML = 'Faol buyurtmalar';
+        if (mapTitle) mapTitle.innerHTML = i18n.ordersMapTitle || 'Yaqin buyurtmalar';
+        if (mapActionBtn) mapActionBtn.innerHTML = i18n.ordersMapAction || 'Usta sifatida qo\'shiling';
+        if (sideTitle) sideTitle.innerHTML = i18n.ordersSideTitle || 'Faol buyurtmalar';
+      }
+
+      // Update map stats labels
+      const statLabelEl = document.querySelector('.stat-i span');
+      if (statLabelEl) {
+        statLabelEl.textContent = currentMode === 'workers' ? (i18n.mastersLabel || 'usta') : (i18n.ordersLabel || 'buyurtma');
       }
 
       renderMap();

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n custom_i18n %}
 
 {% block content %}
 
@@ -58,21 +58,21 @@
     <div class="otp-card">
 
         <div class="mb-3 text-muted">
-            🔒 {% trans "Xavfsiz kirish" %}
+            🔒 {% t 'xavfsiz_kirish' %}
         </div>
 
         <h4 class="otp-title mb-1">
-            {% trans "Telefon raqamingizni kiriting" %}
+            {% t 'telefon_raqamingizni_kiriting' %}
         </h4>
 
         <p class="otp-sub mb-4">
-            {% trans "Tasdiqlash kodi SMS orqali yuboriladi" %}
+            {% t 'tasdiqlash_kodi_sms_orqali_yuboriladi' %}
         </p>
 
         <div id="msg" class="alert alert-warning d-none"></div>
 
         <label class="form-label small">
-            {% trans "Telefon raqami" %}
+            {% t 'telefon_raqami' %}
         </label>
 
         <div class="input-group mb-3">
@@ -86,12 +86,12 @@
         </div>
 
         <button id="sendBtn" class="btn btn-primary btn-otp w-100 mb-3" type="button">
-            {% trans "Kodni yuborish" %}
+            {% t 'kodni_yuborish' %}
         </button>
 
         <div id="codeBlock">
             <label class="form-label small">
-                {% trans "Tasdiqlash kodi" %}
+                {% t 'tasdiqlash_kodi' %}
             </label>
 
             <input
@@ -102,14 +102,14 @@
             >
 
             <button id="verifyBtn" class="btn btn-success btn-otp w-100" type="button">
-                {% trans "Tasdiqlash" %}
+                {% t 'tasdiqlash' %}
             </button>
         </div>
 
         <input type="hidden" id="nextUrl" value="{{ request.GET.next|default:'/' }}">
 
         <p class="text-center text-muted small mt-4">
-            {% trans "Kodni hech kimga bermang · Kod 5 daqiqa amal qiladi" %}
+            {% t 'kodni_hech_kimga_bermang_kod_5_daqiqa_am' %}
         </p>
 
     </div>

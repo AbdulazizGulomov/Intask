@@ -78,8 +78,8 @@ document.addEventListener("DOMContentLoaded", function () {
     .addTo(map)
     .bindPopup(`
       <div style="font-family: Inter, sans-serif;">
-        <strong>Elektrik usta</strong><br>
-        <span style="color:#6b7280;">14 min</span><br>
+        <strong>${window.landingNewI18n.elektrikUsta}</strong><br>
+        <span style="color:#6b7280;">14 ${window.landingNewI18n.min}</span><br>
         <span style="color:#f59e0b;font-weight:800;">★ 4.8</span>
       </div>
     `);
@@ -88,8 +88,8 @@ document.addEventListener("DOMContentLoaded", function () {
     .addTo(map)
     .bindPopup(`
       <div style="font-family: Inter, sans-serif;">
-        <strong>Santexnik</strong><br>
-        <span style="color:#6b7280;">18 min</span><br>
+        <strong>${window.landingNewI18n.santexnik}</strong><br>
+        <span style="color:#6b7280;">18 ${window.landingNewI18n.min}</span><br>
         <span style="color:#f59e0b;font-weight:800;">★ 4.7</span>
       </div>
     `);
@@ -98,8 +98,8 @@ document.addEventListener("DOMContentLoaded", function () {
     .addTo(map)
     .bindPopup(`
       <div style="font-family: Inter, sans-serif;">
-        <strong>Toshkent markazi</strong><br>
-        <span style="color:#6b7280;">12 min</span><br>
+        <strong>${window.landingNewI18n.toshkentMarkazi}</strong><br>
+        <span style="color:#6b7280;">12 ${window.landingNewI18n.min}</span><br>
         <span style="color:#f59e0b;font-weight:800;">★ 4.9</span>
       </div>
     `)
@@ -109,8 +109,8 @@ document.addEventListener("DOMContentLoaded", function () {
     .addTo(map)
     .bindPopup(`
       <div style="font-family: Inter, sans-serif;">
-        <strong>Mebel yig‘ish</strong><br>
-        <span style="color:#6b7280;">20 min</span><br>
+        <strong>${window.landingNewI18n.mebelYigish}</strong><br>
+        <span style="color:#6b7280;">20 ${window.landingNewI18n.min}</span><br>
         <span style="color:#f59e0b;font-weight:800;">★ 4.6</span>
       </div>
     `);
@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (mapToggleBtn && mapWrap) {
     mapToggleBtn.addEventListener("click", function () {
       const isExpanded = mapWrap.classList.toggle("map-expanded");
-      mapToggleBtn.textContent = isExpanded ? "Kichraytirish" : "Kattalashtirish";
+      mapToggleBtn.textContent = isExpanded ? window.landingNewI18n.kichraytirish : window.landingNewI18n.kattalashtirish;
 
       setTimeout(function () {
         map.invalidateSize();

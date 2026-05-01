@@ -1,7 +1,11 @@
 # apps/accounts/views.py
 import json
 from functools import wraps
+import logging
+import random
 
+from django.conf import settings
+from utils.translations import t
 from django.contrib import messages
 from django.utils.safestring import mark_safe
 from django.http import HttpResponseBadRequest, HttpResponseForbidden
@@ -370,11 +374,11 @@ def otp_verify_web(request):
 def worker_apply(request, job_id: int):
     job = Job.objects.filter(id=job_id, is_active=True).select_related("employer").first()
     if not job:
-        messages.error(request, "Ish topilmadi.")
+        messages.error(request, t("job_not_found"))
         return redirect("accounts:worker_home")
 
     if not job.employer:
-        messages.error(request, "Bu ish uchun employer biriktirilmagan.")
+        messages.error(request, t("job_employer_missing"))
         return redirect("jobs:detail", pk=job.id)
 
     application, created = JobApplication.objects.get_or_create(
@@ -387,9 +391,9 @@ def worker_apply(request, job_id: int):
     )
 
     if created:
-        messages.success(request, "Arizangiz muvaffaqiyatli yuborildi.")
-    else:
-        messages.info(request, "Siz allaqachon bu ishga ariza yuborgansiz.")
+        messages.success(request, t("application_sent_successfully"))
+        return redirect('accounts:worker_public_job_detail', pk=job.id)
+    messages.info(request, t("already_applied_job"))
 
     return redirect("accounts:worker_job_detail", job_id=job.id)
 
@@ -533,7 +537,7 @@ def profile_edit(request):
                 user.first_name = full_name
                 user.save(update_fields=["first_name"])
 
-        messages.success(request, "Profile updated successfully.")
+        messages.success(request, t("profile_updated_successfully"))
         return redirect("accounts:profile_edit")
 
     return render(

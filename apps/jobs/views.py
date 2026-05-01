@@ -6,6 +6,7 @@ from django.http import HttpResponseForbidden
 
 from apps.accounts.views import require_role, UZ_REGIONS
 from .models import Job, Profession, JobApplication
+from utils.translations import t
 
 
 @login_required
@@ -188,7 +189,7 @@ def employer_job_create(request):
         if not title or not region or not job_type or not profession:
             ctx = {
                 **base_ctx,
-                "error": "Title, region, profession, and job type are required.",
+                "error": t("job_required_fields_error"),
             }
             return render(request, "employer_job_create.html", ctx)
 
@@ -196,11 +197,11 @@ def employer_job_create(request):
             pay_min = to_decimal(pay_min_raw)
             pay_max = to_decimal(pay_max_raw)
         except (InvalidOperation, ValueError):
-            ctx = {**base_ctx, "error": "Pay min/max must be numbers."}
+            ctx = {**base_ctx, "error": t("pay_must_be_numbers")}
             return render(request, "employer_job_create.html", ctx)
 
         if pay_min is not None and pay_max is not None and pay_min > pay_max:
-            ctx = {**base_ctx, "error": "Pay min cannot be greater than pay max."}
+            ctx = {**base_ctx, "error": t("pay_min_invalid")}
             return render(request, "employer_job_create.html", ctx)
 
         def to_float(v: str):

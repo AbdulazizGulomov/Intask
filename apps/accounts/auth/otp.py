@@ -6,6 +6,7 @@ import re
 import requests
 from django.conf import settings
 from django.core.cache import cache
+from utils.translations import t
 
 logger = logging.getLogger(__name__)
 
@@ -98,7 +99,7 @@ def send_eskiz_sms(phone: str, code: str):
         logger.error(f"Eskiz Send Blocked: invalid normalized phone -> {eskiz_phone}")
         return False
 
-    message = f"Intask platformasida ro'yxatdan o'tish uchun tasdiqlash kodingiz: {code}. Kod 2 daqiqa ichida amal qiladi."
+    message = t("otp_sms_message", code=code)
 
     try:
         send_url = "https://notify.eskiz.uz/api/message/sms/send"

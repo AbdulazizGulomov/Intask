@@ -7,7 +7,11 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path("i18n/", include("django.conf.urls.i18n")),
-    path("admin/", admin.site.urls),
+    
+    # Custom Admin mapping - point directly to accounts admin urls
+    path("admin/", include("apps.accounts.urls_admin")), 
+
+    path("django-admin/", admin.site.urls),
 
     path("", include("apps.accounts.urls", namespace="accounts")),
     path("jobs/", include("apps.jobs.urls", namespace="jobs")),

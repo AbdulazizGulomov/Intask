@@ -1,75 +1,100 @@
-{% load i18n %}
+{% load i18n custom_i18n %}
 {% load static %}
 <!doctype html>
 <html lang="uz">
+
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{{ job.title }} — TaskiN</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <style>
-    body { background:#f6f7fb; }
-    .cardx { border-radius: 18px; overflow:hidden; }
-    .meta-line { display:flex; gap:10px; flex-wrap:wrap; color:#6c757d; align-items:center; }
-    .sticky-cta { position: static; margin-top:16px; }
-    .job-photo { width:100%; height:260px; object-fit:cover; background:#eef2f7; display:block; }
+    body {
+      background: #f6f7fb;
+    }
+
+    .cardx {
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    .meta-line {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      color: #6c757d;
+      align-items: center;
+    }
+
+    .sticky-cta {
+      position: static;
+      margin-top: 16px;
+    }
+
+    .job-photo {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      background: #eef2f7;
+      display: block;
+    }
 
     .photo-edit-slot {
-      position:relative;
-      border:1px dashed #ccc;
-      border-radius:10px;
-      padding:10px;
-      margin-bottom:10px;
-      text-align:center;
-      background:#fff;
+      position: relative;
+      border: 1px dashed #ccc;
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 10px;
+      text-align: center;
+      background: #fff;
     }
 
     .photo-edit-slot img {
-      max-height:80px;
-      object-fit:cover;
-      width:100%;
-      border-radius:6px;
+      max-height: 80px;
+      object-fit: cover;
+      width: 100%;
+      border-radius: 6px;
     }
 
     .photo-edit-slot .delete-label {
-      position:absolute;
-      top:5px;
-      right:5px;
-      background:rgba(255,255,255,0.9);
-      padding:2px 5px;
-      border-radius:5px;
-      cursor:pointer;
-      font-size:12px;
-      border:1px solid #ddd;
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 2px 5px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 12px;
+      border: 1px solid #ddd;
     }
 
     .preview-banner {
-      margin-bottom:14px;
-      padding:12px 14px;
-      border-radius:14px;
-      background:#fff7ed;
-      border:1px solid #fed7aa;
-      color:#9a3412;
-      font-weight:700;
+      margin-bottom: 14px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #9a3412;
+      font-weight: 700;
     }
 
     .icon-input-group {
-      display:flex;
-      align-items:center;
-      gap:8px;
-      margin-bottom:10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
     }
 
-    .icon-input-group > span {
-      width:24px;
-      text-align:center;
+    .icon-input-group>span {
+      width: 24px;
+      text-align: center;
     }
 
-    .icon-input-group > input,
-    .icon-input-group > select {
-      flex:1;
+    .icon-input-group>input,
+    .icon-input-group>select {
+      flex: 1;
     }
 
     .toast-wrap {
@@ -92,15 +117,26 @@
       border-radius: 14px;
       color: #fff;
       font-weight: 600;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.14);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.14);
       animation: fadeSlideUp 0.25s ease, fadeOut 0.35s ease 3.2s forwards;
     }
 
-    .taskin-toast-success { background: #16a34a; }
-    .taskin-toast-info { background: #2563eb; }
-    .taskin-toast-warning { background: #d97706; }
+    .taskin-toast-success {
+      background: #16a34a;
+    }
+
+    .taskin-toast-info {
+      background: #2563eb;
+    }
+
+    .taskin-toast-warning {
+      background: #d97706;
+    }
+
     .taskin-toast-error,
-    .taskin-toast-danger { background: #dc2626; }
+    .taskin-toast-danger {
+      background: #dc2626;
+    }
 
     /* ── Applicants box ── */
     .applicants-box {
@@ -130,7 +166,9 @@
       display: block;
     }
 
-    .applicant-card:last-child { margin-bottom: 0; }
+    .applicant-card:last-child {
+      margin-bottom: 0;
+    }
 
     .applicant-card:hover {
       background: #eef4ff;
@@ -170,93 +208,105 @@
     }
 
     @keyframes fadeSlideUp {
-      from { opacity: 0; transform: translateY(14px); }
-      to   { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     @keyframes fadeOut {
-      to { opacity: 0; transform: translateY(10px); visibility: hidden; }
+      to {
+        opacity: 0;
+        transform: translateY(10px);
+        visibility: hidden;
+      }
     }
   </style>
 </head>
+
 <body>
 
-{% if messages %}
+  {% if messages %}
   <div class="toast-wrap">
     {% for message in messages %}
-      <div class="taskin-toast taskin-toast-{{ message.tags|default:'info' }}">
-        {{ message }}
-      </div>
+    <div class="taskin-toast taskin-toast-{{ message.tags|default:'info' }}">
+      {{ message }}
+    </div>
     {% endfor %}
   </div>
-{% endif %}
+  {% endif %}
 
-<form method="POST" enctype="multipart/form-data" action="{% url 'accounts:worker_job_detail' job.id %}?preview=1">
-  {% csrf_token %}
+  <form method="POST" enctype="multipart/form-data" action="{% url 'accounts:worker_job_detail' job.id %}?preview=1">
+    {% csrf_token %}
 
-  <div class="container py-4" style="max-width:760px;">
-
-    {% if preview_mode %}
-      <a href="{% url 'accounts:employer_home' %}" class="text-decoration-none">← {% trans "Orqaga" %}</a>
-      <div class="preview-banner mt-3">
-        👁 {% trans "Preview mode: Employer is viewing this page as worker" %}
-      </div>
-    {% else %}
-      {% if is_employer_view %}
-        <a href="{% url 'accounts:employer_home' %}" class="text-decoration-none">← {% trans "Orqaga" %}</a>
-      {% else %}
-        <a href="{% url 'accounts:worker_home' %}" class="text-decoration-none">← {% trans "Orqaga" %}</a>
-      {% endif %}
-    {% endif %}
-
-    <div class="card cardx shadow-sm mt-3 p-3">
+    <div class="container py-4" style="max-width:760px;">
 
       {% if preview_mode %}
-        <h5 class="mb-3">{% trans "Rasmlar (tahrirlash)" %}</h5>
+      <a href="{% url 'accounts:employer_home' %}" class="text-decoration-none">← {% t 'orqaga' %}</a>
+      <div class="preview-banner mt-3">
+        👁 {% t 'preview_mode_employer_is_viewing_this_pa' %}
+      </div>
+      {% else %}
+      {% if is_employer_view %}
+      <a href="{% url 'accounts:employer_home' %}" class="text-decoration-none">← {% t 'orqaga' %}</a>
+      {% else %}
+      <a href="{% url 'accounts:worker_home' %}" class="text-decoration-none">← {% t 'orqaga' %}</a>
+      {% endif %}
+      {% endif %}
+
+      <div class="card cardx shadow-sm mt-3 p-3">
+
+        {% if preview_mode %}
+        <h5 class="mb-3">{% t 'rasmlar_tahrirlash' %}</h5>
         <div class="row g-2 mb-4">
           {% for i in "1234" %}
-            <div class="col-6 col-md-3">
-              <div class="photo-edit-slot">
-                {% if i == "1" and job.photo1 %}
-                  <img src="{{ job.photo1.url }}" alt="Photo 1">
-                  <label class="delete-label"><input type="checkbox" name="delete_photo1"> {% trans "O'chirish" %}</label>
-                {% elif i == "2" and job.photo2 %}
-                  <img src="{{ job.photo2.url }}" alt="Photo 2">
-                  <label class="delete-label"><input type="checkbox" name="delete_photo2"> {% trans "O'chirish" %}</label>
-                {% elif i == "3" and job.photo3 %}
-                  <img src="{{ job.photo3.url }}" alt="Photo 3">
-                  <label class="delete-label"><input type="checkbox" name="delete_photo3"> {% trans "O'chirish" %}</label>
-                {% elif i == "4" and job.photo4 %}
-                  <img src="{{ job.photo4.url }}" alt="Photo 4">
-                  <label class="delete-label"><input type="checkbox" name="delete_photo4"> {% trans "O'chirish" %}</label>
-                {% endif %}
-                <input type="file" name="photo{{ i }}" class="form-control form-control-sm mt-2">
-              </div>
+          <div class="col-6 col-md-3">
+            <div class="photo-edit-slot">
+              {% if i == "1" and job.photo1 %}
+              <img src="{{ job.photo1.url }}" alt="Photo 1">
+              <label class="delete-label"><input type="checkbox" name="delete_photo1"> {% t 'o_chirish' %}</label>
+              {% elif i == "2" and job.photo2 %}
+              <img src="{{ job.photo2.url }}" alt="Photo 2">
+              <label class="delete-label"><input type="checkbox" name="delete_photo2"> {% t 'o_chirish' %}</label>
+              {% elif i == "3" and job.photo3 %}
+              <img src="{{ job.photo3.url }}" alt="Photo 3">
+              <label class="delete-label"><input type="checkbox" name="delete_photo3"> {% t 'o_chirish' %}</label>
+              {% elif i == "4" and job.photo4 %}
+              <img src="{{ job.photo4.url }}" alt="Photo 4">
+              <label class="delete-label"><input type="checkbox" name="delete_photo4"> {% t 'o_chirish' %}</label>
+              {% endif %}
+              <input type="file" name="photo{{ i }}" class="form-control form-control-sm mt-2">
             </div>
+          </div>
           {% endfor %}
         </div>
 
         <div class="mb-3">
-          <label class="form-label text-muted">{% trans "Ish sarlavhasi" %}</label>
+          <label class="form-label text-muted">{% t 'ish_sarlavhasi' %}</label>
           <input type="text" name="title" class="form-control" value="{{ job.title }}" required>
         </div>
 
         <div class="mb-3 d-flex align-items-center gap-2 flex-wrap">
-          <label class="form-label mb-0 text-muted">{% trans "Holat (yorliqlarni tahrirlash)" %}</label>
+          <label class="form-label mb-0 text-muted">{% t 'holat_yorliqlarni_tahrirlash' %}</label>
 
           <select name="job_type" class="form-select w-auto text-bg-secondary border-0 rounded-pill">
             {% for value, label in job_type_choices %}
-              <option value="{{ value }}" {% if job.job_type == value %}selected{% endif %}>{{ label }}</option>
+            <option value="{{ value }}" {% if job.job_type==value %}selected{% endif %}>{{ label }}</option>
             {% endfor %}
           </select>
 
           {% if job.is_active %}
-            <span class="badge text-bg-success rounded-pill px-3 py-2">{% trans "Faol" %}</span>
+          <span class="badge text-bg-success rounded-pill px-3 py-2">{% t 'faol' %}</span>
           {% else %}
-            <span class="badge text-bg-danger rounded-pill px-3 py-2">{% trans "Yopilgan" %}</span>
+          <span class="badge text-bg-danger rounded-pill px-3 py-2">{% t 'yopilgan' %}</span>
           {% endif %}
 
-          <span class="badge text-bg-warning text-dark rounded-pill px-3 py-2">{% trans "Preview mode" %}</span>
+          <span class="badge text-bg-warning text-dark rounded-pill px-3 py-2">{% t 'preview_mode' %}</span>
         </div>
 
         <div class="mt-4">
@@ -265,7 +315,7 @@
             <label style="width:100%;">
               <select name="region" class="form-select">
                 {% for value, label in region_choices %}
-                  <option value="{{ value }}" {% if job.region == value %}selected{% endif %}>{{ label }}</option>
+                <option value="{{ value }}" {% if job.region==value %}selected{% endif %}>{{ label }}</option>
                 {% endfor %}
               </select>
             </label>
@@ -276,16 +326,17 @@
             <select name="profession" class="form-select">
               <option value="">---------</option>
               {% for prof in professions %}
-                <option value="{{ prof.id }}" {% if job.profession and job.profession.id == prof.id %}selected{% endif %}>
-                  {{ prof.name }}
-                </option>
+              <option value="{{ prof.id }}" {% if job.profession and job.profession.id==prof.id %}selected{% endif %}>
+                {{ prof.name }}
+              </option>
               {% endfor %}
             </select>
           </div>
 
           <div class="icon-input-group">
             <span>💰</span>
-            <input type="text" name="pay_text" class="form-control" value="{% if job.pay_text %}{{ job.pay_text }}{% else %}{{ pay_display }}{% endif %}">
+            <input type="text" name="pay_text" class="form-control"
+              value="{% if job.pay_text %}{{ job.pay_text }}{% else %}{{ pay_display }}{% endif %}">
           </div>
 
           <div class="icon-input-group">
@@ -296,205 +347,215 @@
 
         <div class="row g-2 mt-2">
           <div class="col-12 col-sm-6">
-            <label class="form-label text-muted mb-1" style="font-size:13px;">{% trans "Ish beruvchi telefoni" %}:</label>
-            <input type="text" class="form-control form-control-sm" value="{{ job.employer.phone|default:'' }}" readonly>
+            <label class="form-label text-muted mb-1" style="font-size:13px;">{% t 'ish_beruvchi_telefoni' %}:</label>
+            <input type="text" class="form-control form-control-sm" value="{{ job.employer.phone|default:'' }}"
+              readonly>
           </div>
           <div class="col-12 col-sm-6">
-            <label class="form-label text-muted mb-1" style="font-size:13px;">{% trans "Ish beruvchi ID" %}:</label>
+            <label class="form-label text-muted mb-1" style="font-size:13px;">{% t 'ish_beruvchi_id' %}:</label>
             <input type="text" class="form-control form-control-sm" value="{{ job.employer.id }}" readonly>
           </div>
         </div>
 
-        <hr class="my-4"/>
+        <hr class="my-4" />
 
-        <h5 class="mb-2">{% trans "Tavsif" %}</h5>
+        <h5 class="mb-2">{% t 'tavsif' %}</h5>
         <textarea name="description" class="form-control" rows="5">{{ job.description }}</textarea>
 
-        <hr class="my-4"/>
+        <hr class="my-4" />
 
         <div class="d-flex align-items-center gap-2">
-          <span>📞 {% trans "Telefon" %}:</span>
+          <span>📞 {% t 'telefon' %}:</span>
           <input type="tel" name="contact_phone" class="form-control w-auto" value="{{ job.contact_phone|default:'' }}">
         </div>
 
-        <hr class="my-4"/>
+        <hr class="my-4" />
 
-        <h5 class="mb-2">{% trans "Lokatsiya" %}</h5>
+        <h5 class="mb-2">{% t 'lokatsiya' %}</h5>
         <div class="text-secondary mb-2">
-          {% trans "Koordinatalarni tahrirlash" %}
+          {% t 'koordinatalarni_tahrirlash' %}
           <div class="row g-2 mt-1">
             <div class="col-6">
-              <input type="text" id="editableLat" name="lat" class="form-control form-control-sm" value="{{ job.lat|default:'' }}" placeholder="{% trans 'Latitude' %}">
+              <input type="text" id="editableLat" name="lat" class="form-control form-control-sm"
+                value="{{ job.lat|default:'' }}" placeholder="{% t 'latitude' %}">
             </div>
             <div class="col-6">
-              <input type="text" id="editableLng" name="lng" class="form-control form-control-sm" value="{{ job.lng|default:'' }}" placeholder="{% trans 'Longitude' %}">
+              <input type="text" id="editableLng" name="lng" class="form-control form-control-sm"
+                value="{{ job.lng|default:'' }}" placeholder="{% t 'longitude' %}">
             </div>
           </div>
         </div>
 
-      {% else %}
-        {% if photos and photos|length > 0 %}
-          <div id="jobPhotos" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-inner">
-              {% for p in photos %}
-                <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                  <img class="job-photo" src="{{ p.url }}" alt="job photo">
-                </div>
-              {% endfor %}
-            </div>
-          </div>
         {% else %}
-          <div class="job-photo d-flex align-items-center justify-content-center text-muted">
-            <div style="font-size:48px;">🧰</div>
+        {% if photos and photos|length > 0 %}
+        <div id="jobPhotos" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner">
+            {% for p in photos %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+              <img class="job-photo" src="{{ p.url }}" alt="job photo">
+            </div>
+            {% endfor %}
           </div>
+        </div>
+        {% else %}
+        <div class="job-photo d-flex align-items-center justify-content-center text-muted">
+          <div style="font-size:48px;">🧰</div>
+        </div>
         {% endif %}
 
         <div class="mt-3 p-2">
           <h3 class="mb-1">{{ job.title }}</h3>
 
           <div class="mt-2">
-            <span class="badge text-bg-success rounded-pill px-3 py-2">{{ job.get_job_type_display }}</span>
+            <span class="badge text-bg-success rounded-pill px-3 py-2">{% t job.job_type %}</span>
             {% if job.is_active %}
-              <span class="badge text-bg-light text-success border rounded-pill px-3 py-2">{% trans "Faol" %}</span>
+            <span class="badge text-bg-light text-success border rounded-pill px-3 py-2">{% t 'faol' %}</span>
             {% else %}
-              <span class="badge text-bg-light text-danger border rounded-pill px-3 py-2">{% trans "Yopilgan" %}</span>
+            <span class="badge text-bg-light text-danger border rounded-pill px-3 py-2">{% t 'yopilgan' %}</span>
             {% endif %}
           </div>
 
           <div class="meta-line mt-3">
             <div>📍 <strong class="text-dark">{{ region_label }}</strong></div>
             {% if profession_name %}
-              <div>🧰 <strong class="text-dark">{{ profession_name }}</strong></div>
+            <div>🧰 <strong class="text-dark">{{ profession_name }}</strong></div>
             {% endif %}
-            <div>💰 <strong class="text-dark">{% if pay_display %}{{ pay_display }}{% else %}{{ job.pay_text }}{% endif %}</strong></div>
+            <div>💰 <strong class="text-dark">{% if pay_display %}{{ pay_display }}{% else %}{{ job.pay_text }}{% endif
+                %}</strong></div>
             {% if job.created_at %}
-              <div>🕒 {{ job.created_at|date:"d M Y" }}</div>
+            <div>🕒 {{ job.created_at|date:"d M Y" }}</div>
             {% endif %}
           </div>
 
-          <hr class="my-4"/>
+          <hr class="my-4" />
 
-          <h5 class="mb-2">{% trans "Tavsif" %}</h5>
-          <p class="text-secondary mb-0" style="white-space:pre-line;">{{ job.description|default:"Tavsif kiritilmagan." }}</p>
+          <h5 class="mb-2">{% t 'tavsif' %}</h5>
+          <p class="text-secondary mb-0" style="white-space:pre-line;">{{ job.description|default:"Tavsif kiritilmagan."
+            }}</p>
 
-          <hr class="my-4"/>
+          <hr class="my-4" />
 
           <div class="text-secondary">
-            📞 {% trans "Telefon" %}: <strong class="text-dark">{{ job.contact_phone }}</strong>
+            📞 {% t 'telefon' %}: <strong class="text-dark">{{ job.contact_phone }}</strong>
           </div>
 
-          <hr class="my-4"/>
+          <hr class="my-4" />
 
-          <h5 class="mb-2">{% trans "Lokatsiya" %}</h5>
+          <h5 class="mb-2">{% t 'lokatsiya' %}</h5>
           {% if job.lat and job.lng %}
-            <div class="text-secondary mb-2">
-              {% trans "Ish joyi koordinatalari" %}: <strong class="text-dark">{{ job.lat }}, {{ job.lng }}</strong>
-            </div>
+          <div class="text-secondary mb-2">
+            {% t 'ish_joyi_koordinatalari' %}: <strong class="text-dark">{{ job.lat }}, {{ job.lng }}</strong>
+          </div>
           {% else %}
-            <div class="text-secondary mb-2">
-              {% trans "Lokatsiya kiritilmagan." %}
-            </div>
+          <div class="text-secondary mb-2">
+            {% t 'lokatsiya_kiritilmagan' %}
+          </div>
           {% endif %}
         </div>
 
         {% if is_employer_view %}
-          <div class="applicants-box">
-            <h5>{% trans "Nomzodlar" %}</h5>
+        <div class="applicants-box">
+          <h5>{% t 'nomzodlar' %}</h5>
 
-            {% for app in applicants %}
-              <a href="{% url 'accounts:worker_public_profile' app.worker.id %}"
-                 class="applicant-card">
-                <div class="applicant-name">
-                  {% if app.worker.worker_profile.first_name or app.worker.worker_profile.last_name %}
-                    {{ app.worker.worker_profile.first_name }} {{ app.worker.worker_profile.last_name }}
-                  {% else %}
-                    {% trans "Ishchi" %} #{{ app.worker.id }}
-                  {% endif %}
-                </div>
-                <div class="applicant-meta">
-                  <span>📞 {{ app.worker.phone|default:"No phone" }}</span>
-                  <span>📌 {{ app.get_status_display }}</span>
-                  <span>🕒 {{ app.created_at|date:"d M Y H:i" }}</span>
-                  {% if app.worker.worker_profile.age %}
-                    <span>🎂 {{ app.worker.worker_profile.age }}</span>
-                  {% endif %}
-                  {% if app.worker.worker_profile.gender %}
-                    <span>👤 {{ app.worker.worker_profile.gender }}</span>
-                  {% endif %}
-                </div>
-              </a>
-            {% empty %}
-              <div class="text-muted">{% trans "Hozircha nomzodlar yo'q." %}</div>
-            {% endfor %}
-          </div>
+          {% for app in applicants %}
+          <a href="{% url 'accounts:worker_public_profile' app.worker.id %}" class="applicant-card">
+            <div class="applicant-name">
+              {% if app.worker.worker_profile.first_name or app.worker.worker_profile.last_name %}
+              {{ app.worker.worker_profile.first_name }} {{ app.worker.worker_profile.last_name }}
+              {% else %}
+              {% t 'ishchi' %} #{{ app.worker.id }}
+              {% endif %}
+            </div>
+            <div class="applicant-meta">
+              <span>📞 {{ app.worker.phone|default:"No phone" }}</span>
+              <span>📌 {% t app.status %}</span>
+              <span>🕒 {{ app.created_at|date:"d M Y H:i" }}</span>
+              {% if app.worker.worker_profile.age %}
+              <span>🎂 {{ app.worker.worker_profile.age }}</span>
+              {% endif %}
+              {% if app.worker.worker_profile.gender %}
+              <span>👤 {{ app.worker.worker_profile.gender }}</span>
+              {% endif %}
+            </div>
+          </a>
+          {% empty %}
+          <div class="text-muted">{% t 'hozircha_nomzodlar_yo_q' %}</div>
+          {% endfor %}
+        </div>
         {% endif %}
-      {% endif %}
+        {% endif %}
 
-      <div class="d-flex gap-2 flex-wrap mt-2 {% if preview_mode %}px-0{% else %}px-2{% endif %}">
-        <a id="yandexMapLink" class="btn btn-outline-secondary" target="_blank" href="https://yandex.com/maps/?pt={{ job.lng|default:'0' }},{{ job.lat|default:'0' }}&z=14&l=map">🗺️ {% trans "Yandex xarita" %}</a>
-        <a id="googleMapLink" class="btn btn-outline-secondary" target="_blank" href="https://www.google.com/maps?q={{ job.lat|default:'0' }},{{ job.lng|default:'0' }}">📍 {% trans "Google xarita" %}</a>
+        <div class="d-flex gap-2 flex-wrap mt-2 {% if preview_mode %}px-0{% else %}px-2{% endif %}">
+          <a id="yandexMapLink" class="btn btn-outline-secondary" target="_blank"
+            href="https://yandex.com/maps/?pt={{ job.lng|default:'0' }},{{ job.lat|default:'0' }}&z=14&l=map">🗺️ {% t
+            'yandex_xarita' %}</a>
+          <a id="googleMapLink" class="btn btn-outline-secondary" target="_blank"
+            href="https://www.google.com/maps?q={{ job.lat|default:'0' }},{{ job.lng|default:'0' }}">📍 {% t
+            'google_xarita' %}</a>
+        </div>
+
       </div>
 
-    </div>
-
-    <div class="sticky-cta mt-3 mb-5">
-      <div class="d-grid gap-2">
-        {% if preview_mode %}
-          <button type="submit" class="btn btn-success btn-lg">💾 {% trans "Saqlash" %}</button>
-        {% else %}
+      <div class="sticky-cta mt-3 mb-5">
+        <div class="d-grid gap-2">
+          {% if preview_mode %}
+          <button type="submit" class="btn btn-success btn-lg">💾 {% t 'saqlash' %}</button>
+          {% else %}
           {% if is_worker_view %}
-            {% if job.contact_phone %}
-              <a class="btn btn-success btn-lg" href="tel:{{ job.contact_phone|cut:' ' }}">📞 {% trans "Qo'ng'iroq qilish" %}</a>
-            {% else %}
-              <button class="btn btn-success btn-lg" disabled>📞 {% trans "Telefon yo'q" %}</button>
-            {% endif %}
+          {% if job.contact_phone %}
+          <a class="btn btn-success btn-lg" href="tel:{{ job.contact_phone|cut:' ' }}">📞 {% t 'qo_ng_iroq_qilish'
+            %}</a>
+          {% else %}
+          <button class="btn btn-success btn-lg" disabled>📞 {% t 'telefon_yo_q' %}</button>
+          {% endif %}
 
-            {% if already_applied %}
-              <button class="btn btn-secondary btn-lg" disabled>
-                ✅ {% trans "Siz allaqachon ariza yuborgansiz" %}
-              </button>
-            {% else %}
-              <a class="btn btn-outline-primary btn-lg" href="{% url 'accounts:worker_apply' job.id %}">
-                ✅ {% trans "Ariza yuborish" %}
-              </a>
-            {% endif %}
+          {% if already_applied %}
+          <button class="btn btn-secondary btn-lg" disabled>
+            ✅ {% t 'siz_allaqachon_ariza_yuborgansiz' %}
+          </button>
+          {% else %}
+          <a class="btn btn-outline-primary btn-lg" href="{% url 'accounts:worker_apply' job.id %}">
+            ✅ {% t 'ariza_yuborish' %}
+          </a>
+          {% endif %}
           {% endif %}
 
           {% if is_employer_view %}
-            <a class="btn btn-outline-warning btn-lg" href="{% url 'accounts:worker_job_detail' job.id %}?preview=1">
-              👁 {% trans "Preview mode" %}
-            </a>
+          <a class="btn btn-outline-warning btn-lg" href="{% url 'accounts:worker_job_detail' job.id %}?preview=1">
+            👁 {% t 'preview_mode' %}
+          </a>
           {% endif %}
-        {% endif %}
+          {% endif %}
+        </div>
       </div>
+
     </div>
+  </form>
 
-  </div>
-</form>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const editableLat = document.getElementById("editableLat");
+    const editableLng = document.getElementById("editableLng");
+    const yandexMapLink = document.getElementById("yandexMapLink");
+    const googleMapLink = document.getElementById("googleMapLink");
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-  const editableLat = document.getElementById("editableLat");
-  const editableLng = document.getElementById("editableLng");
-  const yandexMapLink = document.getElementById("yandexMapLink");
-  const googleMapLink = document.getElementById("googleMapLink");
-
-  function updateMapLinks() {
-    if (editableLat && editableLng && yandexMapLink && googleMapLink) {
-      const latVal = editableLat.value;
-      const lngVal = editableLng.value;
-      if (latVal && lngVal) {
-        yandexMapLink.href = `https://yandex.com/maps/?pt=${lngVal},${latVal}&z=14&l=map`;
-        googleMapLink.href = `https://www.google.com/maps?q=${latVal},${lngVal}`;
+    function updateMapLinks() {
+      if (editableLat && editableLng && yandexMapLink && googleMapLink) {
+        const latVal = editableLat.value;
+        const lngVal = editableLng.value;
+        if (latVal && lngVal) {
+          yandexMapLink.href = `https://yandex.com/maps/?pt=${lngVal},${latVal}&z=14&l=map`;
+          googleMapLink.href = `https://www.google.com/maps?q=${latVal},${lngVal}`;
+        }
       }
     }
-  }
 
-  if (editableLat && editableLng) {
-    editableLat.addEventListener("input", updateMapLinks);
-    editableLng.addEventListener("input", updateMapLinks);
-  }
-</script>
+    if (editableLat && editableLng) {
+      editableLat.addEventListener("input", updateMapLinks);
+      editableLng.addEventListener("input", updateMapLinks);
+    }
+  </script>
 
 </body>
+
 </html>

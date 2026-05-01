@@ -1,4 +1,4 @@
-{% load static i18n %}
+{% load static i18n custom_i18n %}
 {% get_current_language as CURRENT_LANGUAGE %}
 <!DOCTYPE html>
 <html lang="{{ CURRENT_LANGUAGE }}">
@@ -6,16 +6,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>InTask — {% trans "Uy xizmatlari eshigingizgacha" %}</title>
-  <meta name="description"
-    content="{% trans 'InTask orqali yaqin atrofdagi tekshirilgan ustalarni tez toping. Elektrik, santexnik, taʼmir, mebel yigʻish va boshqa xizmatlar.' %}">
+  <title>InTask — {% t 'uy_xizmatlari_eshigingizgacha' %}</title>
+  <meta name="description" content="{% t 'intask_orqali_yaqin_atrofdagi_tekshirilg' %}">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'css/landing.css' %}?v=7">
+  <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=1">
+  <link rel="stylesheet" href="{% static 'css/landing.css' %}?v=8">
+  <script>
+    (function () {
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
 </head>
 
 <body>
@@ -30,7 +36,7 @@
         </div>
         <div class="logo-tx">
           <span class="logo-wm">InTask</span>
-          <span class="logo-sub">{% trans "Tekshirilgan ustalar" %}</span>
+          <span class="logo-sub">{% t 'tekshirilgan_ustalar' %}</span>
         </div>
       </a>
 
@@ -40,8 +46,8 @@
           <circle cx="12" cy="9" r="3" />
         </svg>
         <div class="loc-txt">
-          <small>{% trans "Manzil" %}</small>
-          {% trans "Toshkent, Yunusobod" %}
+          <small>{% t 'manzil' %}</small>
+          {% t 'toshkent_yunusobod' %}
         </div>
         <svg class="loc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <polyline points="6 9 12 15 18 9"></polyline>
@@ -53,7 +59,7 @@
           <circle cx="11" cy="11" r="7"></circle>
           <path d="m21 21-4.3-4.3"></path>
         </svg>
-        <input type="text" placeholder="{% trans 'Qidiring: Konditsioner tozalash' %}">
+        <input type="text" placeholder="{% t 'qidiring_konditsioner_tozalash' %}">
         <span class="srch-hint">⌘K</span>
       </label>
 
@@ -61,8 +67,29 @@
 
       <a href="{% url 'accounts:choose_role' 'worker' %}" class="cta-master">
         <span class="cta-master-dot"></span>
-        <span class="cta-label-full">{% trans "Usta bo'lish" %}</span>
+        <span class="cta-label-full">{% t 'usta_bo_lish' %}</span>
       </a>
+
+      <div class="lang">
+        <button type="button" id="theme-toggle" class="theme-btn" title="{% t 'toggle_theme' %}">
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="hdr-sep"></div>
 
       <div class="lang">
         <form action="{% url 'set_language' %}" method="post" style="margin:0">
@@ -85,8 +112,8 @@
         </form>
       </div>
 
-      <a href="{% url 'accounts:otp' %}" class="btn-login">{% trans "Kirish" %}</a>
-      <a href="{% url 'accounts:role_select' %}" class="btn-signup">{% trans "Ro'yxatdan o'tish" %}</a>
+      <a href="{% url 'accounts:otp' %}" class="btn-login">{% t 'kirish' %}</a>
+      <a href="{% url 'accounts:role_select' %}" class="btn-signup">{% t 'ro_yxatdan_o_tish' %}</a>
 
     </div>
   </header>
@@ -94,10 +121,10 @@
   <!-- ==================== HERO ==================== -->
   <main class="hero">
     <div class="hero-l" data-aos="fade-right" data-aos-duration="1000">
-      <h1>{% blocktrans %}Uy <span class="accent-word">xizmatlari</span><br>eshigingizgacha{% endblocktrans %}</h1>
+      <h1>{% t 'uy_xizmatlari_eshigingizgacha_243' %}</h1>
 
       <div class="picker">
-        <p class="picker-q">{% trans "Nima qidiryapsiz?" %}</p>
+        <p class="picker-q">{% t 'nima_qidiryapsiz' %}</p>
 
         <div class="tiles-main">
           <a href="{% url 'accounts:choose_role' 'employer' %}" class="tile" data-service="electrician">
@@ -105,7 +132,7 @@
                 stroke-linejoin="round">
                 <path d="M22 6 10 22h8l-2 12 12-16h-8l2-12Z" />
               </svg></div>
-            <div class="tile-lb">{% trans "Elektrik" %}</div>
+            <div class="tile-lb">{% t 'elektrik' %}</div>
           </a>
           <a href="{% url 'accounts:choose_role' 'employer' %}" class="tile" data-service="plumber">
             <div class="tile-ic"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-linecap="round"
@@ -114,7 +141,7 @@
                 <circle cx="26" cy="14" r="4" />
                 <path d="m29 11 5-5" />
               </svg></div>
-            <div class="tile-lb">{% trans "Santexnik" %}</div>
+            <div class="tile-lb">{% t 'santexnik' %}</div>
           </a>
           <a href="{% url 'accounts:choose_role' 'employer' %}" class="tile" data-service="ac">
             <div class="tile-ic"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-linecap="round"
@@ -122,7 +149,7 @@
                 <rect x="6" y="10" width="28" height="12" rx="2"></rect>
                 <path d="M10 26v4m8-4v4m8-4v4M6 16h28"></path>
               </svg></div>
-            <div class="tile-lb">{% trans "Konditsioner" %}</div>
+            <div class="tile-lb">{% t 'konditsioner' %}</div>
           </a>
           <a href="{% url 'accounts:choose_role' 'employer' %}" class="tile" data-service="cleaning">
             <div class="tile-ic"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-linecap="round"
@@ -130,7 +157,7 @@
                 <path d="M14 6c0 6-8 6-8 14 0 5 4 8 8 8s8-3 8-8c0-8-8-8-8-14Z" />
                 <path d="M24 24c4 0 8 3 8 7v3H18" />
               </svg></div>
-            <div class="tile-lb">{% trans "Tozalash" %}</div>
+            <div class="tile-lb">{% t 'tozalash' %}</div>
           </a>
           <a href="{% url 'accounts:choose_role' 'employer' %}" class="tile" data-service="furniture">
             <div class="tile-ic"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-linecap="round"
@@ -139,7 +166,7 @@
                 <path d="M8 20v12m24-12v12M10 32h20" />
                 <path d="M10 12V8h20v4" />
               </svg></div>
-            <div class="tile-lb">{% trans "Mebel yig'ish" %}</div>
+            <div class="tile-lb">{% t 'mebel_yig_ish' %}</div>
           </a>
 
           <a href="{% url 'accounts:choose_role' 'employer' %}" class="tile" data-service="deep-clean">
@@ -150,7 +177,7 @@
                 <path d="M17 27v5" />
                 <circle cx="17" cy="34" r="2" />
               </svg></div>
-            <div class="tile-lb">{% blocktrans %}Chuqur tozalash<br>va dezinfeksiya{% endblocktrans %}</div>
+            <div class="tile-lb">{% t 'chuqur_tozalash_va_dezinfeksiya' %}</div>
           </a>
 
         </div>
@@ -162,64 +189,64 @@
                 <path d="M8 22 22 8l4 4 2-2 4 4-2 2 4 4-14 14H8V22Z"></path>
                 <path d="m24 10 6 6" />
               </svg></div>
-            <div class="tile-lb">{% blocktrans %}Uy ta'miri<br>va maishiy ish{% endblocktrans %}</div>
-            <span class="time-badge">30 {% trans "daq" %}</span>
+            <div class="tile-lb">{% t 'uy_ta_miri_va_maishiy_ish' %}</div>
+            <span class="time-badge">30 {% t 'daq' %}</span>
           </a>
         </div>
       </div>
 
       <div class="trust">
         <div class="trust-item"><span class="trust-star">★</span><span class="trust-num count-up" data-target="4.9"
-            data-suffix="">0.0</span><span class="trust-lb">{% trans "reyting" %}</span></div>
+            data-suffix="">0.0</span><span class="trust-lb">{% t 'reyting' %}</span></div>
         <div class="trust-sep"></div>
         <div class="trust-item"><span class="trust-num count-up" data-target="5" data-suffix="K+">0K+</span><span
-            class="trust-lb">{% trans "tekshirilgan usta" %}</span></div>
+            class="trust-lb">{% t 'tekshirilgan_usta' %}</span></div>
         <div class="trust-sep"></div>
         <div class="trust-item"><span class="trust-num count-up" data-target="25" data-suffix="K+">0K+</span><span
-            class="trust-lb">{% trans "buyurtma" %}</span></div>
+            class="trust-lb">{% t 'buyurtma' %}</span></div>
       </div>
     </div>
 
     <!-- RIGHT: interactive 4-tile photo collage -->
     <div class="hero-r" id="collage">
       <div class="ph" data-photo="ac" data-aos="fade-left" data-aos-delay="0">
-        <img src="{% static 'img/electirc_uzbek.png' %}" alt="{% trans 'Konditsioner xizmati' %}">
+        <img src="{% static 'img/' %}{% t 'electirc_img_name' %}.png" alt="{% t 'konditsioner_xizmati' %}">
         <div class="ph-cap">
           <div class="ph-cap-tx">
-            <small>{% trans "Xizmat" %}</small>
-            {% trans "Konditsioner" %}
+            <small>{% t 'xizmat' %}</small>
+            {% t 'konditsioner' %}
           </div>
-          <span class="ph-cap-badge">45 {% trans "daq" %}</span>
+          <span class="ph-cap-badge">45 {% t 'daq' %}</span>
         </div>
       </div>
       <div class="ph" data-photo="furniture" data-aos="fade-left" data-aos-delay="100">
-        <img src="{% static 'img/furnitureFix.png' %}" alt="{% trans 'Mebel yig&#39;ish' %}">
+        <img src="{% static 'img/furnitureFix.png' %}" alt="{% t 'mebel_yig_39_ish' %}">
         <div class="ph-cap">
           <div class="ph-cap-tx">
-            <small>{% trans "Xizmat" %}</small>
-            {% trans "Mebel yig'ish" %}
+            <small>{% t 'xizmat' %}</small>
+            {% t 'mebel_yig_ish' %}
           </div>
-          <span class="ph-cap-badge">2 {% trans "soat" %}</span>
+          <span class="ph-cap-badge">2 {% t 'soat' %}</span>
         </div>
       </div>
       <div class="ph" data-photo="cleaning" data-aos="fade-left" data-aos-delay="200">
-        <img src="{% static 'img/cleanlady.png' %}" alt="{% trans 'Uy tozalash' %}">
+        <img src="{% static 'img/cleanlady.png' %}" alt="{% t 'uy_tozalash' %}">
         <div class="ph-cap">
           <div class="ph-cap-tx">
-            <small>{% trans "Xizmat" %}</small>
-            {% trans "Uy tozalash" %}
+            <small>{% t 'xizmat' %}</small>
+            {% t 'uy_tozalash' %}
           </div>
-          <span class="ph-cap-badge">1.5 {% trans "soat" %}</span>
+          <span class="ph-cap-badge">1.5 {% t 'soat' %}</span>
         </div>
       </div>
       <div class="ph" data-photo="plumber" data-aos="fade-left" data-aos-delay="300">
-        <img src="{% static 'img/plunmber.png' %}" alt="{% trans 'Santexnik' %}" style="object-position: center top;">
+        <img src="{% static 'img/plunmber.png' %}" alt="{% t 'santexnik' %}" style="object-position: center top;">
         <div class="ph-cap">
           <div class="ph-cap-tx">
-            <small>{% trans "Xizmat" %}</small>
-            {% trans "Santexnik" %}
+            <small>{% t 'xizmat' %}</small>
+            {% t 'santexnik' %}
           </div>
-          <span class="ph-cap-badge">30 {% trans "daq" %}</span>
+          <span class="ph-cap-badge">30 {% t 'daq' %}</span>
         </div>
       </div>
     </div>
@@ -230,53 +257,52 @@
     <div class="map-wrap">
       <div class="map-head">
         <div class="map-head-l">
-          <div class="eyebrow">{% trans "Jonli xarita" %}</div>
+          <div class="eyebrow">{% t 'jonli_xarita' %}</div>
 
           <div class="map-title-row">
             <div class="map-title-wrap">
-              <h2 class="map-title" id="mapTitle">{% trans "Toshkentda yaqin buyurtmalar" %}</h2>
-              <a href="{% url 'accounts:role_select' %}" class="map-action-link" id="mapActionBtn">{% blocktrans %}Usta
-                sifatida qo'shiling{% endblocktrans %}</a>
+              <h2 class="map-title" id="mapTitle">{{ 'toshkentda_yaqin_buyurtmalar'|t_filter }}</h2>
+              <a href="{% url 'accounts:role_select' %}" class="map-action-link" id="mapActionBtn"
+                data-t="ordersMapAction"></a>
             </div>
 
             <div class="glass-switch-wrap">
-              <span class="switch-lbl active" id="lblOrders">{% trans "Buyurtmalar" %}</span>
+              <span class="switch-lbl active" id="lblOrders">{% t 'buyurtmalar' %}</span>
               <label class="glass-toggle">
                 <input type="checkbox" id="mapModeToggle">
                 <span class="glass-slider"></span>
               </label>
-              <span class="switch-lbl" id="lblWorkers">{% trans "Ustalar" %}</span>
+              <span class="switch-lbl" id="lblWorkers">{% t 'ustalar' %}</span>
             </div>
           </div>
 
-          <p class="map-sub" style="margin-top:16px;">{% blocktrans %}Shahar bo'ylab joriy interaktiv xaritani bevosita
-            kuzating.{% endblocktrans %}</p>
+          <p class="map-sub" style="margin-top:16px;">{% t 'shahar_bo_ylab_joriy_interaktiv_xaritani' %}</p>
         </div>
         <div class="filters" id="filters">
-          <button class="fil on" data-cat="all">{% trans "Barchasi" %}</button>
-          <button class="fil" data-cat="plumber">🔧 {% trans "Santexnik" %}</button>
-          <button class="fil" data-cat="electrician">⚡ {% trans "Elektrik" %}</button>
-          <button class="fil" data-cat="cleaning">🧽 {% trans "Tozalash" %}</button>
-          <button class="fil" data-cat="repair">🎨 {% trans "Ta'mir" %}</button>
-          <button class="fil" data-cat="ac">❄️ {% trans "Konditsioner" %}</button>
+          <button class="fil on" data-cat="all">{% t 'barchasi' %}</button>
+          <button class="fil" data-cat="plumber">🔧 {% t 'santexnik' %}</button>
+          <button class="fil" data-cat="electrician">⚡ {% t 'elektrik' %}</button>
+          <button class="fil" data-cat="cleaning">🧽 {% t 'tozalash' %}</button>
+          <button class="fil" data-cat="repair">🎨 {% t 'ta_mir' %}</button>
+          <button class="fil" data-cat="ac">❄️ {% t 'konditsioner' %}</button>
         </div>
       </div>
 
       <div class="map-grid">
         <aside class="side">
           <div class="side-head">
-            <h3 id="sideTitle">{% trans "Faol buyurtmalar" %}</h3>
+            <h3 id="sideTitle">{% t 'faol_buyurtmalar' %}</h3>
             <div class="side-head-count"><b id="sideCount">—</b> / 20</div>
           </div>
           <div class="side-list" id="sideList"></div>
         </aside>
         <div class="map-box">
           <div class="map-stats">
-            <div class="stat-i"><b id="statCount">20</b><span>{% trans "buyurtma" %}</span></div>
+            <div class="stat-i"><b id="statCount">20</b><span>{% t 'buyurtma' %}</span></div>
             <div class="stat-sep"></div>
-            <div class="stat-i"><b>12</b><span>{% trans "tuman" %}</span></div>
+            <div class="stat-i"><b>12</b><span>{% t 'tuman' %}</span></div>
             <div class="stat-sep"></div>
-            <div class="stat-i"><b>5.2 {% trans "daq" %}</b><span>{% trans "o'rtacha" %}</span></div>
+            <div class="stat-i"><b>5.2 {% t 'daq' %}</b><span>{% t 'o_rtacha' %}</span></div>
           </div>
           <div id="mapEl"></div>
         </div>
@@ -292,13 +318,12 @@
       <!-- LEFT CONTENT -->
       <div class="cta-l" data-aos="fade-right" data-aos-duration="1000">
         <h2>
-          {% trans "Siz ham" %} <em>{% trans "usta bo'ling" %}</em><br>
-          <span style="white-space: nowrap;">{% trans "va 15 mln so'mgacha toping" %}</span>
+          {% t 'siz_ham' %} <em>{% t 'usta_bo_ling' %}</em><br>
+          <span style="white-space: nowrap;">{% t 'va_15_mln_so_mgacha_toping' %}</span>
         </h2>
 
         <p>
-          {% blocktrans %}InTask'da buyurtmalar oling, mijozlar bilan ishlang va daromadingizni oshiring. Ro'yxatdan
-          o'tish bepul.{% endblocktrans %}
+          {% t 'intask_da_buyurtmalar_oling_mijozlar_bil' %}
         </p>
 
         <div class="cta-stats" data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
@@ -310,7 +335,7 @@
               <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
             </svg>
             <b class="count-up" data-target="15" data-suffix="K+">0K+</b>
-            <span>{% trans "haftalik buyurtmalar" %}</span>
+            <span>{% t 'haftalik_buyurtmalar' %}</span>
           </div>
 
           <div class="cta-stat">
@@ -319,7 +344,7 @@
               <polyline points="12 6 12 12 16 14"></polyline>
             </svg>
             <b class="count-up" data-target="24" data-suffix=" soat">0 soat</b>
-            <span>{% trans "to'lov vaqti" %}</span>
+            <span>{% t 'to_lov_vaqti' %}</span>
           </div>
 
           <div class="cta-stat">
@@ -328,13 +353,13 @@
               <line x1="2" y1="10" x2="22" y2="10" />
             </svg>
             <b class="count-up" data-target="0" data-suffix=" UZS">0 UZS</b>
-            <span>{% trans "ro'yxat uchun" %}</span>
+            <span>{% t 'ro_yxat_uchun' %}</span>
           </div>
 
         </div>
 
         <a href="{% url 'accounts:choose_role' 'worker' %}" class="cta-btn">
-          {% trans "Hoziroq ariza berish" %}
+          {% t 'hoziroq_ariza_berish' %}
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
             <path d="M5 12h14M12 5l7 7-7 7" />
           </svg>
@@ -362,8 +387,8 @@
                 </svg>
               </span>
               <div>
-                <p>{% trans "Elektrik usta" %}</p>
-                <small>{% trans "Tez va ishonchli" %}</small>
+                <p>{% t 'elektrik_usta' %}</p>
+                <small>{% t 'tez_va_ishonchli' %}</small>
               </div>
             </div>
           </div>
@@ -377,9 +402,9 @@
               </svg>
             </span>
             <div class="cta-earn-text">
-              <span>{% trans "Oylik daromad" %}</span>
+              <span>{% t 'oylik_daromad' %}</span>
               <strong>15 000 000</strong>
-              <small>{% trans "so'mgacha" %}</small>
+              <small>{% t 'so_mgacha' %}</small>
             </div>
           </div>
 
@@ -396,8 +421,8 @@
                 </svg>
               </span>
               <div>
-                <p>{% trans "Santexnik" %}</p>
-                <small>{% trans "Sifatli va kafolatli" %}</small>
+                <p>{% t 'santexnik' %}</p>
+                <small>{% t 'sifatli_va_kafolatli' %}</small>
               </div>
             </div>
           </div>
@@ -421,8 +446,8 @@
                 </svg>
               </span>
               <div>
-                <p>{% trans "Tozalash" %}</p>
-                <small>{% trans "Toza va ozoda" %}</small>
+                <p>{% t 'tozalash' %}</p>
+                <small>{% t 'toza_va_ozoda' %}</small>
               </div>
             </div>
 
@@ -434,7 +459,7 @@
               </div>
               <div>
                 <strong>1000+</strong>
-                <small>{% trans "faol ustalar bilan birga" %}</small>
+                <small>{% t 'faol_ustalar_bilan_birga' %}</small>
               </div>
             </div>
           </div>
@@ -444,6 +469,77 @@
 
     </div>
   </section>
+  <!-- ==================== CONTACT SECTION ==================== -->
+  <section class="contact-sec" id="contact">
+    <div class="contact-wrap">
+      <div class="contact-grid">
+        <!-- Form Card -->
+        <div class="contact-card c-form" data-aos="fade-up">
+          <div class="c-head">
+            <h2 class="c-title">{% t 'savollaringiz_bormi' %}</h2>
+            <p class="c-sub">{% t 'habar_qoldiring_va_biz_siz_bilan_tez_ora' %}</p>
+          </div>
+          <form class="c-fields">
+            <div class="c-row">
+              <div class="c-inp-grp">
+                <label>{% t 'ismingiz' %}</label>
+                <input type="text" placeholder="{% t 'ismingizni_kiriting' %}">
+              </div>
+              <div class="c-inp-grp">
+                <label>{% t 'telefon_raqamingiz' %}</label>
+                <input type="tel" placeholder="+998 90 123 45 67">
+              </div>
+            </div>
+            <div class="c-inp-grp">
+              <label>{% t 'xabar' %}</label>
+              <textarea placeholder="{% t 'xabaringizni_yozing' %}"></textarea>
+            </div>
+            <button type="submit" class="c-btn">{% t 'yuborish' %}</button>
+          </form>
+        </div>
+
+        <!-- Info Card -->
+        <div class="contact-card c-info" data-aos="fade-up" data-aos-delay="100">
+          <div class="c-badge">{% t 'aloqa' %}</div>
+          <h3>{% t 'biz_bilan_bog_lanish' %}</h3>
+          <div class="c-list">
+            <div class="c-item">
+              <div class="c-icon">📞</div>
+              <div class="c-tx">
+                <small>{% t 'telefon' %}</small>
+                <span>+998 71 200 00 00</span>
+              </div>
+            </div>
+            <div class="c-item">
+              <div class="c-icon">✉️</div>
+              <div class="c-tx">
+                <small>{% t 'email' %}</small>
+                <span>info@intask.uz</span>
+              </div>
+            </div>
+            <div class="c-item">
+              <div class="c-icon">📍</div>
+              <div class="c-tx">
+                <small>{% t 'manzil' %}</small>
+                <span>{% t 'toshkent_shahri_amir_temur_ko_chasi_108' %}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Social Card -->
+        <div class="contact-card c-social" data-aos="fade-up" data-aos-delay="200">
+          <h3>{% t 'bizni_kuzatib_boring' %}</h3>
+          <div class="s-links">
+            <a href="https://t.me/akoow_007" target="_blank" class="s-link" style="--c: #0088cc">Telegram</a>
+            <a href="https://www.instagram.com/intask.uz/" target="_blank" class="s-link"
+              style="--c: #e1306c">Instagram</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ==================== FOOTER ==================== -->
   <footer class="ftr">
     <div class="ftr-wrap">
@@ -456,7 +552,7 @@
             </div>
             <span class="logo-wm">InTask</span>
           </a>
-          <p>{% trans "O'zbekistondagi №1 tekshirilgan ustalar platformasi. Har qanday uy ishi — 15 daqiqada." %}</p>
+          <p>{% t 'o_zbekistondagi_1_tekshirilgan_ustalar_p' %}</p>
           <div class="ftr-social">
             <a href="#" aria-label="Telegram">
               <svg viewBox="0 0 24 24" fill="currentColor">
@@ -487,45 +583,45 @@
         </div>
 
         <div class="ftr-col">
-          <h4>{% trans "Xizmatlar" %}</h4>
+          <h4>{% t 'xizmatlar' %}</h4>
           <ul>
-            <li><a href="#">{% trans "Elektrik" %}</a></li>
-            <li><a href="#">{% trans "Santexnik" %}</a></li>
-            <li><a href="#">{% trans "Konditsioner" %}</a></li>
-            <li><a href="#">{% trans "Tozalash" %}</a></li>
-            <li><a href="#">{% trans "Mebel yig'ish" %}</a></li>
-            <li><a href="#">{% trans "Barcha xizmatlar" %} →</a></li>
+            <li><a href="#">{% t 'elektrik' %}</a></li>
+            <li><a href="#">{% t 'santexnik' %}</a></li>
+            <li><a href="#">{% t 'konditsioner' %}</a></li>
+            <li><a href="#">{% t 'tozalash' %}</a></li>
+            <li><a href="#">{% t 'mebel_yig_ish' %}</a></li>
+            <li><a href="#">{% t 'barcha_xizmatlar' %} →</a></li>
           </ul>
         </div>
 
         <div class="ftr-col">
           <h4>InTask</h4>
           <ul>
-            <li><a href="#">{% trans "Biz haqimizda" %}</a></li>
-            <li><a href="#">{% trans "Blog" %}</a></li>
-            <li><a href="#">{% trans "Karyera" %}</a></li>
-            <li><a href="#">{% trans "Matbuot" %}</a></li>
-            <li><a href="#">{% trans "Biznes uchun" %} <span class="new-tag">{% trans "Yangi" %}</span></a></li>
+            <li><a href="#">{% t 'biz_haqimizda' %}</a></li>
+            <li><a href="#">{% t 'blog' %}</a></li>
+            <li><a href="#">{% t 'karyera' %}</a></li>
+            <li><a href="#">{% t 'matbuot' %}</a></li>
+            <li><a href="#">{% t 'biznes_uchun' %} <span class="new-tag">{% t 'yangi' %}</span></a></li>
           </ul>
         </div>
 
         <div class="ftr-col">
-          <h4>{% trans "Ustalar" %}</h4>
+          <h4>{% t 'ustalar' %}</h4>
           <ul>
-            <li><a href="{% url 'accounts:choose_role' 'worker' %}">{% trans "Usta bo'lish" %}</a></li>
+            <li><a href="{% url 'accounts:choose_role' 'worker' %}">{% t 'usta_bo_lish' %}</a></li>
             <li><a href="#">InTask Academy</a></li>
-            <li><a href="#">{% trans "Daromad kalkulyatori" %}</a></li>
-            <li><a href="#">{% trans "Sertifikatsiya" %}</a></li>
-            <li><a href="#">{% trans "Usta yordami" %}</a></li>
+            <li><a href="#">{% t 'daromad_kalkulyatori' %}</a></li>
+            <li><a href="#">{% t 'sertifikatsiya' %}</a></li>
+            <li><a href="#">{% t 'usta_yordami' %}</a></li>
           </ul>
         </div>
 
         <div class="ftr-col">
-          <h4>{% trans "Yordam" %}</h4>
+          <h4>{% t 'yordam' %}</h4>
           <ul>
-            <li><a href="#">{% trans "Savol-javob" %}</a></li>
-            <li><a href="#">{% trans "Aloqa" %}</a></li>
-            <li><a href="#">{% trans "Xavfsizlik" %}</a></li>
+            <li><a href="#">{% t 'savol_javob' %}</a></li>
+            <li><a href="#">{% t 'aloqa' %}</a></li>
+            <li><a href="#">{% t 'xavfsizlik' %}</a></li>
             <li><a href="tel:+998711234567">+998 71 123 45 67</a></li>
             <li><a href="mailto:info@intask.uz">info@intask.uz</a></li>
           </ul>
@@ -534,26 +630,26 @@
 
       <div class="ftr-mid">
         <div class="ftr-app">
-          <p class="ftr-app-t">{% trans "Ilovani yuklab oling" %}</p>
+          <p class="ftr-app-t">{% t 'ilovani_yuklab_oling' %}</p>
           <div class="ftr-app-row">
             <a href="#" class="ftr-app-badge">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path
                   d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01ZM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25Z" />
               </svg>
-              <div><small>{% trans "Download on the" %}</small><strong>App Store</strong></div>
+              <div><small>{% t 'download_on_the' %}</small><strong>App Store</strong></div>
             </a>
             <a href="#" class="ftr-app-badge">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path d="m3 2 16 10L3 22V2Zm2 3.4v13.2l10.4-6.6L5 5.4Z" />
               </svg>
-              <div><small>{% trans "Get it on" %}</small><strong>Google Play</strong></div>
+              <div><small>{% t 'get_it_on' %}</small><strong>Google Play</strong></div>
             </a>
           </div>
         </div>
 
         <div class="ftr-pay">
-          <p class="ftr-pay-t">{% trans "Qabul qilinadigan to'lovlar" %}</p>
+          <p class="ftr-pay-t">{% t 'qabul_qilinadigan_to_lovlar' %}</p>
           <div class="ftr-pay-row">
             <span class="pay-chip">Payme</span>
             <span class="pay-chip">Click</span>
@@ -568,10 +664,10 @@
       <div class="ftr-bot">
         <div class="ftr-bot-l">
           <span>© 2026 InTask LLC</span>
-          <a href="#">{% trans "Foydalanish shartlari" %}</a>
-          <a href="#">{% trans "Maxfiylik siyosati" %}</a>
+          <a href="#">{% t 'foydalanish_shartlari' %}</a>
+          <a href="#">{% t 'maxfiylik_siyosati' %}</a>
           <a href="#">Cookie</a>
-          <a href="#">{% trans "Ommaviy oferta" %}</a>
+          <a href="#">{% t 'ommaviy_oferta' %}</a>
         </div>
       </div>
 
@@ -581,57 +677,117 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
+  <div id="marker-i18n" style="display:none">
+    <span data-k="santexnik_kerak">{% t 'santexnik_kerak' %}</span>
+    <span data-k="rozetka_o_rnatish">{% t 'rozetka_o_rnatish' %}</span>
+    <span data-k="chuqur_tozalash">{% t 'chuqur_tozalash' %}</span>
+    <span data-k="split_sistema">{% t 'split_sistema' %}</span>
+    <span data-k="devor_bo_yash">{% t 'devor_bo_yash' %}</span>
+    <span data-k="kran_almashtirish">{% t 'kran_almashtirish' %}</span>
+    <span data-k="lyustra_o_rnatish">{% t 'lyustra_o_rnatish' %}</span>
+    <span data-k="oyna_tozalash">{% t 'oyna_tozalash' %}</span>
+    <span data-k="konditsioner_servis">{% t 'konditsioner_servis' %}</span>
+    <span data-k="plitka_yotqizish">{% t 'plitka_yotqizish' %}</span>
+    <span data-k="bolier_ta_mir">{% t 'bolier_ta_mir' %}</span>
+    <span data-k="sim_o_tkazish">{% t 'sim_o_tkazish' %}</span>
+    <span data-k="umumiy_tozalash">{% t 'umumiy_tozalash' %}</span>
+    <span data-k="shift_ta_miri">{% t 'shift_ta_miri' %}</span>
+    <span data-k="santexnik">{% t 'santexnik' %}</span>
+    <span data-k="elektrik">{% t 'elektrik' %}</span>
+    <span data-k="tozalash">{% t 'tozalash' %}</span>
+    <span data-k="konditsioner">{% t 'konditsioner' %}</span>
+    <span data-k="uy_ta_miri">{% t 'uy_ta_miri' %}</span>
+    <span data-k="uzs">{% t 'uzs' %}</span>
+    <span data-k="soat">{% t 'soat' %}</span>
+    <span data-k="yunusobod">{% t 'yunusobod' %}</span>
+    <span data-k="chilonzor">{% t 'chilonzor' %}</span>
+    <span data-k="mirzo_ulug_bek">{% t 'mirzo_ulug_bek' %}</span>
+    <span data-k="yakkasaroy">{% t 'yakkasaroy' %}</span>
+    <span data-k="shayxontohur">{% t 'shayxontohur' %}</span>
+    <span data-k="olmazor">{% t 'olmazor' %}</span>
+    <span data-k="mirobod">{% t 'mirobod' %}</span>
+    <span data-k="yashnobod">{% t 'yashnobod' %}</span>
+    <span data-k="uchtepa">{% t 'uchtepa' %}</span>
+    <span data-k="chorsu">{% t 'chorsu' %}</span>
+    <span data-k="amir_temur">{% t 'amir_temur' %}</span>
+    <span data-k="ttz">{% t 'ttz' %}</span>
+    <span data-k="yangihayot">{% t 'yangihayot' %}</span>
+    <span data-k="beruniy">{% t 'beruniy' %}</span>
+    <span data-k="hadra">{% t 'hadra' %}</span>
+    <span data-k="oybek">{% t 'oybek' %}</span>
+    <span data-k="paxtakor">{% t 'paxtakor' %}</span>
+    <span data-k="mustaqillik">{% t 'mustaqillik' %}</span>
+    <span data-k="darxon">{% t 'darxon' %}</span>
+    <span data-k="pushkin">{% t 'pushkin' %}</span>
+  </div>
+
   <script>
-    // Localized Arrays for Javascript injection safely using raw javascript template literals
+    const _t = (k) => {
+      const el = document.querySelector(`#marker-i18n [data-k="${k}"]`);
+      return el ? el.textContent : k;
+    };
     window.systemOrders = [
-      { lat: 41.2829, lng: 69.2034, cat: 'plumber', icon: '🔧', title: `{% trans "Santexnik kerak" %}`, area: `{% trans "Chilonzor" %}`, price: `80 000 {% trans "UZS" %}` },
-      { lat: 41.3563, lng: 69.2898, cat: 'electrician', icon: '⚡', title: `{% trans "Rozetka o'rnatish" %}`, area: `{% trans "Yunusobod" %}`, price: `120 000 {% trans "UZS" %}` },
-      { lat: 41.3259, lng: 69.3434, cat: 'cleaning', icon: '🧽', title: `{% trans "Chuqur tozalash" %}`, area: `{% trans "Mirzo Ulug'bek" %}`, price: `150 000 {% trans "UZS" %}` },
-      { lat: 41.2916, lng: 69.2716, cat: 'ac', icon: '❄️', title: `{% trans "Split-sistema" %}`, area: `{% trans "Yakkasaroy" %}`, price: `180 000 {% trans "UZS" %}` },
-      { lat: 41.3250, lng: 69.2491, cat: 'repair', icon: '🎨', title: `{% trans "Devor bo'yash" %}`, area: `{% trans "Shayxontohur" %}`, price: `450 000 {% trans "UZS" %}` },
-      { lat: 41.3376, lng: 69.2128, cat: 'plumber', icon: '🔧', title: `{% trans "Kran almashtirish" %}`, area: `{% trans "Olmazor" %}`, price: `95 000 {% trans "UZS" %}` },
-      { lat: 41.2943, lng: 69.2831, cat: 'electrician', icon: '⚡', title: `{% trans "Lyustra o'rnatish" %}`, area: `{% trans "Mirobod" %}`, price: `110 000 {% trans "UZS" %}` },
-      { lat: 41.3091, lng: 69.3250, cat: 'cleaning', icon: '🧽', title: `{% trans "Oyna tozalash" %}`, area: `{% trans "Yashnobod" %}`, price: `170 000 {% trans "UZS" %}` },
-      { lat: 41.3156, lng: 69.1917, cat: 'ac', icon: '❄️', title: `{% trans "Konditsioner servis" %}`, area: `{% trans "Uchtepa" %}`, price: `190 000 {% trans "UZS" %}` },
-      { lat: 41.3263, lng: 69.2394, cat: 'repair', icon: '🎨', title: `{% trans "Plitka yotqizish" %}`, area: `{% trans "Chorsu" %}`, price: `380 000 {% trans "UZS" %}` },
-      { lat: 41.3111, lng: 69.2797, cat: 'plumber', icon: '🔧', title: `{% trans "Bolier ta'mir" %}`, area: `{% trans "Amir Temur" %}`, price: `85 000 {% trans "UZS" %}` },
-      { lat: 41.3446, lng: 69.3583, cat: 'electrician', icon: '⚡', title: `{% trans "Sim o'tkazish" %}`, area: `{% trans "TTZ" %}`, price: `105 000 {% trans "UZS" %}` },
-      { lat: 41.2410, lng: 69.2582, cat: 'cleaning', icon: '🧽', title: `{% trans "Umumiy tozalash" %}`, area: `{% trans "Yangihayot" %}`, price: `140 000 {% trans "UZS" %}` },
-      { lat: 41.3389, lng: 69.2283, cat: 'repair', icon: '🎨', title: `{% trans "Shift ta'miri" %}`, area: `{% trans "Beruniy" %}`, price: `320 000 {% trans "UZS" %}` },
-      { lat: 41.3210, lng: 69.2576, cat: 'ac', icon: '❄️', title: `{% trans "Freon to'ldirish" %}`, area: `{% trans "Hadra" %}`, price: `200 000 {% trans "UZS" %}` },
-      { lat: 41.2974, lng: 69.2700, cat: 'plumber', icon: '🔧', title: `{% trans "Unitaz o'rnatish" %}`, area: `{% trans "Oybek" %}`, price: `160 000 {% trans "UZS" %}` },
-      { lat: 41.3087, lng: 69.2634, cat: 'electrician', icon: '⚡', title: `{% trans "Shit yig'ish" %}`, area: `{% trans "Paxtakor" %}`, price: `115 000 {% trans "UZS" %}` },
-      { lat: 41.3119, lng: 69.2700, cat: 'cleaning', icon: '🧽', title: `{% trans "Xona tozalash" %}`, area: `{% trans "Mustaqillik" %}`, price: `130 000 {% trans "UZS" %}` },
-      { lat: 41.3278, lng: 69.2789, cat: 'repair', icon: '🎨', title: `{% trans "Gipskarton shift" %}`, area: `{% trans "Darxon" %}`, price: `400 000 {% trans "UZS" %}` },
-      { lat: 41.3175, lng: 69.2900, cat: 'ac', icon: '❄️', title: `{% trans "Klimat o'rnatish" %}`, area: `{% trans "Pushkin" %}`, price: `175 000 {% trans "UZS" %}` }
+      { lat: 41.2829, lng: 69.2034, cat: 'plumber', icon: '🔧', title: _t('santexnik_kerak'), area: _t('chilonzor'), price: `80 000 ${_t('uzs')}` },
+      { lat: 41.3563, lng: 69.2898, cat: 'electrician', icon: '⚡', title: _t('rozetka_o_rnatish'), area: _t('yunusobod'), price: `120 000 ${_t('uzs')}` },
+      { lat: 41.3259, lng: 69.3434, cat: 'cleaning', icon: '🧽', title: _t('chuqur_tozalash'), area: _t('mirzo_ulug_bek'), price: `150 000 ${_t('uzs')}` },
+      { lat: 41.2916, lng: 69.2716, cat: 'ac', icon: '❄️', title: _t('split_sistema'), area: _t('yakkasaroy'), price: `180 000 ${_t('uzs')}` },
+      { lat: 41.3250, lng: 69.2491, cat: 'repair', icon: '🎨', title: _t('devor_bo_yash'), area: _t('shayxontohur'), price: `450 000 ${_t('uzs')}` },
+      { lat: 41.3376, lng: 69.2128, cat: 'plumber', icon: '🔧', title: _t('kran_almashtirish'), area: _t('olmazor'), price: `95 000 ${_t('uzs')}` },
+      { lat: 41.2943, lng: 69.2831, cat: 'electrician', icon: '⚡', title: _t('lyustra_o_rnatish'), area: _t('mirobod'), price: `110 000 ${_t('uzs')}` },
+      { lat: 41.3091, lng: 69.3250, cat: 'cleaning', icon: '🧽', title: _t('oyna_tozalash'), area: _t('yashnobod'), price: `170 000 ${_t('uzs')}` },
+      { lat: 41.3156, lng: 69.1917, cat: 'ac', icon: '❄️', title: _t('konditsioner_servis'), area: _t('uchtepa'), price: `190 000 ${_t('uzs')}` },
+      { lat: 41.3263, lng: 69.2394, cat: 'repair', icon: '🎨', title: _t('plitka_yotqizish'), area: _t('chorsu'), price: `380 000 ${_t('uzs')}` },
+      { lat: 41.3111, lng: 69.2797, cat: 'plumber', icon: '🔧', title: _t('bolier_ta_mir'), area: _t('amir_temur'), price: `85 000 ${_t('uzs')}` },
+      { lat: 41.3446, lng: 69.3583, cat: 'electrician', icon: '⚡', title: _t('sim_o_tkazish'), area: _t('ttz'), price: `105 000 ${_t('uzs')}` },
+      { lat: 41.2410, lng: 69.2582, cat: 'cleaning', icon: '🧽', title: _t('umumiy_tozalash'), area: _t('yangihayot'), price: `140 000 ${_t('uzs')}` },
+      { lat: 41.3389, lng: 69.2283, cat: 'repair', icon: '🎨', title: _t('shift_ta_miri'), area: _t('beruniy'), price: `320 000 ${_t('uzs')}` }
     ];
 
     window.systemWorkers = [
-      { lat: 41.3111, lng: 69.2797, cat: 'plumber', icon: '', rating: '4.4', title: 'Alisher', service: `{% trans "Santexnik" %}`, price: `110 000 {% trans "UZS" %}/{% trans "soat" %}`, area: `{% trans "Amir Temur" %}` },
-      { lat: 41.2829, lng: 69.2034, cat: 'electrician', icon: '', rating: '4.8', title: 'Botir', service: `{% trans "Elektrik" %}`, price: `170 000 {% trans "UZS" %}/{% trans "soat" %}`, area: `{% trans "Chilonzor" %}` },
-      { lat: 41.3259, lng: 69.3434, cat: 'cleaning', icon: '', rating: '4.3', title: 'Madina', service: `{% trans "Tozalash" %}`, price: `90 000 {% trans "UZS" %}/{% trans "soat" %}`, area: `{% trans "Mirzo Ulug'bek" %}` },
-      { lat: 41.2916, lng: 69.2716, cat: 'ac', icon: '', rating: '4.3', title: 'Sardor', service: `{% trans "Konditsioner" %}`, price: `90 000 {% trans "UZS" %}/{% trans "soat" %}`, area: `{% trans "Yakkasaroy" %}` },
-      { lat: 41.3250, lng: 69.2491, cat: 'repair', icon: '', rating: '4.3', title: 'Otabek', service: `{% trans "Uy ta'miri" %}`, price: `90 000 {% trans "UZS" %}/{% trans "soat" %}`, area: `{% trans "Shayxontohur" %}` },
-      { lat: 41.3376, lng: 69.2128, cat: 'plumber', icon: '', rating: '4.5', title: 'Dilshod', service: `{% trans "Santexnik" %}`, price: `120 000 {% trans "UZS" %}/{% trans "soat" %}`, area: `{% trans "Olmazor" %}` },
-      { lat: 41.2943, lng: 69.2831, cat: 'electrician', icon: '', rating: '4.6', title: 'Nodir', service: `{% trans "Elektrik" %}`, price: `140 000 {% trans "UZS" %}/{% trans "soat" %}`, area: `{% trans "Mirobod" %}` },
-      { lat: 41.3091, lng: 69.3250, cat: 'cleaning', icon: '', rating: '4.1', title: 'Zilola', service: `{% trans "Tozalash" %}`, price: `60 000 {% trans "UZS" %}/{% trans "soat" %}`, area: `{% trans "Yashnobod" %}` },
-      { lat: 41.3156, lng: 69.1917, cat: 'ac', icon: '', rating: '4.6', title: 'Jasur', service: `{% trans "Konditsioner" %}`, price: `140 000 {% trans "UZS" %}/{% trans "soat" %}`, area: `{% trans "Uchtepa" %}` },
-      { lat: 41.3263, lng: 69.2394, cat: 'repair', icon: '', rating: '4.9', title: 'Hasan', service: `{% trans "Uy ta'miri" %}`, price: `180 000 {% trans "UZS" %}/{% trans "soat" %}`, area: `{% trans "Chorsu" %}` },
-      { lat: 41.3111, lng: 69.2797, cat: 'plumber', icon: '', rating: '4.4', title: 'Temur', service: `{% trans "Santexnik" %}`, price: `110 000 {% trans "UZS" %}/{% trans "soat" %}`, area: `{% trans "Amir Temur" %}` },
-      { lat: 41.3446, lng: 69.3583, cat: 'electrician', icon: '', rating: '4.8', title: 'Farhod', service: `{% trans "Elektrik" %}`, price: `170 000 {% trans "UZS" %}/{% trans "soat" %}`, area: `{% trans "TTZ" %}` },
-      { lat: 41.2410, lng: 69.2582, cat: 'cleaning', icon: '', rating: '5.0', title: 'Omina', service: `{% trans "Tozalash" %}`, price: `200 000 {% trans "UZS" %}/{% trans "soat" %}`, area: `{% trans "Yangihayot" %}` },
-      { lat: 41.3389, lng: 69.2283, cat: 'repair', icon: '', rating: '4.5', title: 'Sanjar', service: `{% trans "Uy ta'miri" %}`, price: `120 000 {% trans "UZS" %}/{% trans "soat" %}`, area: `{% trans "Beruniy" %}` },
-      { lat: 41.3210, lng: 69.2576, cat: 'ac', icon: '', rating: '4.8', title: 'Rustam', service: `{% trans "Konditsioner" %}`, price: `170 000 {% trans "UZS" %}/{% trans "soat" %}`, area: `{% trans "Hadra" %}` },
-      { lat: 41.2974, lng: 69.2700, cat: 'plumber', icon: '', rating: '4.9', title: 'Aziz', service: `{% trans "Santexnik" %}`, price: `180 000 {% trans "UZS" %}/{% trans "soat" %}`, area: `{% trans "Oybek" %}` },
-      { lat: 41.3087, lng: 69.2634, cat: 'electrician', icon: '', rating: '4.2', title: 'Bekzod', service: `{% trans "Elektrik" %}`, price: `80 000 {% trans "UZS" %}/{% trans "soat" %}`, area: `{% trans "Paxtakor" %}` },
-      { lat: 41.3119, lng: 69.2700, cat: 'cleaning', icon: '', rating: '4.1', title: 'Guli', service: `{% trans "Tozalash" %}`, price: `60 000 {% trans "UZS" %}/{% trans "soat" %}`, area: `{% trans "Mustaqillik" %}` },
-      { lat: 41.3278, lng: 69.2789, cat: 'repair', icon: '', rating: '4.9', title: 'Akmal', service: `{% trans "Uy ta'miri" %}`, price: `180 000 {% trans "UZS" %}/{% trans "soat" %}`, area: `{% trans "Darxon" %}` },
-      { lat: 41.3175, lng: 69.2900, cat: 'ac', icon: '', rating: '4.8', title: 'Ulug\'bek', service: `{% trans "Konditsioner" %}`, price: `170 000 {% trans "UZS" %}/{% trans "soat" %}`, area: `{% trans "Pushkin" %}` }
+      { lat: 41.3111, lng: 69.2797, cat: 'plumber', icon: '', rating: '4.4', title: 'Alisher', service: _t('santexnik'), price: `110 000 ${_t('uzs')}/${_t('soat')}`, area: _t('amir_temur') },
+      { lat: 41.2829, lng: 69.2034, cat: 'electrician', icon: '', rating: '4.8', title: 'Botir', service: _t('elektrik'), price: `170 000 ${_t('uzs')}/${_t('soat')}`, area: _t('chilonzor') },
+      { lat: 41.3259, lng: 69.3434, cat: 'cleaning', icon: '', rating: '4.3', title: 'Madina', service: _t('tozalash'), price: `90 000 ${_t('uzs')}/${_t('soat')}`, area: _t('mirzo_ulug_bek') },
+      { lat: 41.2916, lng: 69.2716, cat: 'ac', icon: '', rating: '4.3', title: 'Sardor', service: _t('konditsioner'), price: `90 000 ${_t('uzs')}/${_t('soat')}`, area: _t('yakkasaroy') },
+      { lat: 41.3250, lng: 69.2491, cat: 'repair', icon: '', rating: '4.3', title: 'Otabek', service: _t('uy_ta_miri'), price: `90 000 ${_t('uzs')}/${_t('soat')}`, area: _t('shayxontohur') },
+      { lat: 41.3376, lng: 69.2128, cat: 'plumber', icon: '', rating: '4.5', title: 'Dilshod', service: _t('santexnik'), price: `120 000 ${_t('uzs')}/${_t('soat')}`, area: _t('olmazor') },
+      { lat: 41.2943, lng: 69.2831, cat: 'electrician', icon: '', rating: '4.6', title: 'Nodir', service: _t('elektrik'), price: `140 000 ${_t('uzs')}/${_t('soat')}`, area: _t('mirobod') },
+      { lat: 41.3091, lng: 69.3250, cat: 'cleaning', icon: '', rating: '4.1', title: 'Zilola', service: _t('tozalash'), price: `60 000 ${_t('uzs')}/${_t('soat')}`, area: _t('yashnobod') },
+      { lat: 41.3156, lng: 69.1917, cat: 'ac', icon: '', rating: '4.6', title: 'Jasur', service: _t('konditsioner'), price: `140 000 ${_t('uzs')}/${_t('soat')}`, area: _t('uchtepa') },
+      { lat: 41.3263, lng: 69.2394, cat: 'repair', icon: '', rating: '4.9', title: 'Hasan', service: _t('uy_ta_miri'), price: `180 000 ${_t('uzs')}/${_t('soat')}`, area: _t('chorsu') },
+      { lat: 41.3389, lng: 69.2283, cat: 'repair', icon: '', rating: '4.5', title: 'Sanjar', service: _t('uy_ta_miri'), price: `120 000 ${_t('uzs')}/${_t('soat')}`, area: _t('beruniy') },
+      { lat: 41.3210, lng: 69.2576, cat: 'ac', icon: '', rating: '4.8', title: 'Rustam', service: _t('konditsioner'), price: `170 000 ${_t('uzs')}/${_t('soat')}`, area: _t('hadra') },
+      { lat: 41.2974, lng: 69.2700, cat: 'plumber', icon: '', rating: '4.9', title: 'Aziz', service: _t('santexnik'), price: `180 000 ${_t('uzs')}/${_t('soat')}`, area: _t('oybek') },
+      { lat: 41.3087, lng: 69.2634, cat: 'electrician', icon: '', rating: '4.2', title: 'Bekzod', service: _t('elektrik'), price: `80 000 ${_t('uzs')}/${_t('soat')}`, area: _t('paxtakor') },
+      { lat: 41.3119, lng: 69.2700, cat: 'cleaning', icon: '', rating: '4.1', title: 'Guli', service: _t('tozalash'), price: `60 000 ${_t('uzs')}/${_t('soat')}`, area: _t('mustaqillik') },
+      { lat: 41.3278, lng: 69.2789, cat: 'repair', icon: '', rating: '4.9', title: 'Akmal', service: _t('uy_ta_miri'), price: `180 000 ${_t('uzs')}/${_t('soat')}`, area: _t('darxon') },
+      { lat: 41.3175, lng: 69.2900, cat: 'ac', icon: '', rating: '4.8', title: 'Ulug\'bek', service: _t('konditsioner'), price: `170 000 ${_t('uzs')}/${_t('soat')}`, area: _t('pushkin') }
     ];
   </script>
 
+  <div id="i18n-source" style="display:none" data-yaqin-atrofdagi="{% t 'yaqin_atrofdagi' %}"
+    data-workers-map-title="{% t 'toshkentda_yaqin_ustalar' %}" data-workers-map-action="{% t 'usta_qidiring' %}"
+    data-workers-side-title="{% t 'faol_ustalar' %}" data-orders-map-title="{% t 'toshkentda_yaqin_buyurtmalar' %}"
+    data-orders-map-action="{% t 'usta_sifatida_qo_shiling' %}" data-orders-side-title="{% t 'faol_buyurtmalar' %}"
+    data-masters-label="{% t 'tekshirilgan_usta' %}" data-orders-label="{% t 'buyurtma' %}"></div>
+  <script>
+    (function () {
+      const src = document.getElementById('i18n-source');
+      if (!src) return;
+      window.i18n = {
+        yaqinAtrofdagi: src.dataset.yaqinAtrofdagi,
+        workersMapTitle: src.dataset.workersMapTitle,
+        workersMapAction: src.dataset.workersMapAction + " →",
+        workersSideTitle: src.dataset.workersSideTitle,
+        ordersMapTitle: src.dataset.ordersMapTitle,
+        ordersMapAction: src.dataset.ordersMapAction + " →",
+        ordersSideTitle: src.dataset.ordersSideTitle,
+        mastersLabel: src.dataset.mastersLabel,
+        ordersLabel: src.dataset.ordersLabel
+      };
+    })();
+  </script>
+
   <script src="{% static 'js/landing.js' %}?v=7"></script>
-  <script src="{% static 'js/commonItems.js' %}?v=7"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       AOS.init({ once: false, offset: 60 });
@@ -640,27 +796,20 @@
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             const el = entry.target;
-
-            // Prevent restarting if already animating or done (unless we want to replay on every scroll)
-            // Replaying number animations on every scroll chunk can be distracting, but we will replay if desired.
             if (el.dataset.done === "true") return;
-
             const target = parseFloat(el.getAttribute("data-target") || 0);
             const suffix = el.getAttribute("data-suffix") || "";
             const isFloat = target % 1 !== 0;
-
             if (target === 0) {
               el.innerText = "0" + suffix;
               el.dataset.done = "true";
               return;
             }
-
             let start = 0;
             const duration = 2000;
-            const stepTime = 30; // 30ms per frame
+            const stepTime = 30;
             const steps = duration / stepTime;
             const increment = target / steps;
-
             const timer = setInterval(() => {
               start += increment;
               if (start >= target) {
@@ -671,13 +820,11 @@
               el.innerText = (isFloat ? start.toFixed(1) : Math.floor(start)) + suffix;
             }, stepTime);
           } else {
-            // Reset animation when out of view
             el.dataset.done = "false";
             el.innerText = "0" + (el.getAttribute("data-suffix") || "");
           }
         });
       }, { threshold: 0.1 });
-
       nums.forEach(num => observer.observe(num));
     });
   </script>

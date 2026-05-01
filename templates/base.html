@@ -1,125 +1,105 @@
 {% load static %}
-{% load i18n %}
+{% load i18n custom_i18n %}
 
 <!DOCTYPE html>
-<html lang="uz">
+<html lang="{{ request.LANGUAGE_CODE|default:'uz' }}">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>TaskiN</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=1">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
 
     <style>
         body {
             font-family: Inter, sans-serif;
-            background-color: #f8f9fa;
+            background-color: var(--bg-base);
+            color: var(--ink);
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
         .card {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border);
             border-radius: 20px;
-        }
-
-        .form-check-input {
-            border-radius: 50%;
+            color: var(--ink);
         }
 
         .form-check-label {
             font-size: 0.9rem;
+            color: var(--ink);
         }
 
         .card h5 {
             font-weight: 600;
+            color: var(--ink);
         }
 
         .card .text-secondary {
             font-size: 0.85rem;
+            color: var(--muted) !important;
         }
 
         .modal-content {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border);
             border-radius: 20px;
+            color: var(--ink);
         }
 
         body.otp-page {
             margin: 0;
             padding: 0;
-            background: #eef4f7;
-        }
-
-        body.otp-page .page-content {
-            margin: 0 !important;
-            padding: 0 !important;
-            width: 100%;
-            max-width: 100%;
+            background: var(--bg-soft);
         }
 
         .app-navbar {
-            background: rgba(255,255,255,0.92);
+            background: var(--bg-surface);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid #eceff3;
+            border-bottom: 1px solid var(--border);
             position: sticky;
             top: 0;
             z-index: 1030;
         }
 
-        .app-navbar .container {
-            min-height: 72px;
-        }
-
         .brand-logo {
             font-weight: 800;
             font-size: 1.5rem;
-            color: #2563eb !important;
+            color: var(--accent) !important;
             text-decoration: none;
             letter-spacing: -0.3px;
-        }
-
-        .top-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
         .icon-btn {
             width: 42px;
             height: 42px;
             border-radius: 14px;
-            border: 1px solid #e7ebf0;
-            background: #f8fafc;
+            border: 1px solid var(--border);
+            background: var(--bg-soft);
             display: inline-flex;
             align-items: center;
             justify-content: center;
             text-decoration: none;
-            color: #334155;
+            color: var(--ink-2);
             transition: all 0.2s ease;
             position: relative;
             padding: 0;
         }
 
         .icon-btn:hover {
-            background: #eef4ff;
-            border-color: #cfe0ff;
-            color: #2563eb;
+            background: var(--accent-soft);
+            border-color: var(--accent-2);
+            color: var(--accent);
             transform: translateY(-1px);
-        }
-
-        .notif-badge {
-            position: absolute;
-            top: -4px;
-            right: -4px;
-            min-width: 18px;
-            height: 18px;
-            border-radius: 999px;
-            background: #ef4444;
-            color: #fff;
-            font-size: 10px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 5px;
-            line-height: 1;
         }
 
         .avatar-btn {
@@ -127,19 +107,13 @@
             height: 42px;
             border-radius: 14px;
             overflow: hidden;
-            border: 1px solid #e7ebf0;
-            background: #f8fafc;
+            border: 1px solid var(--border);
+            background: var(--bg-soft);
             display: inline-flex;
             align-items: center;
             justify-content: center;
             text-decoration: none;
-            color: #334155;
-        }
-
-        .avatar-btn img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            color: var(--ink-2);
         }
 
         .avatar-fallback {
@@ -148,15 +122,16 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #eef2f7;
+            background: var(--bg-soft);
             font-size: 18px;
+            color: var(--muted);
         }
 
         .lang-dropdown .dropdown-toggle {
             border-radius: 14px;
-            border: 1px solid #e7ebf0;
-            background: #f8fafc;
-            color: #334155;
+            border: 1px solid var(--border);
+            background: var(--bg-soft);
+            color: var(--ink-2);
             font-weight: 600;
             padding: 9px 12px;
             min-width: 82px;
@@ -164,9 +139,10 @@
 
         .lang-dropdown .dropdown-menu,
         .user-dropdown .dropdown-menu {
+            background-color: var(--bg-surface);
             border-radius: 16px;
-            border: 1px solid #e7ebf0;
-            box-shadow: 0 10px 35px rgba(15, 23, 42, 0.08);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-md);
             padding: 8px;
         }
 
@@ -175,10 +151,13 @@
             border-radius: 12px;
             padding: 10px 12px;
             font-weight: 500;
+            color: var(--ink);
         }
 
-        .dropdown-item-form {
-            margin: 0;
+        .lang-dropdown .dropdown-item:hover,
+        .user-dropdown .dropdown-item:hover {
+            background-color: var(--bg-soft);
+            color: var(--accent);
         }
 
         .dropdown-item-form button {
@@ -189,33 +168,30 @@
             padding: 10px 12px;
             border-radius: 12px;
             font-weight: 500;
-            color: #212529;
+            color: var(--ink);
         }
 
         .dropdown-item-form button:hover {
-            background: #f3f6fb;
-        }
-
-        .user-summary {
-            padding: 10px 12px 8px;
+            background: var(--bg-soft);
+            color: var(--accent);
         }
 
         .user-name {
             font-weight: 700;
             font-size: 14px;
-            color: #0f172a;
+            color: var(--ink);
             margin: 0;
         }
 
         .user-phone {
             font-size: 12px;
-            color: #64748b;
+            color: var(--muted);
             margin: 2px 0 0;
         }
 
         .menu-divider {
             height: 1px;
-            background: #edf1f5;
+            background: var(--border);
             margin: 8px 0;
         }
 
@@ -266,17 +242,23 @@
 
             <div class="ms-auto d-flex align-items-center gap-2">
 
+                <!-- Theme Toggle -->
+                <button id="themeToggle" class="icon-btn" title="{% t 'theme' %}">
+                    <span class="theme-icon-sun">☀️</span>
+                    <span class="theme-icon-moon" style="display:none;">🌙</span>
+                </button>
+
                 <div class="dropdown lang-dropdown">
                     <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         {% get_current_language as LANGUAGE_CODE %}
                         {% if LANGUAGE_CODE == 'uz' %}
-                            UZB
+                        UZB
                         {% elif LANGUAGE_CODE == 'ru' %}
-                            RUS
+                        RUS
                         {% elif LANGUAGE_CODE == 'en' %}
-                            ENG
+                        ENG
                         {% else %}
-                            LANG
+                        LANG
                         {% endif %}
                     </button>
 
@@ -307,57 +289,58 @@
 
                 {% if request.user.is_authenticated %}
 
-                    <a href="#" class="icon-btn" title="{% trans 'Notifications' %}">
-                        🔔
-                        <span class="notif-badge">2</span>
-                    </a>
+                <a href="#" class="icon-btn" title="{% t 'notifications' %}">
+                    🔔
+                    <span class="notif-badge">2</span>
+                </a>
 
-                    <a href="{% url 'accounts:profile_edit' %}" class="avatar-btn" title="{% trans 'Profile' %}">
-                        {% if request.user.role == "worker" and request.user.worker_profile.photo %}
-                            <img src="{{ request.user.worker_profile.photo.url }}" alt="avatar">
-                        {% else %}
-                            <div class="avatar-fallback">👤</div>
-                        {% endif %}
-                    </a>
+                <a href="{% url 'accounts:profile_edit' %}" class="avatar-btn" title="{% t 'profile' %}">
+                    {% if request.user.role == "worker" and request.user.worker_profile.photo %}
+                    <img src="{{ request.user.worker_profile.photo.url }}" alt="avatar">
+                    {% else %}
+                    <div class="avatar-fallback">👤</div>
+                    {% endif %}
+                </a>
 
-                    <div class="dropdown user-dropdown">
-                        <button class="icon-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="{% trans 'Menu' %}">
-                            ☰
-                        </button>
+                <div class="dropdown user-dropdown">
+                    <button class="icon-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                        title="{% t 'menu' %}">
+                        ☰
+                    </button>
 
-                        <div class="dropdown-menu dropdown-menu-end">
-                            <div class="user-summary">
-                                <p class="user-name">{{ display_name }}</p>
-                                <p class="user-phone">{{ request.user.phone }}</p>
-                            </div>
-
-                            <div class="menu-divider"></div>
-
-                            <a class="dropdown-item" href="{% url 'accounts:profile_edit' %}">
-                                👤 {% trans "Profile" %}
-                            </a>
-
-                            <a class="dropdown-item" href="/employer/">
-                                📋 {% trans "My Jobs" %}
-                            </a>
-
-                            <a class="dropdown-item" href="#">
-                                🔔 {% trans "Notifications" %}
-                            </a>
-
-                            <div class="menu-divider"></div>
-
-                            <a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}">
-                                ↩ {% trans "Chiqish" %}
-                            </a>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <div class="user-summary">
+                            <p class="user-name">{{ display_name }}</p>
+                            <p class="user-phone">{{ request.user.phone }}</p>
                         </div>
+
+                        <div class="menu-divider"></div>
+
+                        <a class="dropdown-item" href="{% url 'accounts:profile_edit' %}">
+                            👤 {% t 'profile' %}
+                        </a>
+
+                        <a class="dropdown-item" href="/employer/">
+                            📋 {% t 'my_jobs' %}
+                        </a>
+
+                        <a class="dropdown-item" href="#">
+                            🔔 {% t 'notifications' %}
+                        </a>
+
+                        <div class="menu-divider"></div>
+
+                        <a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}">
+                            ↩ {% t 'logout' %}
+                        </a>
                     </div>
+                </div>
 
                 {% else %}
 
-                    <a href="{% url 'accounts:otp' %}" class="btn btn-primary auth-btn">
-                        {% trans "RO‘YXATDAN O‘TISH" %}
-                    </a>
+                <a href="{% url 'accounts:otp' %}" class="btn btn-primary auth-btn">
+                    {% t 'register' %}
+                </a>
 
                 {% endif %}
             </div>
@@ -372,4 +355,5 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{% static 'js/main.js' %}"></script>
 </body>
+
 </html>

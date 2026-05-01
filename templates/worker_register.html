@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n custom_i18n %}
 
 {% block content %}
 <div class="registration-wrapper">
@@ -13,19 +13,19 @@
           <circle cx="12" cy="7" r="4"></circle>
         </svg>
       </div>
-      <h2 class="registration-title">{% trans "Ishchi ro'yxatdan o'tish" %}</h2>
-      <p class="registration-subtitle">{% trans "Ma'lumotlaringizni kiriting (1-qadam)" %}</p>
+      <h2 class="registration-title">{% t 'ishchi_ro_yxatdan_o_tish' %}</h2>
+      <p class="registration-subtitle">{% t 'ma_lumotlaringizni_kiriting_1_qadam' %}</p>
 
       <!-- Progress Steps -->
       <div class="progress-steps">
         <div class="step active">
           <div class="step-circle">1</div>
-          <span class="step-label">{% trans "Shaxsiy ma'lumot" %}</span>
+          <span class="step-label">{% t 'shaxsiy_ma_lumot' %}</span>
         </div>
         <div class="step-line"></div>
         <div class="step">
           <div class="step-circle">2</div>
-          <span class="step-label">{% trans "Qo'shimcha" %}</span>
+          <span class="step-label">{% t 'qo_shimcha' %}</span>
         </div>
       </div>
     </div>
@@ -52,7 +52,7 @@
             <circle cx="8.5" cy="8.5" r="1.5"></circle>
             <polyline points="21 15 16 10 5 21"></polyline>
           </svg>
-          {% trans "Profil rasmi" %}
+          {% t 'profil_rasmi' %}
         </label>
 
         <div class="photo-upload-card">
@@ -80,8 +80,8 @@
           </div>
 
           <div class="photo-upload-content">
-            <h4 class="photo-title">{% trans "Profil rasmini yuklang" %}</h4>
-            <p class="photo-description">{% trans "Yuzingiz aniq ko'rinadigan rasm tavsiya qilinadi" %}</p>
+            <h4 class="photo-title">{% t 'profil_rasmini_yuklang' %}</h4>
+            <p class="photo-description">{% t 'yuzingiz_aniq_ko_rinadigan_rasm_tavsiya_' %}</p>
 
             <input id="photoInput" type="file" name="photo" accept="image/*" style="display: none;">
 
@@ -92,7 +92,7 @@
                   <polyline points="17 8 12 3 7 8"></polyline>
                   <line x1="12" y1="3" x2="12" y2="15"></line>
                 </svg>
-                {% trans "Rasm tanlash" %}
+                {% t 'rasm_tanlash' %}
               </button>
 
               <button type="button" class="btn-clear" onclick="clearPhoto()">
@@ -100,12 +100,12 @@
                   <polyline points="3 6 5 6 21 6"></polyline>
                   <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                 </svg>
-                {% trans "O'chirish" %}
+                {% t 'o_chirish' %}
               </button>
             </div>
 
             <span id="photoFileName" class="file-name"></span>
-            <p class="photo-hint">PNG, JPG. {% trans "5MB gacha" %}</p>
+            <p class="photo-hint">PNG, JPG. {% t '5mb_gacha' %}</p>
           </div>
         </div>
       </div>
@@ -119,13 +119,13 @@
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
               <circle cx="12" cy="7" r="4"></circle>
             </svg>
-            {% trans "Ism" %}
+            {% t 'ism' %}
           </label>
           <input
             type="text"
             name="first_name"
             class="form-input"
-            placeholder="{% trans 'Masalan: Abdulaziz' %}"
+            placeholder="{% t 'masalan_abdulaziz' %}"
             value="{{ profile.first_name|default:'' }}"
             required
           >
@@ -140,13 +140,13 @@
               <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
               <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
             </svg>
-            {% trans "Familiya" %}
+            {% t 'familiya' %}
           </label>
           <input
             type="text"
             name="last_name"
             class="form-input"
-            placeholder="{% trans 'Masalan: Gulomov' %}"
+            placeholder="{% t 'masalan_gulomov' %}"
             value="{{ profile.last_name|default:'' }}"
             required
           >
@@ -159,13 +159,13 @@
               <circle cx="12" cy="12" r="10"></circle>
               <polyline points="12 6 12 12 16 14"></polyline>
             </svg>
-            {% trans "Yosh" %}
+            {% t 'yosh' %}
           </label>
           <input
             type="number"
             name="age"
             class="form-input"
-            placeholder="{% trans 'Masalan: 25' %}"
+            placeholder="{% t 'masalan_25' %}"
             value="{{ profile.age|default:'' }}"
             min="16"
             max="100"
@@ -183,19 +183,19 @@
               <line x1="4.22" y1="4.22" x2="1.42" y2="1.42"></line>
               <line x1="19.78" y1="19.78" x2="22.58" y2="22.58"></line>
             </svg>
-            {% trans "Jins" %}
+            {% t 'jins' %}
           </label>
           <select name="gender" class="form-select" required>
-            <option value="">{% trans "Tanlang" %}</option>
-            <option value="male" {% if profile.gender == 'male' %}selected{% endif %}>{% trans "Erkak" %}</option>
-            <option value="female" {% if profile.gender == 'female' %}selected{% endif %}>{% trans "Ayol" %}</option>
+            <option value="">{% t 'tanlang' %}</option>
+            <option value="male" {% if profile.gender == 'male' %}selected{% endif %}>{% t 'erkak' %}</option>
+            <option value="female" {% if profile.gender == 'female' %}selected{% endif %}>{% t 'ayol' %}</option>
           </select>
         </div>
       </div>
 
       <!-- Submit Button -->
       <button class="btn-submit" type="submit">
-        {% trans "Davom etish" %}
+        {% t 'davom_etish' %}
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="5" y1="12" x2="19" y2="12"></line>
           <polyline points="12 5 19 12 12 19"></polyline>
@@ -610,14 +610,14 @@
       if (!file) return;
 
       if (!file.type.startsWith("image/")) {
-        alert("{% trans 'Iltimos, rasm faylini tanlang' %}");
+        alert("{% t 'iltimos_rasm_faylini_tanlang' %}");
         input.value = "";
         return;
       }
 
       // Check file size (5MB)
       if (file.size > 5 * 1024 * 1024) {
-        alert("{% trans 'Fayl hajmi 5MB dan oshmasligi kerak' %}");
+        alert("{% t 'fayl_hajmi_5mb_dan_oshmasligi_kerak' %}");
         input.value = "";
         return;
       }

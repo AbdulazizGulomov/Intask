@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-{% load i18n %}
+{% load i18n custom_i18n %}
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/worker_home.css' %}">
@@ -12,14 +12,14 @@
       <!-- ══ SIDEBAR FILTERS ══ -->
       <aside class="col-12 col-lg-4 col-xl-3">
         <div class="panel">
-          <div class="panel-title">{% trans "Filtrlar" %}</div>
+          <div class="panel-title">{% t 'filtrlar' %}</div>
 
           <form method="get" id="filtersForm">
 
             <div class="filter-block">
-              <div class="filter-title">{% trans "Hudud" %}</div>
+              <div class="filter-title">{% t 'hudud' %}</div>
               <details class="region-dropdown" {% if selected_regions %}open{% endif %}>
-                <summary class="region-summary">{% trans "Hududni tanlang" %}</summary>
+                <summary class="region-summary">{% t 'hududni_tanlang' %}</summary>
                 <div class="region-options">
                   {% for r in regions %}
                     <label class="check">
@@ -34,9 +34,9 @@
             <div class="divider"></div>
 
             <div class="filter-block">
-              <div class="filter-title">{% trans "Kasb" %}</div>
+              <div class="filter-title">{% t 'kasb' %}</div>
               <details class="region-dropdown" {% if selected_professions %}open{% endif %}>
-                <summary class="region-summary">{% trans "Kasbni tanlang" %}</summary>
+                <summary class="region-summary">{% t 'kasbni_tanlang' %}</summary>
                 <div class="region-options">
                   {% for p in professions %}
                     <label class="check">
@@ -55,7 +55,7 @@
 
             {% if q %}<input type="hidden" name="q" value="{{ q }}">{% endif %}
 
-            <button class="btn-apply w-100 mt-3" type="submit">{% trans "Qo'llash" %}</button>
+            <button class="btn-apply w-100 mt-3" type="submit">{% t 'qo_llash' %}</button>
           </form>
         </div>
       </aside>
@@ -74,11 +74,11 @@
               <input class="search-input"
                      name="q"
                      value="{{ q|default:'' }}"
-                     placeholder="{% trans 'Kasb yoki joyni qidiring...' %}">
+                     placeholder="{% t 'kasb_yoki_joyni_qidiring' %}">
             </label>
           </div>
-          <button class="btn-search" type="submit">{% trans "Qidirish" %}</button>
-          <button class="btn-search" type="button" id="nearMeBtn">📍 {% trans "Yaqin ishlar" %}</button>
+          <button class="btn-search" type="submit">{% t 'qidirish' %}</button>
+          <button class="btn-search" type="button" id="nearMeBtn">📍 {% t 'yaqin_ishlar' %}</button>
         </form>
 
         <!-- Near me info -->
@@ -141,7 +141,7 @@
                 ${profLine}
                 <div style="margin-top:8px;font-weight:800;color:#05a866;">💰 ${escapeHtml(job.pay)}</div>
                 <div style="margin-top:10px;">
-                  <a href="${detailUrl}" style="font-weight:700;color:#4361EE;">➜ {% trans "Batafsil" %}</a>
+                  <a href="${detailUrl}" style="font-weight:700;color:#4361EE;">➜ {% t 'batafsil' %}</a>
                 </div>
               </div>`;
 
@@ -203,7 +203,7 @@
                   }
 
                   const nearest = withDist[0];
-                  info.innerHTML = `✅ {% trans "Yaqin ish" %}: <b>${escapeHtml(nearest.title)}</b> — <b>${nearest.distKm.toFixed(1)} km</b>`;
+                  info.innerHTML = `✅ {% t 'yaqin_ish' %}: <b>${escapeHtml(nearest.title)}</b> — <b>${nearest.distKm.toFixed(1)} km</b>`;
 
                   if (map) map.setCenter([uLat, uLng], 12);
                   if (collection) {
@@ -227,7 +227,7 @@
         </script>
 
         <!-- Job list -->
-        <h2 class="section-title">{% trans "Tavsiya etilgan ishlar" %}</h2>
+        <h2 class="section-title">{% t 'tavsiya_etilgan_ishlar' %}</h2>
 
         <div class="job-list">
           {% for job in jobs %}
@@ -266,15 +266,15 @@
                 </div>
               </div>
 
-              <span class="btn-cta detail-btn">{% trans "Batafsil" %} →</span>
+              <span class="btn-cta detail-btn">{% t 'batafsil' %} →</span>
             </a>
 
           {% empty %}
             <div class="job-card" style="text-align:center;padding:32px 20px;">
               <div style="font-size:38px;margin-bottom:10px;">📭</div>
-              <div class="job-title">{% trans "Natija topilmadi" %}</div>
+              <div class="job-title">{% t 'natija_topilmadi' %}</div>
               <div class="job-meta" style="justify-content:center;margin-top:6px;">
-                {% trans "Filtrlarni o'zgartirib ko'ring." %}
+                {% t 'filtrlarni_o_zgartirib_ko_ring' %}
               </div>
             </div>
           {% endfor %}

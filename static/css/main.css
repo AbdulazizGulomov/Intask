@@ -4,53 +4,43 @@
 
 body {
     font-family: Inter, sans-serif;
-    background-color: #f8f9fa;
+    background-color: var(--bg-base);
+    color: var(--ink);
     margin: 0;
+    transition: background 0.3s ease, color 0.3s ease;
 }
-
-
-/* ================================
-   Cards
-================================ */
 
 .card {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border);
     border-radius: 20px;
-    border: none;
-}
-
-
-/* ================================
-   Sidebar / Filter Panel
-================================ */
-
-.form-check-input {
-    border-radius: 50%;
+    color: var(--ink);
 }
 
 .form-check-label {
     font-size: 0.9rem;
+    color: var(--ink);
 }
-
-
-/* ================================
-   Card Typography
-================================ */
 
 .card h5 {
     font-weight: 600;
+    color: var(--ink);
 }
 
 .card .text-secondary {
     font-size: 0.85rem;
+    color: var(--muted) !important;
 }
 
-
-/* ================================
-   Modal
-================================ */
-
 .modal-content {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border);
     border-radius: 20px;
+    color: var(--ink);
+}
+
+.shadow-soft {
+    box-shadow: var(--shadow-sm);
 }
 
 
@@ -75,5 +65,5 @@ body {
 }
 
 .shadow-soft {
-    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }

@@ -23,6 +23,7 @@
       --bg: #f5f7fb;
       --white: #ffffff;
       --danger: #ef4444;
+      --success: #10b981;
     }
 
     * {
@@ -34,7 +35,6 @@
       color: var(--text-dark);
     }
 
-    /* MAIN CARD */
     .profile-wrap {
       max-width: 880px;
       margin: 32px auto;
@@ -44,7 +44,6 @@
       box-shadow: 0 4px 24px -8px rgba(0, 0, 0, 0.06);
     }
 
-    /* HEADER */
     .profile-header {
       display: flex;
       align-items: center;
@@ -112,7 +111,6 @@
       background: var(--primary-light);
     }
 
-    /* SECTION TITLE */
     .section-label {
       font-size: 16px;
       font-weight: 700;
@@ -120,7 +118,6 @@
       margin-bottom: 14px;
     }
 
-    /* AVATAR SECTION */
     .avatar-section {
       display: flex;
       align-items: center;
@@ -199,6 +196,7 @@
       font-size: 14px;
       cursor: pointer;
       transition: all 0.2s ease;
+      margin-bottom: 0;
     }
 
     .file-pick-btn:hover {
@@ -211,14 +209,26 @@
       height: 16px;
     }
 
-    /* DIVIDER */
+    .file-selected-label {
+      font-size: 13px;
+      color: var(--success);
+      font-weight: 600;
+      margin-top: 8px;
+      display: none;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .file-selected-label.show {
+      display: inline-flex;
+    }
+
     .divider {
       height: 1px;
       background: var(--border-light);
       margin: 24px 0;
     }
 
-    /* FORM FIELDS */
     .form-row {
       margin-bottom: 18px;
     }
@@ -295,7 +305,6 @@
       padding-right: 48px;
     }
 
-    /* FILE UPLOAD BOX */
     .file-upload-box {
       border: 2px dashed var(--border);
       border-radius: 16px;
@@ -314,6 +323,12 @@
       background: var(--primary-light);
     }
 
+    .file-upload-box.has-file {
+      border-style: solid;
+      border-color: var(--success);
+      background: #f0fdf4;
+    }
+
     .file-upload-icon {
       width: 44px;
       height: 44px;
@@ -324,6 +339,11 @@
       justify-content: center;
       color: var(--primary);
       flex-shrink: 0;
+    }
+
+    .file-upload-box.has-file .file-upload-icon {
+      background: #dcfce7;
+      color: var(--success);
     }
 
     .file-upload-icon svg {
@@ -342,6 +362,10 @@
       margin: 0;
     }
 
+    .file-upload-box.has-file .file-upload-text .main-text {
+      color: var(--success);
+    }
+
     .file-upload-text .sub-text {
       color: var(--text-muted);
       font-size: 13px;
@@ -358,6 +382,11 @@
       justify-content: center;
       color: var(--primary);
       flex-shrink: 0;
+    }
+
+    .file-upload-box.has-file .file-upload-arrow {
+      background: #dcfce7;
+      color: var(--success);
     }
 
     .file-upload-arrow svg {
@@ -390,7 +419,6 @@
       text-decoration: underline;
     }
 
-    /* SAVE BUTTON */
     .btn-save {
       display: inline-flex;
       align-items: center;
@@ -419,7 +447,6 @@
       height: 18px;
     }
 
-    /* ALERTS */
     .alert {
       border-radius: 14px;
       padding: 14px 18px;
@@ -447,7 +474,6 @@
       color: var(--primary-dark);
     }
 
-    /* RESPONSIVE */
     @media (max-width: 576px) {
       .profile-wrap {
         margin: 16px;
@@ -521,17 +547,18 @@
         <!-- AVATAR SECTION -->
         <div class="section-label">{% trans "Profile Photo" %}</div>
         <div class="avatar-section">
-          <div class="avatar-box">
+          <div class="avatar-box" id="avatarBox">
             {% if profile and profile.photo %}
-              <img src="{{ profile.photo.url }}" alt="Profile photo">
+              <img id="avatarPreview" src="{{ profile.photo.url }}" alt="Profile photo">
             {% else %}
-              <div class="avatar-empty">
+              <div class="avatar-empty" id="avatarEmpty">
                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
                   <circle cx="12" cy="13" r="4"/>
                 </svg>
                 <span class="empty-label">{% trans "No photo" %}</span>
               </div>
+              <img id="avatarPreview" src="" alt="Profile photo" style="display: none;">
             {% endif %}
           </div>
           <div class="avatar-info">
@@ -544,8 +571,11 @@
                 <line x1="12" y1="3" x2="12" y2="15"/>
               </svg>
               {% trans "Choose file" %}
-              <input type="file" name="photo" class="d-none" accept="image/*">
+              <input type="file" name="photo" id="photoInput" class="d-none" accept="image/*">
             </label>
+            <div class="file-selected-label" id="photoSelectedLabel">
+              ✓ <span id="photoFileName"></span>
+            </div>
           </div>
         </div>
 
@@ -647,8 +677,8 @@
         <!-- CERTIFICATE / DIPLOMA / CV -->
         <div class="form-row">
           <label class="field-label">{% trans "Certificate / Diploma / CV" %}</label>
-          <label class="file-upload-box">
-            <input type="file" name="certificate" class="file-input-hidden" accept=".pdf,image/*,.doc,.docx">
+          <label class="file-upload-box" id="certBox">
+            <input type="file" name="certificate" id="certInput" class="file-input-hidden" accept=".pdf,image/*,.doc,.docx">
             <div class="file-upload-icon">
               <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
@@ -656,8 +686,8 @@
               </svg>
             </div>
             <div class="file-upload-text">
-              <p class="main-text">{% trans "Choose file" %}</p>
-              <p class="sub-text">{% trans "PDF, DOC, DOCX or JPG. Maximum size 10 MB." %}</p>
+              <p class="main-text" id="certMainText">{% trans "Choose file" %}</p>
+              <p class="sub-text" id="certSubText">{% trans "PDF, DOC, DOCX or JPG. Maximum size 10 MB." %}</p>
             </div>
             <div class="file-upload-arrow">
               <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
@@ -703,6 +733,85 @@
 
   </div>
 </div>
+
+<script>
+  // ====== INSTANT PHOTO PREVIEW ======
+  (function () {
+    var photoInput = document.getElementById("photoInput");
+    var avatarPreview = document.getElementById("avatarPreview");
+    var avatarEmpty = document.getElementById("avatarEmpty");
+    var photoSelectedLabel = document.getElementById("photoSelectedLabel");
+    var photoFileName = document.getElementById("photoFileName");
+
+    if (!photoInput) return;
+
+    photoInput.addEventListener("change", function (e) {
+      var file = e.target.files && e.target.files[0];
+      if (!file) return;
+
+      // Validate file size (5MB max)
+      if (file.size > 5 * 1024 * 1024) {
+        alert("File size must be less than 5MB");
+        photoInput.value = "";
+        return;
+      }
+
+      // Show file name
+      if (photoFileName && photoSelectedLabel) {
+        photoFileName.textContent = file.name;
+        photoSelectedLabel.classList.add("show");
+      }
+
+      // Show preview
+      var reader = new FileReader();
+      reader.onload = function (event) {
+        if (avatarPreview) {
+          avatarPreview.src = event.target.result;
+          avatarPreview.style.display = "block";
+        }
+        if (avatarEmpty) {
+          avatarEmpty.style.display = "none";
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  })();
+
+  // ====== INSTANT CERTIFICATE PREVIEW ======
+  (function () {
+    var certInput = document.getElementById("certInput");
+    var certBox = document.getElementById("certBox");
+    var certMainText = document.getElementById("certMainText");
+    var certSubText = document.getElementById("certSubText");
+
+    if (!certInput) return;
+
+    certInput.addEventListener("change", function (e) {
+      var file = e.target.files && e.target.files[0];
+      if (!file) return;
+
+      // Validate file size (10MB max)
+      if (file.size > 10 * 1024 * 1024) {
+        alert("File size must be less than 10MB");
+        certInput.value = "";
+        return;
+      }
+
+      // Show file name in the box
+      if (certBox) {
+        certBox.classList.add("has-file");
+      }
+      if (certMainText) {
+        certMainText.textContent = "✓ " + file.name;
+      }
+      if (certSubText) {
+        var sizeKB = Math.round(file.size / 1024);
+        var sizeText = sizeKB > 1024 ? (sizeKB / 1024).toFixed(1) + " MB" : sizeKB + " KB";
+        certSubText.textContent = sizeText + " - Ready to upload";
+      }
+    });
+  })();
+</script>
 
 </body>
 </html>

@@ -1,0 +1,86 @@
+[
+{
+  "model": "jobs.profession",
+  "pk": 1,
+  "fields": {
+    "name": "Yordamchi ishchi"
+  }
+},
+{
+  "model": "jobs.profession",
+  "pk": 2,
+  "fields": {
+    "name": "Quruvchi"
+  }
+},
+{
+  "model": "jobs.profession",
+  "pk": 3,
+  "fields": {
+    "name": "Santexnik"
+  }
+},
+{
+  "model": "jobs.profession",
+  "pk": 4,
+  "fields": {
+    "name": "Elektrik"
+  }
+},
+{
+  "model": "jobs.profession",
+  "pk": 5,
+  "fields": {
+    "name": "Payvandchi"
+  }
+},
+{
+  "model": "jobs.profession",
+  "pk": 6,
+  "fields": {
+    "name": "Haydovchi"
+  }
+},
+{
+  "model": "jobs.profession",
+  "pk": 7,
+  "fields": {
+    "name": "Yuk tashuvchi"
+  }
+},
+{
+  "model": "jobs.profession",
+  "pk": 8,
+  "fields": {
+    "name": "Kuryer"
+  }
+},
+{
+  "model": "jobs.profession",
+  "pk": 9,
+  "fields": {
+    "name": "Oshpaz"
+  }
+},
+{
+  "model": "jobs.profession",
+  "pk": 10,
+  "fields": {
+    "name": "Kichkintoylar qarovchisi"
+  }
+},
+{
+  "model": "jobs.profession",
+  "pk": 11,
+  "fields": {
+    "name": "Tozalovchi"
+  }
+},
+{
+  "model": "jobs.profession",
+  "pk": 14,
+  "fields": {
+    "name": "Konditsioner ustasi"
+  }
+}
+]

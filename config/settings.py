@@ -135,7 +135,15 @@ CACHES = {
         }
     }
 }
-
+# =====================
+#local user
+# =====================
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+#         "LOCATION": "intask-local-cache",
+#     }
+# }
 OTP_TTL_SECONDS = 300
 
 # OTP behavior

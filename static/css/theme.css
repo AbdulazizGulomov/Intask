@@ -1,0 +1,77 @@
+/* static/css/theme.css */
+:root {
+    /* LIGHT MODE (Default) */
+    --bg-base: #ffffff;
+    --bg-surface: #ffffff;
+    --bg-soft: #f8fafc;
+    --bg-input: #ffffff;
+
+    --ink: #0f172a;
+    --ink-2: #334155;
+    --muted: #64748b;
+    --muted-2: #94a3b8;
+
+    --border: #e2e8f0;
+    --border-2: #cbd5e1;
+
+    --accent: #4f6ee6;
+    --accent-2: #3b5bfe;
+    --accent-hov: #3a58d1;
+    --accent-soft: #eef4ff;
+    --accent-ink: #1e3a8a;
+
+    --mint: #d1fae5;
+    --mint-ink: #065f46;
+
+    --bg-hero: radial-gradient(circle at 80% 20%, rgba(79, 110, 230, 0.05), transparent 40%), linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+    --bg-cta: radial-gradient(circle at 78% 18%, rgba(79, 110, 230, 0.18), transparent 32%), linear-gradient(135deg, #eef4ff 0%, #dce8ff 100%);
+
+    --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="dark"] {
+    --bg-base: #000000;
+    --bg-surface: #0a0a0a;
+    --bg-soft: #111111;
+    --bg-input: #181818;
+
+    --ink: #f1f5f9;
+    --ink-2: #e2e8f0;
+    --muted: #94a3b8;
+    --muted-2: #64748b;
+
+    --border: #222222;
+    --border-2: #333333;
+
+    --accent: #818cf8;
+    --accent-2: #6366f1;
+    --accent-hov: #4f46e5;
+    --accent-soft: #1e1b4b;
+    --accent-hov-soft: #1e1b4b;
+    --accent-ink: #c7d2fe;
+
+    --mint: #064e3b;
+    --mint-ink: #d1fae5;
+
+    --bg-hero: radial-gradient(circle at 80% 20%, rgba(99, 102, 241, 0.15), transparent 40%), linear-gradient(135deg, #000000 0%, #050505 100%);
+    --bg-cta: radial-gradient(circle at 78% 18%, rgba(99, 102, 241, 0.25), transparent 35%), linear-gradient(135deg, #050505 0%, #000000 100%);
+
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.8);
+}
+
+/* Global Image Filter for Dark Mode */
+[data-theme="dark"] img {
+    filter: brightness(0.85) contrast(1.1);
+    transition: filter 0.3s ease;
+}
+
+/* Exemptions for Profile Photos and Logo */
+[data-theme="dark"] .avatar,
+[data-theme="dark"] .avatar-btn img,
+[data-theme="dark"] .w-ava img,
+[data-theme="dark"] .sb-logo img,
+[data-theme="dark"] .brand-badge img {
+    filter: brightness(1) contrast(1);
+}

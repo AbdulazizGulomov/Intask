@@ -17,8 +17,8 @@ class Profession(models.Model):
 
 class Job(models.Model):
     class JobType(models.TextChoices):
-        DOIMIY = "doimiy", _("Doimiy")
-        VAQTINCHALIK = "vaqtinchalik", _("Vaqtinchalik")
+        SOATLIK = "soatlik", _("Soatlik")
+        KUNLIK = "kunlik", _("Kunlik")
 
     class Currency(models.TextChoices):
         UZS = "UZS", _("UZS")

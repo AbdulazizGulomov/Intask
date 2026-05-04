@@ -7,60 +7,202 @@
   <title>{% trans "Create Job" %}</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
+    :root {
+      --primary: #4f6df5;
+      --primary-dark: #3b56d4;
+      --primary-light: #eef2ff;
+      --accent: #fbbf24;
+      --success: #10b981;
+      --success-dark: #059669;
+      --text-dark: #1f2937;
+      --text-muted: #6b7280;
+      --text-light: #9ca3af;
+      --border: #e5e7eb;
+      --border-light: #f3f4f6;
+      --bg: #f9fafb;
+      --white: #ffffff;
+    }
+
+    * {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
     body {
-      background: #f4f6f9;
+      background: var(--bg);
+      color: var(--text-dark);
     }
 
+    /* PAGE HEADER */
+    .page-header {
+      margin-bottom: 24px;
+    }
+
+    .page-header h2 {
+      font-weight: 700;
+      font-size: 28px;
+      color: var(--text-dark);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .page-header .header-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 8px 16px -4px rgba(79, 109, 245, 0.3);
+    }
+
+    .page-header .subtitle {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-top: 6px;
+      margin-left: 56px;
+    }
+
+    /* MAIN CARD */
     .job-card {
-      border: 1px solid #e5e7eb;
-      border-radius: 18px;
-      background: #ffffff;
+      border: none;
+      border-radius: 24px;
+      background: var(--white);
+      box-shadow: 0 4px 24px -8px rgba(0, 0, 0, 0.06);
+      padding: 28px;
     }
 
+    /* SECTION TITLES */
+    .section-title {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title .icon {
+      font-size: 16px;
+    }
+
+    /* FORM LABELS */
+    .form-label {
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--text-dark);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .form-label .label-icon {
+      font-size: 14px;
+      color: var(--primary);
+    }
+
+    /* FORM CONTROLS */
+    .form-control,
+    .form-select {
+      border-radius: 12px;
+      min-height: 48px;
+      border: 1.5px solid var(--border);
+      background: var(--white);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-dark);
+      padding: 10px 14px;
+      transition: all 0.2s ease;
+    }
+
+    .form-control:hover,
+    .form-select:hover {
+      border-color: #c7d2fe;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(79, 109, 245, 0.1);
+      outline: none;
+    }
+
+    .form-control::placeholder {
+      color: var(--text-light);
+      font-weight: 400;
+    }
+
+    textarea.form-control {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    /* PHOTO UPLOAD */
     .upload-card {
       width: 100%;
       min-height: 180px;
-      border: 2px dashed #d6dce8;
+      border: 2px dashed #cbd5e1;
       border-radius: 18px;
-      background: #f8fafc;
+      background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
       cursor: pointer;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 7px;
+      gap: 8px;
       text-align: center;
       position: relative;
       overflow: hidden;
-      transition: 0.2s ease;
+      transition: all 0.25s ease;
+      padding: 16px;
     }
 
     .upload-card:hover {
-      border-color: #4f6df5;
-      background: #f1f5ff;
+      border-color: var(--primary);
+      background: linear-gradient(135deg, #eef2ff 0%, #dbeafe 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px -8px rgba(79, 109, 245, 0.2);
     }
 
     .upload-plus {
-      width: 46px;
-      height: 46px;
+      width: 52px;
+      height: 52px;
       border-radius: 50%;
-      background: #4f6df5;
-      color: #ffffff;
-      font-size: 32px;
-      line-height: 42px;
-      font-weight: 500;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      font-size: 28px;
+      font-weight: 300;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 16px -4px rgba(79, 109, 245, 0.4);
+      transition: transform 0.25s ease;
+    }
+
+    .upload-card:hover .upload-plus {
+      transform: scale(1.1) rotate(90deg);
     }
 
     .upload-title {
       font-weight: 600;
-      color: #1f2937;
+      color: var(--text-dark);
+      font-size: 15px;
     }
 
     .upload-subtitle {
       font-size: 13px;
-      color: #6b7280;
+      color: var(--text-muted);
     }
 
     .photo-preview {
@@ -73,8 +215,9 @@
 
     .upload-card.has-image {
       border-style: solid;
-      border-color: #d6dce8;
-      background: #000000;
+      border-color: var(--border);
+      background: #000;
+      padding: 0;
     }
 
     .upload-card.has-image .upload-plus,
@@ -85,18 +228,25 @@
 
     .photo-remove-btn {
       position: absolute;
-      top: 10px;
-      right: 10px;
+      top: 12px;
+      right: 12px;
       z-index: 5;
       border: 0;
       border-radius: 999px;
-      width: 34px;
-      height: 34px;
-      background: rgba(0, 0, 0, 0.65);
-      color: #ffffff;
+      width: 36px;
+      height: 36px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
       font-size: 18px;
       line-height: 1;
       display: none;
+      backdrop-filter: blur(8px);
+      transition: all 0.2s ease;
+    }
+
+    .photo-remove-btn:hover {
+      background: #ef4444;
+      transform: scale(1.1);
     }
 
     .upload-card.has-image .photo-remove-btn {
@@ -108,49 +258,173 @@
     #addPhotoBtn {
       border-radius: 999px;
       font-weight: 600;
+      font-size: 14px;
+      padding: 8px 18px;
+      border: 1.5px solid var(--primary);
+      color: var(--primary);
+      background: var(--white);
+      transition: all 0.2s ease;
     }
 
-    .form-label {
-      font-weight: 500;
+    #addPhotoBtn:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 16px -4px rgba(79, 109, 245, 0.3);
     }
 
-    .form-control,
-    .form-select {
-      border-radius: 10px;
-      min-height: 42px;
-    }
-
-    textarea.form-control {
-      min-height: 120px;
-    }
-
-    .btn {
-      border-radius: 10px;
-    }
-
+    /* MONEY INPUT */
     .money-input {
-      font-weight: 500;
+      font-weight: 600;
       letter-spacing: 0.4px;
+      font-variant-numeric: tabular-nums;
     }
 
     .money-hint {
       font-size: 12px;
-      color: #6b7280;
-      margin-top: 4px;
+      color: var(--text-light);
+      margin-top: 6px;
+      font-weight: 500;
+    }
+
+    /* DIVIDER */
+    .form-divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--border), transparent);
+      margin: 28px 0 20px;
+    }
+
+    /* LOCATION */
+    .location-section {
+      background: linear-gradient(135deg, #fef3c7 0%, #fef9c3 100%);
+      border-radius: 16px;
+      padding: 18px;
+      border: 1.5px solid #fde68a;
+      margin-top: 20px;
+    }
+
+    .location-btn {
+      width: 100%;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-weight: 600;
+      font-size: 14px;
+      border: 1.5px solid var(--accent);
+      color: #92400e;
+      background: white;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .location-btn:hover {
+      background: var(--accent);
+      color: white;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 16px -4px rgba(251, 191, 36, 0.4);
     }
 
     .location-status {
       font-size: 13px;
+      margin-top: 10px;
+      font-weight: 500;
+      color: #92400e;
     }
 
+    /* ACTION BUTTONS */
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 28px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-light);
+    }
+
+    .btn-save {
+      flex: 1;
+      border-radius: 12px;
+      padding: 13px 24px;
+      font-weight: 600;
+      font-size: 15px;
+      background: linear-gradient(135deg, var(--success), var(--success-dark));
+      color: white;
+      border: none;
+      transition: all 0.2s ease;
+      box-shadow: 0 8px 16px -4px rgba(16, 185, 129, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-save:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px -6px rgba(16, 185, 129, 0.4);
+      color: white;
+    }
+
+    .btn-back {
+      border-radius: 12px;
+      padding: 13px 24px;
+      font-weight: 600;
+      font-size: 15px;
+      border: 1.5px solid var(--border);
+      color: var(--text-muted);
+      background: white;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .btn-back:hover {
+      border-color: var(--text-muted);
+      color: var(--text-dark);
+      background: var(--bg);
+    }
+
+    /* ALERT */
+    .alert-danger {
+      border-radius: 14px;
+      border: 1.5px solid #fecaca;
+      background: #fef2f2;
+      color: #b91c1c;
+      padding: 14px 18px;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    /* RESPONSIVE */
     @media (max-width: 576px) {
       .container {
         padding-left: 14px;
         padding-right: 14px;
       }
 
+      .job-card {
+        padding: 18px;
+        border-radius: 18px;
+      }
+
       .upload-card {
         min-height: 160px;
+      }
+
+      .page-header h2 {
+        font-size: 22px;
+      }
+
+      .page-header .subtitle {
+        margin-left: 0;
+        margin-top: 8px;
+      }
+
+      .action-buttons {
+        flex-direction: column-reverse;
       }
     }
   </style>
@@ -158,25 +432,45 @@
 
 <body>
 
-<div class="container py-4" style="max-width: 720px;">
-  <h3 class="mb-3">{% trans "Create Job" %}</h3>
+<div class="container py-4 py-md-5" style="max-width: 760px;">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <h2>
+      <span class="header-icon">✨</span>
+      {% trans "Create Job" %}
+    </h2>
+    <div class="subtitle">{% trans "Fill in the details below to post a new job listing" %}</div>
+  </div>
 
   {% if error %}
-    <div class="alert alert-danger">{{ error }}</div>
+    <div class="alert alert-danger">⚠️ {{ error }}</div>
   {% endif %}
 
-  <form method="post" enctype="multipart/form-data" class="card job-card p-3 shadow-sm" id="jobCreateForm">
+  <form method="post" enctype="multipart/form-data" class="job-card" id="jobCreateForm">
     {% csrf_token %}
 
+    <!-- BASIC INFO SECTION -->
+    <div class="section-title">
+      <span class="icon">📋</span>
+      {% trans "Basic information" %}
+    </div>
+
     <!-- TITLE -->
-    <div class="mb-3">
-      <label class="form-label">{% trans "Title" %}</label>
-      <input name="title" class="form-control" required>
+    <div class="mb-4">
+      <label class="form-label" for="titleField">
+        <span class="label-icon">✏️</span>
+        {% trans "Title" %}
+      </label>
+      <input name="title" id="titleField" class="form-control" placeholder="{% trans 'e.g. Need an electrician for socket installation' %}" required>
     </div>
 
     <!-- PHOTOS -->
-    <div class="mb-3">
-      <label class="form-label">{% trans "Job photo" %}</label>
+    <div class="mb-4">
+      <label class="form-label">
+        <span class="label-icon">📸</span>
+        {% trans "Job photo" %}
+      </label>
 
       <div id="photoUploadArea" class="row g-3">
 
@@ -230,21 +524,32 @@
 
       </div>
 
-      <button type="button" id="addPhotoBtn" class="btn btn-outline-primary btn-sm mt-3">
+      <button type="button" id="addPhotoBtn" class="mt-3">
         + {% trans "Add another photo" %}
       </button>
 
-      <div class="form-text mt-2">
-        {% trans "Upload one photo first. You can add more photos if needed, up to 4." %}
+      <div class="money-hint mt-2">
+        💡 {% trans "Upload one photo first. You can add more photos if needed, up to 4." %}
       </div>
     </div>
 
+    <div class="form-divider"></div>
+
+    <!-- JOB DETAILS SECTION -->
+    <div class="section-title">
+      <span class="icon">🔍</span>
+      {% trans "Job details" %}
+    </div>
+
     <!-- REGION + PROFESSION + TYPE -->
-    <div class="row g-3">
+    <div class="row g-3 mb-4">
 
       <div class="col-md-4">
-        <label class="form-label">{% trans "Region" %}</label>
-        <select name="region" class="form-select" required>
+        <label class="form-label" for="regionField">
+          <span class="label-icon">📍</span>
+          {% trans "Region" %}
+        </label>
+        <select name="region" id="regionField" class="form-select" required>
           <option value="">--</option>
           {% for k,v in regions %}
             <option value="{{ k }}">{{ v }}</option>
@@ -253,8 +558,11 @@
       </div>
 
       <div class="col-md-4">
-        <label class="form-label">{% trans "Profession" %}</label>
-        <select name="profession" class="form-select" required>
+        <label class="form-label" for="professionField">
+          <span class="label-icon">🛠️</span>
+          {% trans "Profession" %}
+        </label>
+        <select name="profession" id="professionField" class="form-select" required>
           <option value="">--</option>
           {% for profession in professions %}
             <option value="{{ profession.id }}">{{ profession.name }}</option>
@@ -263,8 +571,11 @@
       </div>
 
       <div class="col-md-4">
-        <label class="form-label">{% trans "Job type" %}</label>
-        <select name="job_type" class="form-select" required>
+        <label class="form-label" for="jobTypeField">
+          <span class="label-icon">⏱️</span>
+          {% trans "Job type" %}
+        </label>
+        <select name="job_type" id="jobTypeField" class="form-select" required>
           <option value="">--</option>
           {% for k,v in job_types %}
             <option value="{{ k }}">{{ v }}</option>
@@ -274,11 +585,21 @@
 
     </div>
 
-    <!-- PAY -->
-    <div class="row g-3 mt-3">
+    <div class="form-divider"></div>
+
+    <!-- PAY SECTION -->
+    <div class="section-title">
+      <span class="icon">💰</span>
+      {% trans "Payment" %}
+    </div>
+
+    <div class="row g-3 mb-3">
 
       <div class="col-md-4">
-        <label class="form-label">{% trans "Currency" %}</label>
+        <label class="form-label" for="payCurrency">
+          <span class="label-icon">💵</span>
+          {% trans "Currency" %}
+        </label>
         <select name="pay_currency" id="payCurrency" class="form-select">
           {% for k,v in currencies %}
             <option value="{{ k }}">{{ v }}</option>
@@ -287,7 +608,10 @@
       </div>
 
       <div class="col-md-4">
-        <label class="form-label">{% trans "Minimum Pay" %}</label>
+        <label class="form-label" for="payMin">
+          <span class="label-icon">📉</span>
+          {% trans "Minimum Pay" %}
+        </label>
         <input
           name="pay_min"
           id="payMin"
@@ -301,7 +625,10 @@
       </div>
 
       <div class="col-md-4">
-        <label class="form-label">{% trans "Maximum Pay" %}</label>
+        <label class="form-label" for="payMax">
+          <span class="label-icon">📈</span>
+          {% trans "Maximum Pay" %}
+        </label>
         <input
           name="pay_max"
           id="payMax"
@@ -317,43 +644,60 @@
     </div>
 
     <!-- PAY TEXT -->
-    <div class="mt-2">
-      <label class="form-label">{% trans "Pay text (optional)" %}</label>
+    <div class="mb-4">
+      <label class="form-label" for="payText">
+        <span class="label-icon">💬</span>
+        {% trans "Pay text (optional)" %}
+      </label>
       <input name="pay_text" id="payText" class="form-control" placeholder="6–8 mln so‘m">
     </div>
 
+    <div class="form-divider"></div>
+
+    <!-- DESCRIPTION SECTION -->
+    <div class="section-title">
+      <span class="icon">📝</span>
+      {% trans "Description & contact" %}
+    </div>
+
     <!-- DESCRIPTION -->
-    <div class="mb-3 mt-3">
-      <label class="form-label">{% trans "Description" %}</label>
-      <textarea name="description" class="form-control" rows="4"></textarea>
+    <div class="mb-3">
+      <label class="form-label" for="descriptionField">
+        <span class="label-icon">📄</span>
+        {% trans "Description" %}
+      </label>
+      <textarea name="description" id="descriptionField" class="form-control" rows="4" placeholder="{% trans 'Describe the job in detail...' %}"></textarea>
     </div>
 
     <!-- CONTACT -->
-    <div class="row g-3">
-      <div class="col-md-12">
-        <label class="form-label">{% trans "Contact phone" %}</label>
-        <input name="contact_phone" class="form-control" placeholder="+998901234567">
-      </div>
+    <div class="mb-3">
+      <label class="form-label" for="contactPhone">
+        <span class="label-icon">📞</span>
+        {% trans "Contact phone" %}
+      </label>
+      <input name="contact_phone" id="contactPhone" class="form-control" placeholder="+998901234567">
     </div>
 
     <!-- HIDDEN LOCATION VALUES -->
     <input type="hidden" id="lat" name="lat">
     <input type="hidden" id="lng" name="lng">
 
-    <!-- LOCATION BUTTON -->
-    <div class="mt-3">
-      <button type="button" id="getLocationBtn" class="btn btn-outline-primary w-100">
+    <!-- LOCATION SECTION -->
+    <div class="location-section">
+      <button type="button" id="getLocationBtn" class="location-btn">
         📍 {% trans "Use my current location" %}
       </button>
-      <div id="locMsg" class="small text-muted location-status mt-2"></div>
+      <div id="locMsg" class="location-status"></div>
     </div>
 
-    <!-- BUTTONS -->
-    <div class="d-flex gap-2 mt-3">
-      <button class="btn btn-success" type="submit">{% trans "Save" %}</button>
-      <a class="btn btn-outline-secondary" href="{% url 'accounts:employer_home' %}">
-        {% trans "Back" %}
+    <!-- ACTION BUTTONS -->
+    <div class="action-buttons">
+      <a class="btn-back" href="{% url 'accounts:employer_home' %}">
+        ← {% trans "Back" %}
       </a>
+      <button class="btn-save" type="submit">
+        ✓ {% trans "Save" %}
+      </button>
     </div>
 
   </form>
@@ -433,8 +777,6 @@
 
   // =====================================================
   // MONEY FORMATTER
-  // 6000000 -> 6 000 000
-  // Before submit: 6 000 000 -> 6000000
   // =====================================================
   function formatMoney(value) {
     value = value.replace(/\D/g, "");
@@ -521,7 +863,6 @@
 
   // =====================================================
   // GEOLOCATION
-  // Latitude and Longitude are hidden, but values are saved
   // =====================================================
   const btn = document.getElementById("getLocationBtn");
   const lat = document.getElementById("lat");
@@ -530,22 +871,22 @@
 
   btn.addEventListener("click", () => {
     if (!navigator.geolocation) {
-      msg.textContent = "Geolocation not supported";
+      msg.textContent = "⚠️ Geolocation not supported";
       return;
     }
 
     btn.disabled = true;
-    msg.textContent = "Getting location...";
+    msg.textContent = "⏳ Getting location...";
 
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         lat.value = pos.coords.latitude.toFixed(6);
         lng.value = pos.coords.longitude.toFixed(6);
-        msg.textContent = "Location added successfully";
+        msg.textContent = "✅ Location added successfully";
         btn.disabled = false;
       },
       (err) => {
-        msg.textContent = "Location error: " + err.message;
+        msg.textContent = "❌ Location error: " + err.message;
         btn.disabled = false;
       }
     );

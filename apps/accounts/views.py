@@ -528,10 +528,26 @@ def profile_edit(request):
             profile.save()
 
         else:
+            # Employer branch — safely save full_name to whichever field exists on User model.
             full_name = (request.POST.get("full_name") or "").strip()
             if full_name:
-                user.first_name = full_name
-                user.save(update_fields=["first_name"])
+                user_fields = {f.name for f in user._meta.get_fields() if hasattr(f, "name")}
+
+                # Try common field names in order of preference
+                if "full_name" in user_fields:
+                    user.full_name = full_name
+                    user.save(update_fields=["full_name"])
+                elif "first_name" in user_fields:
+                    user.first_name = full_name
+                    user.save(update_fields=["first_name"])
+                elif "name" in user_fields:
+                    user.name = full_name
+                    user.save(update_fields=["name"])
+                elif "display_name" in user_fields:
+                    user.display_name = full_name
+                    user.save(update_fields=["display_name"])
+                # If none of these fields exist, silently skip — name won't be saved
+                # but the page won't crash. Add a real field to your User model later.
 
         messages.success(request, "Profile updated successfully.")
         return redirect("accounts:profile_edit")

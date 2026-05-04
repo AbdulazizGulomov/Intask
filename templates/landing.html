@@ -15,6 +15,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=1">
   <link rel="stylesheet" href="{% static 'css/landing.css' %}?v=7">
 </head>
 
@@ -444,8 +445,7 @@
 
     </div>
   </section>
-<<<<<<< HEAD
-=======
+
   <!-- ==================== CONTACT SECTION ==================== -->
   <section class="contact-sec" id="contact">
     <div class="contact-wrap">
@@ -453,52 +453,52 @@
         <!-- Form Card -->
         <div class="contact-card c-form" data-aos="fade-up">
           <div class="c-head">
-            <h2 class="c-title">{% t 'savollaringiz_bormi' %}</h2>
-            <p class="c-sub">{% t 'habar_qoldiring_va_biz_siz_bilan_tez_ora' %}</p>
+            <h2 class="c-title">{% trans "Savollaringiz bormi?" %}</h2>
+            <p class="c-sub">{% trans "Xabar qoldiring va biz siz bilan tez orada bog'lanamiz." %}</p>
           </div>
           <form class="c-fields">
             <div class="c-row">
               <div class="c-inp-grp">
-                <label>{% t 'ismingiz' %}</label>
-                <input type="text" placeholder="{% t 'ismingizni_kiriting' %}">
+                <label>{% trans "Ismingiz" %}</label>
+                <input type="text" placeholder="{% trans 'Ismingizni kiriting' %}">
               </div>
               <div class="c-inp-grp">
-                <label>{% t 'telefon_raqamingiz' %}</label>
+                <label>{% trans "Telefon raqamingiz" %}</label>
                 <input type="tel" placeholder="+998 90 123 45 67">
               </div>
             </div>
             <div class="c-inp-grp">
-              <label>{% t 'xabar' %}</label>
-              <textarea placeholder="{% t 'xabaringizni_yozing' %}"></textarea>
+              <label>{% trans "Xabar" %}</label>
+              <textarea placeholder="{% trans 'Xabaringizni yozing' %}"></textarea>
             </div>
-            <button type="submit" class="c-btn">{% t 'yuborish' %}</button>
+            <button type="submit" class="c-btn">{% trans "Yuborish" %}</button>
           </form>
         </div>
 
         <!-- Info Card -->
         <div class="contact-card c-info" data-aos="fade-up" data-aos-delay="100">
-          <div class="c-badge">{% t 'aloqa' %}</div>
-          <h3>{% t 'biz_bilan_bog_lanish' %}</h3>
+          <div class="c-badge">{% trans "Aloqa" %}</div>
+          <h3>{% trans "Biz bilan bog'lanish" %}</h3>
           <div class="c-list">
             <div class="c-item">
               <div class="c-icon">📞</div>
               <div class="c-tx">
-                <small>{% t 'telefon' %}</small>
+                <small>{% trans "Telefon" %}</small>
                 <span>+998 71 200 00 00</span>
               </div>
             </div>
             <div class="c-item">
               <div class="c-icon">✉️</div>
               <div class="c-tx">
-                <small>{% t 'email' %}</small>
+                <small>{% trans "Email" %}</small>
                 <span>info@intask.uz</span>
               </div>
             </div>
             <div class="c-item">
               <div class="c-icon">📍</div>
               <div class="c-tx">
-                <small>{% t 'manzil' %}</small>
-                <span>{% t 'toshkent_shahri_amir_temur_ko_chasi_108' %}</span>
+                <small>{% trans "Manzil" %}</small>
+                <span>{% trans "Toshkent shahri, Amir Temur ko'chasi, 108" %}</span>
               </div>
             </div>
           </div>
@@ -506,7 +506,7 @@
 
         <!-- Social Card -->
         <div class="contact-card c-social" data-aos="fade-up" data-aos-delay="200">
-          <h3>{% t 'bizni_kuzatib_boring' %}</h3>
+          <h3>{% trans "Bizni kuzatib boring" %}</h3>
           <div class="s-links">
             <a href="https://t.me/Abdulaziz_Gold" target="_blank" class="s-link" style="--c: #0088cc">Telegram</a>
             <a href="https://www.instagram.com/intask.uz/" target="_blank" class="s-link"
@@ -517,7 +517,6 @@
     </div>
   </section>
 
->>>>>>> 0bfb82a870db9a08e1d67319c570945c255e90ba
   <!-- ==================== FOOTER ==================== -->
   <footer class="ftr">
     <div class="ftr-wrap">
@@ -656,7 +655,6 @@
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
   <script>
-    // Localized Arrays for Javascript injection safely using raw javascript template literals
     window.systemOrders = [
       { lat: 41.2829, lng: 69.2034, cat: 'plumber', icon: '🔧', title: `{% trans "Santexnik kerak" %}`, area: `{% trans "Chilonzor" %}`, price: `80 000 {% trans "UZS" %}` },
       { lat: 41.3563, lng: 69.2898, cat: 'electrician', icon: '⚡', title: `{% trans "Rozetka o'rnatish" %}`, area: `{% trans "Yunusobod" %}`, price: `120 000 {% trans "UZS" %}` },
@@ -714,9 +712,6 @@
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             const el = entry.target;
-
-            // Prevent restarting if already animating or done (unless we want to replay on every scroll)
-            // Replaying number animations on every scroll chunk can be distracting, but we will replay if desired.
             if (el.dataset.done === "true") return;
 
             const target = parseFloat(el.getAttribute("data-target") || 0);
@@ -731,7 +726,7 @@
 
             let start = 0;
             const duration = 2000;
-            const stepTime = 30; // 30ms per frame
+            const stepTime = 30;
             const steps = duration / stepTime;
             const increment = target / steps;
 
@@ -745,7 +740,6 @@
               el.innerText = (isFloat ? start.toFixed(1) : Math.floor(start)) + suffix;
             }, stepTime);
           } else {
-            // Reset animation when out of view
             el.dataset.done = "false";
             el.innerText = "0" + (el.getAttribute("data-suffix") || "");
           }

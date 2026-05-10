@@ -37,6 +37,10 @@ TIME_ZONE = "Asia/Tashkent"
 # Applications
 # =====================
 INSTALLED_APPS = [
+    # Unfold MUST be before django.contrib.admin
+    "unfold",
+
+    # Django built-ins
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -44,12 +48,13 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
-    # third-party
+    # Third-party
     "rest_framework",
 
-    # local apps
+    # Local apps
     "apps.accounts.apps.AccountsConfig",
     "apps.jobs.apps.JobsConfig",
+    "apps.orders.apps.OrdersConfig",
 ]
 
 # =====================
@@ -170,4 +175,143 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "AUTH_HEADER_TYPES": ("Bearer",),
+}
+# =====================
+# Unfold Admin Branding
+# =====================
+from django.templatetags.static import static
+from django.utils.translation import gettext_lazy as _
+
+UNFOLD = {
+    "SITE_TITLE": "InTask Admin",
+    "SITE_HEADER": "InTask Admin",
+    "SITE_SUBHEADER": _("Service marketplace control panel"),
+    "SITE_URL": "/",
+    "SITE_SYMBOL": "dashboard",  # Material icon name
+
+    "SHOW_HISTORY": True,
+    "SHOW_VIEW_ON_SITE": True,
+    "SHOW_BACK_BUTTON": True,
+    "SHOW_LANGUAGES": True,
+
+    "THEME": "dark",  # Force dark mode (set to None to allow user toggle)
+
+    # Brand colors — InTask navy / teal / gold
+    "COLORS": {
+        "base": {
+            "50": "249 250 251",
+            "100": "243 244 246",
+            "200": "229 231 235",
+            "300": "209 213 219",
+            "400": "156 163 175",
+            "500": "107 114 128",
+            "600": "75 85 99",
+            "700": "55 65 81",
+            "800": "31 41 55",
+            "900": "17 24 39",
+            "950": "3 7 18",
+        },
+        "primary": {
+            "50": "240 253 250",
+            "100": "204 251 241",
+            "200": "153 246 228",
+            "300": "94 234 212",
+            "400": "45 212 191",
+            "500": "42 138 138",   # InTask teal
+            "600": "13 148 136",
+            "700": "15 118 110",
+            "800": "26 43 74",     # InTask navy
+            "900": "19 78 74",
+            "950": "4 47 46",
+        },
+        "font": {
+            "subtle-light": "107 114 128",
+            "subtle-dark": "156 163 175",
+            "default-light": "75 85 99",
+            "default-dark": "229 231 235",
+            "important-light": "17 24 39",
+            "important-dark": "243 244 246",
+        },
+    },
+
+    # Sidebar layout
+    "SIDEBAR": {
+        "show_search": True,
+        "show_all_applications": False,
+        "navigation": [
+            {
+                "title": _("Overview"),
+                "separator": True,
+                "items": [
+                    {
+                        "title": _("Dashboard"),
+                        "icon": "dashboard",
+                        "link": "/admin/",
+                    },
+                ],
+            },
+            {
+                "title": _("Accounts & People"),
+                "separator": True,
+                "icon": "groups",
+                "items": [
+                    {
+                        "title": _("Users"),
+                        "icon": "person",
+                        "link": "/admin/accounts/user/",
+                    },
+                    {
+                        "title": _("Worker profiles"),
+                        "icon": "engineering",
+                        "link": "/admin/accounts/workerprofile/",
+                    },
+                    {
+                        "title": _("Groups"),
+                        "icon": "shield",
+                        "link": "/admin/auth/group/",
+                    },
+                ],
+            },
+            {
+                "title": _("Jobs & Catalog"),
+                "separator": True,
+                "icon": "work",
+                "items": [
+                    {
+                        "title": _("Jobs"),
+                        "icon": "work_outline",
+                        "link": "/admin/jobs/job/",
+                    },
+                    {
+                        "title": _("Professions"),
+                        "icon": "category",
+                        "link": "/admin/jobs/profession/",
+                    },
+                    {
+                        "title": _("Applications"),
+                        "icon": "assignment",
+                        "link": "/admin/jobs/jobapplication/",
+                    },
+                ],
+            },
+            {
+                "title": _("Order Management"),
+                "separator": True,
+                "icon": "receipt_long",
+                "items": [
+                    {
+                        "title": _("Orders"),
+                        "icon": "receipt",
+                        "link": "/admin/orders/order/",
+                    },
+                    {
+                        "title": _("Status history"),
+                        "icon": "history",
+                        "link": "/admin/orders/orderstatushistory/",
+                    },
+                ],
+            },
+        ],
+    },
+
 }

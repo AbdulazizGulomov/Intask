@@ -11,6 +11,9 @@ urlpatterns = [
 
     path("", include("apps.accounts.urls", namespace="accounts")),
     path("jobs/", include("apps.jobs.urls", namespace="jobs")),
+
+    # Operator dashboard API
+    path("api/dashboard/", include("apps.accounts.dashboard.urls", namespace="dashboard")),
 ]
 
 if settings.DEBUG:

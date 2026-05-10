@@ -49,6 +49,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     class Role(models.TextChoices):
         WORKER = "worker", "Worker"
         EMPLOYER = "employer", "Employer"
+        OPERATOR = "operator", "Operator"
         ADMIN = "admin", "Admin"
 
     # Admin login (optional)

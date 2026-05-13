@@ -86,6 +86,8 @@ class OperatorMeSerializer(serializers.ModelSerializer):
             "is_active",
         )
         read_only_fields = fields
+
+
 # =====================================================
 # Order serializers (for /api/dashboard/orders/)
 # =====================================================
@@ -293,3 +295,76 @@ class MasterListSerializer(serializers.ModelSerializer):
         ).aggregate(avg=Avg("employer_rating"))
         avg = result["avg"]
         return round(avg, 2) if avg is not None else None
+
+
+# =====================================================
+# Client serializers (for /api/dashboard/clients/)
+# =====================================================
+
+class ClientListSerializer(serializers.ModelSerializer):
+    """
+    Employer info for the clients page in operator dashboard.
+    Includes aggregated order stats so operators can spot patterns
+    (VIP clients, high cancellation rate, dormant accounts, etc.).
+    """
+
+    full_name = serializers.SerializerMethodField()
+    total_orders = serializers.SerializerMethodField()
+    completed_orders = serializers.SerializerMethodField()
+    cancelled_orders = serializers.SerializerMethodField()
+    total_spent = serializers.SerializerMethodField()
+    cancellation_rate = serializers.SerializerMethodField()
+    last_order_at = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = (
+            "id",
+            "phone",
+            "username",
+            "full_name",
+            "is_active",
+            "created_at",
+            "total_orders",
+            "completed_orders",
+            "cancelled_orders",
+            "total_spent",
+            "cancellation_rate",
+            "last_order_at",
+        )
+        read_only_fields = fields
+
+    def get_full_name(self, obj):
+        # User model doesn't have first/last name — only WorkerProfile does.
+        # Employers don't have a profile yet, so use username or phone as display name.
+        return (obj.username or "").strip()
+
+    def get_total_orders(self, obj):
+        return obj.orders_as_employer.count()
+
+    def get_completed_orders(self, obj):
+        return obj.orders_as_employer.filter(status=Order.Status.COMPLETED).count()
+
+    def get_cancelled_orders(self, obj):
+        return obj.orders_as_employer.filter(status=Order.Status.CANCELLED).count()
+
+    def get_total_spent(self, obj):
+        from django.db.models import Sum
+        total = (
+            obj.orders_as_employer
+            .filter(status=Order.Status.COMPLETED)
+            .aggregate(total=Sum("agreed_price"))
+            .get("total")
+        )
+        return float(total) if total else 0
+
+    def get_cancellation_rate(self, obj):
+        total = obj.orders_as_employer.count()
+        if total == 0:
+            return 0
+        cancelled = obj.orders_as_employer.filter(status=Order.Status.CANCELLED).count()
+        return round((cancelled / total) * 100, 1)
+
+    def get_last_order_at(self, obj):
+        last = obj.orders_as_employer.order_by("-created_at").first()
+        return last.created_at if last else None

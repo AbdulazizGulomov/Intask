@@ -92,10 +92,11 @@ class OperatorMeView(APIView):
 
     def get(self, request, *args, **kwargs):
         return Response(OperatorMeSerializer(request.user).data)
-    # =====================================================
-    # Dashboard data endpoints (stats + charts)
-    # =====================================================
 
+
+# =====================================================
+# Dashboard data endpoints (stats + charts)
+# =====================================================
 
 from datetime import timedelta
 from django.db.models import Count, Sum, Q
@@ -316,18 +317,20 @@ class RevenueByDistrictChartView(APIView):
             "unit": "M UZS",
         })
 
+
 # =====================================================
-# CRUD ViewSets (Orders + Masters)
+# CRUD ViewSets (Orders + Masters + Clients)
 # =====================================================
 from rest_framework import viewsets, mixins, filters
 from rest_framework.pagination import PageNumberPagination
 
-from apps.accounts.models import WorkerProfile
+from apps.accounts.models import WorkerProfile, User
 from .serializers import (
     OrderListSerializer,
     OrderDetailSerializer,
     OrderUpdateSerializer,
     MasterListSerializer,
+    ClientListSerializer,
 )
 
 
@@ -441,5 +444,38 @@ class MasterViewSet(
             qs = qs.filter(user__is_active=True)
         elif is_active in ("false", "0"):
             qs = qs.filter(user__is_active=False)
+
+        return qs
+
+
+class ClientViewSet(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet,
+):
+    """
+    Clients (employers) ViewSet — read-only listing with aggregated order stats.
+    Operators use this to spot patterns: VIP clients, high cancellation rate, dormant accounts.
+    """
+    permission_classes = [IsAuthenticated, IsOperatorOrAdmin]
+    pagination_class = DashboardPagination
+    serializer_class = ClientListSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = [
+        "phone",
+        "username",
+    ]
+    ordering_fields = ["created_at", "phone"]
+    ordering = ["-created_at"]
+
+    def get_queryset(self):
+        qs = User.objects.filter(role=User.Role.EMPLOYER)
+
+        # Filter by active status
+        is_active = self.request.query_params.get("is_active")
+        if is_active in ("true", "1"):
+            qs = qs.filter(is_active=True)
+        elif is_active in ("false", "0"):
+            qs = qs.filter(is_active=False)
 
         return qs

@@ -17,6 +17,7 @@ from .api_views import (
     # ViewSets
     OrderViewSet,
     MasterViewSet,
+    ClientViewSet,
 )
 
 
@@ -24,6 +25,7 @@ from .api_views import (
 router = DefaultRouter()
 router.register(r"orders", OrderViewSet, basename="order")
 router.register(r"masters", MasterViewSet, basename="master")
+router.register(r"clients", ClientViewSet, basename="client")
 
 
 app_name = "dashboard"
@@ -44,6 +46,6 @@ urlpatterns = [
     path("charts/top-professions/", TopProfessionsChartView.as_view(), name="chart_top_professions"),
     path("charts/revenue-by-district/", RevenueByDistrictChartView.as_view(), name="chart_revenue_district"),
 
-    # CRUD ViewSets (auto-generates: /orders/, /orders/<id>/, /masters/, /masters/<id>/)
+    # CRUD ViewSets (auto-generates: /orders/, /orders/<id>/, /masters/, /masters/<id>/, /clients/, /clients/<id>/)
     path("", include(router.urls)),
 ]

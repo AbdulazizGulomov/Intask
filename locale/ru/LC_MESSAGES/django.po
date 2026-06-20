@@ -2,53 +2,137 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 23:58+0500\n"
+"POT-Creation-Date: 2026-06-19 22:50+0500\n"
 "Language: ru\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: .\apps\accounts\dashboard\serializers.py:26
+#: .\apps\accounts\dashboard\serializers.py:183
+msgid "Phone is required."
+msgstr "Требуется номер телефона."
+
+#: .\apps\accounts\dashboard\serializers.py:55
+msgid "Invalid phone or password."
+msgstr "Неверный телефон или пароль."
+
+#: .\apps\accounts\dashboard\serializers.py:60
+msgid "This account is deactivated."
+msgstr "Этот аккаунт деактивирован."
+
+#: .\apps\accounts\dashboard\serializers.py:67
+msgid "This account is not authorized to access the dashboard."
+msgstr "Этот аккаунт не имеет доступа к панели управления."
+
+#: .\apps\accounts\dashboard\serializers.py:108
+msgid "Username cannot be empty."
+msgstr "Имя пользователя не может быть пустым."
+
+#: .\apps\accounts\dashboard\serializers.py:114
+#: .\apps\accounts\dashboard\serializers.py:195
+msgid "This username is already taken."
+msgstr "Это имя пользователя уже занято."
+
+#: .\apps\accounts\dashboard\serializers.py:136
+msgid "Current password is incorrect."
+msgstr "Текущий пароль неверен."
+
+#: .\apps\accounts\dashboard\serializers.py:142
+msgid "New password and confirmation do not match."
+msgstr "Новый пароль и подтверждение не совпадают."
+
+#: .\apps\accounts\dashboard\serializers.py:187
+msgid "A user with this phone already exists."
+msgstr "Пользователь с таким телефоном уже существует."
+
+#: .\apps\accounts\dashboard\serializers.py:193
+msgid "Username is required."
+msgstr "Требуется имя пользователя."
+
 #: .\apps\accounts\models.py:75
 msgid "groups"
-msgstr "Группы"
+msgstr "группы"
 
 #: .\apps\accounts\models.py:77
 msgid "The groups this user belongs to."
-msgstr "Группы, к которым принадлежит этот пользователь."
+msgstr "Группы, к которым принадлежит пользователь."
 
 #: .\apps\accounts\models.py:83
 msgid "user permissions"
-msgstr "Права пользователя"
+msgstr "разрешения пользователя"
 
 #: .\apps\accounts\models.py:85
 msgid "Specific permissions for this user."
-msgstr "Особые права для этого пользователя."
+msgstr "Конкретные разрешения для этого пользователя."
 
-#: .\apps\accounts\models.py:107 .\templates\worker_register.html:190
+# =========================
+# accounts models
+# =========================
+#: .\apps\accounts\models.py:105 .\templates\worker_register.html:190
 msgid "Erkak"
 msgstr "Мужчина"
 
-#: .\apps\accounts\models.py:108 .\templates\worker_register.html:191
+#: .\apps\accounts\models.py:106 .\templates\worker_register.html:191
 msgid "Ayol"
 msgstr "Женщина"
 
-#: .\apps\jobs\models.py:11 .\apps\jobs\models.py:53
-#: .\templates\employer_job_create.html:256
+#: .\apps\analytics\apps.py:8
+msgid "Analytics"
+msgstr "Аналитика"
+
+#: .\apps\analytics\models.py:18 .\apps\analytics\models.py:74
+msgid "Date"
+msgstr "Дата"
+
+#: .\apps\analytics\models.py:19 .\apps\analytics\models.py:75
+msgid "District"
+msgstr "Район"
+
+#: .\apps\analytics\models.py:23
+msgid "GMV"
+msgstr "GMV"
+
+#: .\apps\analytics\models.py:43
+msgid "Daily metric"
+msgstr "Дневная метрика"
+
+#: .\apps\analytics\models.py:44
+msgid "Daily metrics"
+msgstr "Дневные метрики"
+
+#: .\apps\analytics\models.py:70
+msgid "OK"
+msgstr "OK"
+
+#: .\apps\analytics\models.py:71
+msgid "Tight"
+msgstr "Дефицит"
+
+#: .\apps\analytics\models.py:72
+msgid "Gap"
+msgstr "Нехватка"
+
+#: .\apps\analytics\models.py:80 .\apps\jobs\models.py:79
+#: .\templates\profile_edit.html:658
 msgid "Profession"
 msgstr "Профессия"
 
-#: .\apps\jobs\models.py:12
-msgid "Professions"
-msgstr "Профессии"
+#: .\apps\analytics\models.py:92 .\apps\analytics\models.py:93
+msgid "District/profession demand"
+msgstr "Спрос по районам/профессиям"
 
-#: .\apps\jobs\models.py:20
+# =========================
+# jobs models
+# =========================
+#: .\apps\jobs\models.py:8 .\templates\worker_home.html:43
 msgid "Doimiy"
-msgstr ""
+msgstr "Постоянный"
 
-#: .\apps\jobs\models.py:21
+#: .\apps\jobs\models.py:9 .\templates\worker_home.html:48
 msgid "Vaqtinchalik"
-msgstr ""
+msgstr "Временный"
 
-#: .\apps\jobs\models.py:24 .\templates\landing.html:659
+#: .\apps\jobs\models.py:12 .\templates\landing.html:659
 #: .\templates\landing.html:660 .\templates\landing.html:661
 #: .\templates\landing.html:662 .\templates\landing.html:663
 #: .\templates\landing.html:664 .\templates\landing.html:665
@@ -70,411 +154,525 @@ msgstr ""
 #: .\templates\landing.html:699 .\templates\landing.html:700
 #: .\templates\landing.html:701
 msgid "UZS"
-msgstr "сум"
+msgstr "UZS"
 
-#: .\apps\jobs\models.py:25
+#: .\apps\jobs\models.py:13
 msgid "USD"
 msgstr "USD"
 
-#: .\apps\jobs\models.py:39
+#: .\apps\jobs\models.py:27
 msgid "Region key, e.g. buxoro, toshkent_city"
-msgstr "Ключ региона, например: buxoro, toshkent_city"
+msgstr "Ключ региона, напр. buxoro, toshkent_city"
 
-#: .\apps\jobs\models.py:80
+#: .\apps\jobs\models.py:46
 msgid "Old salary text (optional), e.g. '6–8 mln so‘m'"
-msgstr "Старый текст зарплаты (необязательно), например: '6–8 млн сум'"
+msgstr "Старый текст зарплаты (необязательно), напр. '6–8 млн сум'"
 
-#: .\apps\jobs\models.py:94
+#: .\apps\jobs\models.py:58
 msgid "Latitude for map pin"
-msgstr "Широта для отметки на карте"
+msgstr "Широта для метки на карте"
 
-#: .\apps\jobs\models.py:100
+#: .\apps\jobs\models.py:59
 msgid "Longitude for map pin"
-msgstr "Долгота для отметки на карте"
+msgstr "Долгота для метки на карте"
 
-#: .\apps\jobs\models.py:110
+#: .\apps\jobs\models.py:68 .\apps\orders\models.py:36
 msgid "Job"
 msgstr "Вакансия"
 
-#: .\apps\jobs\models.py:111
+#: .\apps\jobs\models.py:69
 msgid "Jobs"
 msgstr "Вакансии"
 
-#: .\apps\jobs\models.py:119
-msgid "Pending"
-msgstr "В ожидании"
+#: .\apps\jobs\models.py:80
+msgid "Professions"
+msgstr "Профессии"
 
-#: .\apps\jobs\models.py:120
-msgid "Accepted"
-msgstr "Принят"
+#: .\apps\orders\admin.py:17 .\apps\orders\models.py:172
+msgid "Status change"
+msgstr "Изменение статуса"
 
-#: .\apps\jobs\models.py:121
-msgid "Rejected"
-msgstr "Отклонён"
+#: .\apps\orders\admin.py:18 .\apps\orders\models.py:173
+msgid "Status history"
+msgstr "История статусов"
 
-#: .\apps\jobs\models.py:148
-msgid "Job Application"
+#: .\apps\orders\admin.py:51
+msgid "Parties"
+msgstr "Стороны"
+
+#: .\apps\orders\admin.py:52
+msgid "Job link"
+msgstr "Ссылка на вакансию"
+
+#: .\apps\orders\admin.py:53
+msgid "Details"
+msgstr "Детали"
+
+#: .\apps\orders\admin.py:54
+msgid "Money"
+msgstr "Деньги"
+
+#: .\apps\orders\admin.py:55
+msgid "Schedule"
+msgstr "Расписание"
+
+#: .\apps\orders\admin.py:56
+msgid "Location"
+msgstr "Локация"
+
+#: .\apps\orders\admin.py:57 .\apps\orders\admin.py:88
+#: .\apps\orders\models.py:95
+msgid "Status"
+msgstr "Статус"
+
+#: .\apps\orders\admin.py:58
+msgid "Ratings & reviews"
+msgstr "Рейтинги и отзывы"
+
+#: .\apps\orders\admin.py:62
+msgid "Cancellation"
+msgstr "Отмена"
+
+#: .\apps\orders\admin.py:66
+msgid "Timestamps"
+msgstr "Временные метки"
+
+#: .\apps\orders\admin.py:74 .\apps\orders\models.py:43
+msgid "Employer"
+msgstr "Работодатель"
+
+#: .\apps\orders\admin.py:78 .\apps\orders\models.py:50
+msgid "Worker"
+msgstr "Исполнитель"
+
+#: .\apps\orders\admin.py:82
+msgid "Price"
+msgstr "Цена"
+
+#: .\apps\orders\apps.py:8
+msgid "Order Management"
+msgstr "Управление заказами"
+
+#: .\apps\orders\models.py:14
+msgid "Scheduled"
+msgstr "Запланировано"
+
+#: .\apps\orders\models.py:15
+msgid "In Progress"
+msgstr "В процессе"
+
+#: .\apps\orders\models.py:16
+msgid "Completed"
+msgstr "Завершено"
+
+#: .\apps\orders\models.py:17
+msgid "Cancelled"
+msgstr "Отменено"
+
+#: .\apps\orders\models.py:18
+msgid "Disputed"
+msgstr "Спорный"
+
+#: .\apps\orders\models.py:27
+msgid "Job application"
 msgstr "Заявка на вакансию"
 
-#: .\apps\jobs\models.py:149
-msgid "Job Applications"
-msgstr "Заявки на вакансии"
+#: .\apps\orders\models.py:54 .\templates\employer_job_create.html:24
+msgid "Title"
+msgstr "Заголовок"
 
-#: .\templates\base.html:310 .\templates\base.html:345
-#: .\templates\employer_home.html:132 .\templates\employer_home.html:161
-#: .\templates\employer_home_backup.html:153
-#: .\templates\employer_home_backup.html:180
-msgid "Notifications"
-msgstr "Уведомления"
+#: .\apps\orders\models.py:55 .\templates\employer_job_create.html:119
+msgid "Description"
+msgstr "Описание"
 
-#: .\templates\base.html:315 .\templates\base.html:337
-#: .\templates\employer_home.html:159 .\templates\employer_home_backup.html:178
-msgid "Profile"
-msgstr "Профиль"
+#: .\apps\orders\models.py:63
+msgid "Agreed price"
+msgstr "Согласованная цена"
 
-#: .\templates\base.html:324
-msgid "Menu"
-msgstr "Меню"
+#: .\apps\orders\models.py:68 .\templates\employer_job_create.html:91
+msgid "Currency"
+msgstr "Валюта"
 
-#: .\templates\base.html:341 .\templates\employer_home.html:42
-#: .\templates\employer_home.html:81 .\templates\employer_home.html:160
-#: .\templates\employer_home.html:254 .\templates\employer_home_backup.html:42
-#: .\templates\employer_home_backup.html:87
-#: .\templates\employer_home_backup.html:107
-#: .\templates\employer_home_backup.html:179
-#: .\templates\employer_home_backup.html:277
-msgid "My Jobs"
-msgstr "Мои вакансии"
+#: .\apps\orders\models.py:75
+msgid "Scheduled at"
+msgstr "Запланировано на"
 
-#: .\templates\base.html:351
+#: .\apps\orders\models.py:77
+msgid "Started at"
+msgstr "Начато"
+
+#: .\apps\orders\models.py:78
+msgid "Completed at"
+msgstr "Завершено"
+
+#: .\apps\orders\models.py:85
+msgid "Address"
+msgstr "Адрес"
+
+#: .\apps\orders\models.py:102
+msgid "Employer rates the worker (1-5)"
+msgstr "Работодатель оценивает исполнителя (1-5)"
+
+#: .\apps\orders\models.py:103
+msgid "Worker rating"
+msgstr "Оценка исполнителя"
+
+#: .\apps\orders\models.py:108
+msgid "Worker rates the employer (1-5)"
+msgstr "Исполнитель оценивает работодателя (1-5)"
+
+#: .\apps\orders\models.py:109
+msgid "Employer rating"
+msgstr "Оценка работодателя"
+
+#: .\apps\orders\models.py:129 .\apps\orders\models.py:143
+msgid "Order"
+msgstr "Заказ"
+
+#: .\apps\orders\models.py:130
+msgid "Orders"
+msgstr "Заказы"
+
+#: .\apps\orders\models.py:150
+msgid "From status"
+msgstr "Из статуса"
+
+#: .\apps\orders\models.py:154
+msgid "To status"
+msgstr "В статус"
+
+#: .\apps\orders\models.py:163
+msgid "Changed by"
+msgstr "Изменено"
+
+#: .\apps\orders\models.py:166
+msgid "Note"
+msgstr "Примечание"
+
+# =========================
+# navbar
+# =========================
+#: .\templates\base.html:129
 msgid "Chiqish"
-msgstr "Выйти"
+msgstr "Выход"
 
-#: .\templates\base.html:359
+#: .\templates\base.html:137
 msgid "RO‘YXATDAN O‘TISH"
 msgstr "РЕГИСТРАЦИЯ"
 
-#: .\templates\employer_home.html:8 .\templates\employer_home_backup.html:8
+#: .\templates\employer_home_backup.html:8
 msgid "Intask — Employer"
-msgstr "InTask — Работодатель"
+msgstr "Intask — Работодатель"
 
-#: .\templates\employer_home.html:37 .\templates\employer_home_backup.html:38
+#: .\templates\employer_home_backup.html:38
 #: .\templates\employer_home_backup.html:86
 msgid "Sections"
 msgstr "Разделы"
 
-#: .\templates\employer_home.html:43 .\templates\employer_home.html:188
-#: .\templates\employer_home.html:374 .\templates\employer_home_backup.html:43
+#: .\templates\employer_home_backup.html:42
+#: .\templates\employer_home_backup.html:87
+#: .\templates\employer_home_backup.html:107
+#: .\templates\employer_home_backup.html:179
+#: .\templates\employer_home_backup.html:277
+#| msgid "Jobs"
+msgid "My Jobs"
+msgstr "Мои вакансии"
+
+#: .\templates\employer_home_backup.html:43
 #: .\templates\employer_home_backup.html:87
 #: .\templates\employer_home_backup.html:214
 #: .\templates\employer_home_backup.html:392
 msgid "New"
-msgstr "Новые"
+msgstr "Новая"
 
-#: .\templates\employer_home.html:48 .\templates\employer_home.html:303
 #: .\templates\employer_home_backup.html:47
 #: .\templates\employer_home_backup.html:88
 #: .\templates\employer_home_backup.html:325
 msgid "Candidates"
 msgstr "Кандидаты"
 
-#: .\templates\employer_home.html:53 .\templates\employer_home_backup.html:51
+#: .\templates\employer_home_backup.html:51
 #: .\templates\employer_home_backup.html:89
 msgid "Workers Base"
-msgstr "База работников"
+msgstr "База исполнителей"
 
-#: .\templates\employer_home.html:58 .\templates\employer_home_backup.html:55
+#: .\templates\employer_home_backup.html:55
 #: .\templates\employer_home_backup.html:90
 msgid "Messages"
 msgstr "Сообщения"
 
-#: .\templates\employer_home.html:63 .\templates\employer_home_backup.html:59
+#: .\templates\employer_home_backup.html:59
 #: .\templates\employer_home_backup.html:91
 msgid "Settings"
 msgstr "Настройки"
 
-#: .\templates\employer_home.html:70 .\templates\employer_home.html:256
-#: .\templates\employer_home.html:358 .\templates\employer_home.html:389
 #: .\templates\employer_home_backup.html:66
 #: .\templates\employer_home_backup.html:94
 #: .\templates\employer_home_backup.html:279
 #: .\templates\employer_home_backup.html:376
 #: .\templates\employer_home_backup.html:408
 #: .\templates\employer_job_create.html:7
-#: .\templates\employer_job_create.html:162
+#: .\templates\employer_job_create.html:13
 msgid "Create Job"
 msgstr "Создать вакансию"
-
-#: .\templates\employer_home.html:82 .\templates\employer_home_backup.html:108
-msgid "All listings and candidates"
-msgstr "Все объявления и кандидаты"
-
-#: .\templates\employer_home.html:93 .\templates\employer_home_backup.html:120
-msgid "Language"
-msgstr "Язык"
-
-#: .\templates\employer_home.html:143 .\templates\employer_home_backup.html:164
-msgid "Profile menu"
-msgstr "Меню профиля"
-
-#: .\templates\employer_home.html:145 .\templates\employer_home_backup.html:166
-msgid "Profile photo"
-msgstr "Фото профиля"
-
-#: .\templates\employer_home.html:165 .\templates\employer_home_backup.html:182
-msgid "Logout"
-msgstr "Выйти"
-
-#: .\templates\employer_home.html:178 .\templates\employer_home_backup.html:205
-msgid "Active listings"
-msgstr "Активные объявления"
-
-#: .\templates\employer_home.html:179 .\templates\employer_home_backup.html:206
-msgid "This week"
-msgstr "На этой неделе"
-
-#: .\templates\employer_home.html:187 .\templates\employer_home_backup.html:213
-msgid "Total candidates"
-msgstr "Всего кандидатов"
-
-#: .\templates\employer_home.html:196 .\templates\employer_home_backup.html:221
-msgid "Offers sent"
-msgstr "Отправлено офферов"
-
-#: .\templates\employer_home.html:197 .\templates\employer_home.html:206
-#: .\templates\employer_home_backup.html:222
-#: .\templates\employer_home_backup.html:230
-msgid "This month"
-msgstr "В этом месяце"
-
-#: .\templates\employer_home.html:205 .\templates\employer_home.html:377
-#: .\templates\employer_home_backup.html:229
-#: .\templates\employer_home_backup.html:395
-msgid "Hired"
-msgstr "Принят"
-
-#: .\templates\employer_home.html:220 .\templates\employer_home.html:221
-#: .\templates\employer_home_backup.html:244
-#: .\templates\employer_home_backup.html:245
-msgid "Search by profession, name or region..."
-msgstr "Поиск по профессии, имени или региону..."
-
-#: .\templates\employer_home.html:225 .\templates\employer_home_backup.html:248
-msgid "Filter"
-msgstr "Фильтр"
-
-#: .\templates\employer_home.html:226 .\templates\employer_home_backup.html:249
-msgid "Favourite"
-msgstr "Избранное"
-
-#: .\templates\employer_home.html:231 .\templates\employer_home_backup.html:253
-msgid "Tashkent"
-msgstr "Ташкент"
-
-#: .\templates\employer_home.html:232 .\templates\employer_home.html:307
-#: .\templates\employer_home_backup.html:254
-#: .\templates\employer_home_backup.html:329
-msgid "Active"
-msgstr "Активно"
-
-#: .\templates\employer_home.html:233 .\templates\employer_home_backup.html:255
-msgid "Last 7 days"
-msgstr "За последние 7 дней"
-
-#: .\templates\employer_home.html:234 .\templates\employer_home_backup.html:256
-msgid "Add filter"
-msgstr "Добавить фильтр"
-
-#: .\templates\employer_home.html:240 .\templates\employer_home_backup.html:261
-msgid "Search"
-msgstr "Поиск"
-
-#: .\templates\employer_home.html:265 .\templates\employer_home.html:275
-#: .\templates\employer_home_backup.html:289
-#: .\templates\employer_home_backup.html:299
-msgid "Open job details"
-msgstr "Открыть детали вакансии"
-
-#: .\templates\employer_home.html:268 .\templates\employer_home_backup.html:292
-msgid "Job image"
-msgstr "Изображение вакансии"
-
-#: .\templates\employer_home.html:309 .\templates\employer_home_backup.html:331
-msgid "Inactive"
-msgstr "Неактивно"
-
-#: .\templates\employer_home.html:318 .\templates\employer_home_backup.html:340
-msgid "More actions"
-msgstr "Ещё действия"
-
-#: .\templates\employer_home.html:325 .\templates\employer_home_backup.html:344
-msgid "Open candidates"
-msgstr "Открыть кандидатов"
-
-#: .\templates\employer_home.html:330 .\templates\employer_home_backup.html:349
-msgid "View as worker"
-msgstr "Просмотр как работник"
-
-#: .\templates\employer_home.html:341 .\templates\employer_home_backup.html:360
-msgid "Viewed"
-msgstr "Просмотров"
-
-#: .\templates\employer_home.html:345 .\templates\employer_home_backup.html:364
-msgid "Selected"
-msgstr "Выбрано"
-
-#: .\templates\employer_home.html:352 .\templates\employer_home_backup.html:372
-msgid "No jobs yet"
-msgstr "Вакансий пока нет"
-
-#: .\templates\employer_home.html:354 .\templates\employer_home_backup.html:373
-msgid "Click the button below to post your first job"
-msgstr "Нажмите кнопку ниже, чтобы разместить первую вакансию"
-
-#: .\templates\employer_home.html:364 .\templates\employer_home_backup.html:382
-msgid "Show more"
-msgstr "Показать ещё"
-
-#: .\templates\employer_home.html:369 .\templates\employer_home_backup.html:388
-msgid "Candidate Flow"
-msgstr "Воронка кандидатов"
-
-#: .\templates\employer_home.html:375 .\templates\employer_home_backup.html:393
-msgid "Interview"
-msgstr "Собеседование"
-
-#: .\templates\employer_home.html:376 .\templates\employer_home_backup.html:394
-msgid "Offer"
-msgstr "Оффер"
-
-#: .\templates\employer_home.html:385 .\templates\employer_home_backup.html:405
-msgid "Quick Actions"
-msgstr "Быстрые действия"
-
-#: .\templates\employer_home.html:393 .\templates\employer_home_backup.html:411
-msgid "Create in 1 step"
-msgstr "Создать за 1 шаг"
-
-#: .\templates\employer_home.html:394 .\templates\employer_home_backup.html:412
-msgid "Choose from templates"
-msgstr "Выбрать из шаблонов"
-
-#: .\templates\employer_home.html:395 .\templates\employer_home_backup.html:413
-msgid "Top workers"
-msgstr "Лучшие работники"
 
 #: .\templates\employer_home_backup.html:82
 msgid "Close"
 msgstr "Закрыть"
 
+#: .\templates\employer_home_backup.html:108
+msgid "All listings and candidates"
+msgstr "Все объявления и кандидаты"
+
+#: .\templates\employer_home_backup.html:120
+msgid "Language"
+msgstr "Язык"
+
+#: .\templates\employer_home_backup.html:153
+#: .\templates\employer_home_backup.html:180
+msgid "Notifications"
+msgstr "Уведомления"
+
+#: .\templates\employer_home_backup.html:164
+#| msgid "Profil rasmi"
+msgid "Profile menu"
+msgstr "Меню профиля"
+
+#: .\templates\employer_home_backup.html:166
+msgid "Profile photo"
+msgstr "Фото профиля"
+
+#: .\templates\employer_home_backup.html:178
+#| msgid "Profil rasmi"
+msgid "Profile"
+msgstr "Профиль"
+
+#: .\templates\employer_home_backup.html:182
+msgid "Logout"
+msgstr "Выход"
+
 #: .\templates\employer_home_backup.html:192
 msgid "Open menu"
 msgstr "Открыть меню"
 
+#: .\templates\employer_home_backup.html:205
+msgid "Active listings"
+msgstr "Активные объявления"
+
+#: .\templates\employer_home_backup.html:206
+msgid "This week"
+msgstr "На этой неделе"
+
+#: .\templates\employer_home_backup.html:213
+msgid "Total candidates"
+msgstr "Всего кандидатов"
+
+#: .\templates\employer_home_backup.html:221
+msgid "Offers sent"
+msgstr "Отправлено предложений"
+
+#: .\templates\employer_home_backup.html:222
+#: .\templates\employer_home_backup.html:230
+msgid "This month"
+msgstr "В этом месяце"
+
+#: .\templates\employer_home_backup.html:229
+#: .\templates\employer_home_backup.html:395
+msgid "Hired"
+msgstr "Нанято"
+
+#: .\templates\employer_home_backup.html:244
+#: .\templates\employer_home_backup.html:245
+msgid "Search by profession, name or region..."
+msgstr "Поиск по профессии, имени или региону..."
+
+# =========================
+# worker home
+# =========================
+#: .\templates\employer_home_backup.html:248
+#| msgid "Filtrlar"
+msgid "Filter"
+msgstr "Фильтр"
+
+#: .\templates\employer_home_backup.html:249
+msgid "Favourite"
+msgstr "Избранное"
+
+#: .\templates\employer_home_backup.html:253
+msgid "Tashkent"
+msgstr "Ташкент"
+
+#: .\templates\employer_home_backup.html:254
+#: .\templates\employer_home_backup.html:329
+msgid "Active"
+msgstr "Активно"
+
+#: .\templates\employer_home_backup.html:255
+msgid "Last 7 days"
+msgstr "Последние 7 дней"
+
+#: .\templates\employer_home_backup.html:256
+msgid "Add filter"
+msgstr "Добавить фильтр"
+
+#: .\templates\employer_home_backup.html:261
+msgid "Search"
+msgstr "Поиск"
+
+#: .\templates\employer_home_backup.html:289
+#: .\templates\employer_home_backup.html:299
+msgid "Open job details"
+msgstr "Открыть детали вакансии"
+
+#: .\templates\employer_home_backup.html:292
+msgid "Job image"
+msgstr "Изображение вакансии"
+
+#: .\templates\employer_home_backup.html:331
+msgid "Inactive"
+msgstr "Неактивно"
+
+#: .\templates\employer_home_backup.html:340
+msgid "More actions"
+msgstr "Ещё действия"
+
+#: .\templates\employer_home_backup.html:344
+msgid "Open candidates"
+msgstr "Открыть кандидатов"
+
+#: .\templates\employer_home_backup.html:349
+msgid "View as worker"
+msgstr "Посмотреть как исполнитель"
+
+#: .\templates\employer_home_backup.html:360
+msgid "Viewed"
+msgstr "Просмотрено"
+
+#: .\templates\employer_home_backup.html:364
+msgid "Selected"
+msgstr "Выбрано"
+
+#: .\templates\employer_home_backup.html:372
+msgid "No jobs yet"
+msgstr "Пока нет вакансий"
+
+#: .\templates\employer_home_backup.html:373
+msgid "Click the button below to post your first job"
+msgstr "Нажмите кнопку ниже, чтобы разместить первую вакансию"
+
+#: .\templates\employer_home_backup.html:382
+msgid "Show more"
+msgstr "Показать ещё"
+
+#: .\templates\employer_home_backup.html:388
+msgid "Candidate Flow"
+msgstr "Поток кандидатов"
+
+#: .\templates\employer_home_backup.html:393
+msgid "Interview"
+msgstr "Собеседование"
+
+#: .\templates\employer_home_backup.html:394
+msgid "Offer"
+msgstr "Предложение"
+
+#: .\templates\employer_home_backup.html:405
+msgid "Quick Actions"
+msgstr "Быстрые действия"
+
+#: .\templates\employer_home_backup.html:411
+msgid "Create in 1 step"
+msgstr "Создать в 1 шаг"
+
+#: .\templates\employer_home_backup.html:412
+msgid "Choose from templates"
+msgstr "Выбрать из шаблонов"
+
+#: .\templates\employer_home_backup.html:413
+msgid "Top workers"
+msgstr "Лучшие исполнители"
+
 #: .\templates\employer_home_backup.html:418
 msgid "Recommended Workers"
-msgstr "Рекомендуемые работники"
+msgstr "Рекомендуемые исполнители"
 
 #: .\templates\employer_home_backup.html:448
 msgid "Send Offer"
-msgstr "Отправить оффер"
+msgstr "Отправить предложение"
 
-#: .\templates\employer_job_create.html:173
-msgid "Title"
-msgstr "Название"
-
-#: .\templates\employer_job_create.html:179
-msgid "Job photo"
+#: .\templates\employer_job_create.html:30
+msgid "Job photos"
 msgstr "Фото вакансии"
 
-#: .\templates\employer_job_create.html:188
-msgid "Upload main photo"
-msgstr "Загрузить главное фото"
-
-#: .\templates\employer_job_create.html:189
-#: .\templates\employer_job_create.html:201
-#: .\templates\employer_job_create.html:213
-#: .\templates\employer_job_create.html:225
-msgid "Click to choose image"
-msgstr "Нажмите, чтобы выбрать изображение"
-
-#: .\templates\employer_job_create.html:200
-#: .\templates\employer_job_create.html:212
-#: .\templates\employer_job_create.html:224
-msgid "Upload photo"
-msgstr "Загрузить фото"
-
-#: .\templates\employer_job_create.html:234
-msgid "Add another photo"
-msgstr "Добавить ещё фото"
-
-#: .\templates\employer_job_create.html:238
-msgid "Upload one photo first. You can add more photos if needed, up to 4."
+#: .\templates\employer_job_create.html:61
+msgid ""
+"You can upload up to 4 photos. Each selected photo will preview immediately."
 msgstr ""
-"Сначала загрузите одно фото. При необходимости можно добавить ещё, до 4 шт."
+"Вы можете загрузить до 4 фотографий. Каждая выбранная фотография сразу "
+"появится в превью."
 
-#: .\templates\employer_job_create.html:246
+#: .\templates\employer_job_create.html:68
 msgid "Region"
 msgstr "Регион"
 
-#: .\templates\employer_job_create.html:266
+#: .\templates\employer_job_create.html:78
 msgid "Job type"
-msgstr "Тип работы"
+msgstr "Тип вакансии"
 
-#: .\templates\employer_job_create.html:283
-msgid "Currency"
-msgstr "Валюта"
+#: .\templates\employer_job_create.html:100
+msgid "Pay min"
+msgstr "Мин. оплата"
 
-#: .\templates\employer_job_create.html:292
-msgid "Minimum Pay"
-msgstr "Минимальная оплата"
+#: .\templates\employer_job_create.html:105
+msgid "Pay max"
+msgstr "Макс. оплата"
 
-#: .\templates\employer_job_create.html:302
-#: .\templates\employer_job_create.html:316
-msgid "Example"
-msgstr "Пример"
-
-#: .\templates\employer_job_create.html:306
-msgid "Maximum Pay"
-msgstr "Максимальная оплата"
-
-#: .\templates\employer_job_create.html:323
+#: .\templates\employer_job_create.html:112
 msgid "Pay text (optional)"
 msgstr "Текст оплаты (необязательно)"
 
-#: .\templates\employer_job_create.html:329
-msgid "Description"
-msgstr "Описание"
+#: .\templates\employer_job_create.html:114
+msgid "Optional: for human-friendly text."
+msgstr "Необязательно: для понятного человеку текста."
 
-#: .\templates\employer_job_create.html:338
+#: .\templates\employer_job_create.html:126
 msgid "Contact phone"
 msgstr "Контактный телефон"
 
-#: .\templates\employer_job_create.html:352
+#: .\templates\employer_job_create.html:131
+msgid "Lat"
+msgstr "Широта"
+
+#: .\templates\employer_job_create.html:136
+msgid "Lng"
+msgstr "Долгота"
+
+#: .\templates\employer_job_create.html:144
 msgid "Use my current location"
 msgstr "Использовать моё текущее местоположение"
 
-#: .\templates\employer_job_create.html:359
+#: .\templates\employer_job_create.html:151
 msgid "Save"
 msgstr "Сохранить"
 
-#: .\templates\employer_job_create.html:361
+#: .\templates\employer_job_create.html:153 .\templates\profile_edit.html:528
 msgid "Back"
 msgstr "Назад"
 
 #: .\templates\landing.html:9
 msgid "Uy xizmatlari eshigingizgacha"
-msgstr "Домашние услуги до вашей двери"
+msgstr "Бытовые услуги до вашего порога"
 
 #: .\templates\landing.html:11
 msgid ""
 "InTask orqali yaqin atrofdagi tekshirilgan ustalarni tez toping. Elektrik, "
 "santexnik, taʼmir, mebel yigʻish va boshqa xizmatlar."
 msgstr ""
-"Быстро найдите проверенных мастеров поблизости через InTask. Электрик, "
+"С InTask быстро находите проверенных мастеров поблизости. Электрик, "
 "сантехник, ремонт, сборка мебели и другие услуги."
 
 #: .\templates\landing.html:34 .\templates\landing_new.html:92
+#| msgid "Tavsiya etilgan ishlar"
 msgid "Tekshirilgan ustalar"
 msgstr "Проверенные мастера"
 
@@ -488,23 +686,28 @@ msgstr "Ташкент, Юнусабад"
 
 #: .\templates\landing.html:57
 msgid "Qidiring: Konditsioner tozalash"
-msgstr "Поиск: Чистка кондиционера"
+msgstr "Поиск: чистка кондиционера"
 
 #: .\templates\landing.html:65 .\templates\landing.html:588
 msgid "Usta bo'lish"
 msgstr "Стать мастером"
 
 #: .\templates\landing.html:89
+#| msgid "Qidirish"
 msgid "Kirish"
-msgstr "Войти"
+msgstr "Вход"
 
+# =========================
+# worker register
+# =========================
 #: .\templates\landing.html:90
+#| msgid "Ishchi ro'yxatdan o'tish"
 msgid "Ro'yxatdan o'tish"
 msgstr "Регистрация"
 
 #: .\templates\landing.html:98
 msgid "Uy <span class=\"accent-word\">xizmatlari</span><br>eshigingizgacha"
-msgstr "Домашние <span class=\"accent-word\">услуги</span><br>до вашей двери"
+msgstr "Бытовые <span class=\"accent-word\">услуги</span><br>до вашего порога"
 
 #: .\templates\landing.html:101
 msgid "Nima qidiryapsiz?"
@@ -536,6 +739,7 @@ msgstr "Кондиционер"
 #: .\templates\landing.html:425 .\templates\landing.html:568
 #: .\templates\landing.html:684 .\templates\landing.html:689
 #: .\templates\landing.html:694 .\templates\landing.html:699
+#| msgid "Tasdiqlash"
 msgid "Tozalash"
 msgstr "Уборка"
 
@@ -567,11 +771,11 @@ msgstr "проверенный мастер"
 
 #: .\templates\landing.html:180 .\templates\landing.html:276
 msgid "buyurtma"
-msgstr "заказов"
+msgstr "заказ"
 
 #: .\templates\landing.html:187
 msgid "Konditsioner xizmati"
-msgstr "Обслуживание кондиционеров"
+msgstr "Обслуживание кондиционера"
 
 #: .\templates\landing.html:190 .\templates\landing.html:200
 #: .\templates\landing.html:210 .\templates\landing.html:220
@@ -594,9 +798,10 @@ msgstr "Сборка мебели"
 #: .\templates\landing.html:698 .\templates\landing.html:699
 #: .\templates\landing.html:700 .\templates\landing.html:701
 msgid "soat"
-msgstr "час"
+msgstr "ч"
 
 #: .\templates\landing.html:207 .\templates\landing.html:211
+#| msgid "Rasm tanlash"
 msgid "Uy tozalash"
 msgstr "Уборка дома"
 
@@ -612,9 +817,7 @@ msgstr "Ближайшие заказы в Ташкенте"
 msgid ""
 "Usta\n"
 "                sifatida qo'shiling"
-msgstr ""
-"Присоединитесь как\n"
-"                мастер"
+msgstr "Присоединяйтесь как мастер"
 
 #: .\templates\landing.html:244
 msgid "Buyurtmalar"
@@ -630,8 +833,8 @@ msgid ""
 "Shahar bo'ylab joriy interaktiv xaritani bevosita\n"
 "            kuzating."
 msgstr ""
-"Наблюдайте за интерактивной картой города\n"
-"            в реальном времени."
+"Следите за актуальной интерактивной картой по всему городу в реальном "
+"времени."
 
 #: .\templates\landing.html:257
 msgid "Barchasi"
@@ -663,17 +866,15 @@ msgstr "станьте мастером"
 
 #: .\templates\landing.html:297
 msgid "va 15 mln so'mgacha toping"
-msgstr "и зарабатывайте до 15 млн."
+msgstr "и зарабатывайте до 15 млн сум"
 
 #: .\templates\landing.html:301
 msgid ""
-"InTask'da buyurtmalar oling, mijozlar bilan ishlang va daromadingizni "
-"oshiring. Ro'yxatdan\n"
+"InTask'da buyurtmalar oling, mijozlar bilan ishlang va daromadingizni oshiring. Ro'yxatdan\n"
 "          o'tish bepul."
 msgstr ""
 "Получайте заказы в InTask, работайте с клиентами и увеличивайте свой доход. "
-"Регистрация\n"
-"          бесплатна."
+"Регистрация бесплатна."
 
 #: .\templates\landing.html:314
 msgid "haftalik buyurtmalar"
@@ -681,11 +882,11 @@ msgstr "заказов в неделю"
 
 #: .\templates\landing.html:323
 msgid "to'lov vaqti"
-msgstr "время оплаты"
+msgstr "время выплаты"
 
 #: .\templates\landing.html:332
 msgid "ro'yxat uchun"
-msgstr "для списка"
+msgstr "за регистрацию"
 
 #: .\templates\landing.html:338
 msgid "Hoziroq ariza berish"
@@ -693,15 +894,15 @@ msgstr "Подать заявку сейчас"
 
 #: .\templates\landing.html:366
 msgid "Elektrik usta"
-msgstr "Мастер электрик"
+msgstr "Мастер-электрик"
 
 #: .\templates\landing.html:367
 msgid "Tez va ishonchli"
-msgstr "Быстро и надежно"
+msgstr "Быстро и надёжно"
 
 #: .\templates\landing.html:381
 msgid "Oylik daromad"
-msgstr "Ежемесячный доход"
+msgstr "Месячный доход"
 
 #: .\templates\landing.html:383
 msgid "so'mgacha"
@@ -732,10 +933,12 @@ msgid "Ismingiz"
 msgstr "Ваше имя"
 
 #: .\templates\landing.html:463
+#| msgid "Telefon raqamingizni kiriting"
 msgid "Ismingizni kiriting"
-msgstr "Введите имя"
+msgstr "Введите ваше имя"
 
 #: .\templates\landing.html:466
+#| msgid "Telefon raqami"
 msgid "Telefon raqamingiz"
 msgstr "Ваш номер телефона"
 
@@ -748,6 +951,7 @@ msgid "Xabaringizni yozing"
 msgstr "Напишите ваше сообщение"
 
 #: .\templates\landing.html:474
+#| msgid "Kodni yuborish"
 msgid "Yuborish"
 msgstr "Отправить"
 
@@ -759,14 +963,13 @@ msgstr "Контакты"
 msgid "Biz bilan bog'lanish"
 msgstr "Связаться с нами"
 
-#: .\templates\landing.html:486 .\templates\worker_job_detail.html:316
-#: .\templates\worker_job_detail.html:383
+#: .\templates\landing.html:486 .\templates\worker_job_detail.html:146
 msgid "Telefon"
 msgstr "Телефон"
 
 #: .\templates\landing.html:493
 msgid "Email"
-msgstr "Email"
+msgstr "Эл. почта"
 
 #: .\templates\landing.html:501
 msgid "Toshkent shahri, Amir Temur ko'chasi, 108"
@@ -774,14 +977,14 @@ msgstr "г. Ташкент, ул. Амира Темура, 108"
 
 #: .\templates\landing.html:509
 msgid "Bizni kuzatib boring"
-msgstr "Подписывайтесь на нас"
+msgstr "Следите за нами"
 
 #: .\templates\landing.html:532
 msgid ""
-"O'zbekistondagi №1 tekshirilgan ustalar platformasi. Har qanday uy ishi — 15 "
-"daqiqada."
+"O'zbekistondagi №1 tekshirilgan ustalar platformasi. Har qanday uy ishi — 15"
+" daqiqada."
 msgstr ""
-"Платформа №1 проверенных мастеров в Узбекистане. Любая работа по дому — за "
+"Платформа проверенных мастеров №1 в Узбекистане. Любая домашняя работа — за "
 "15 минут."
 
 #: .\templates\landing.html:563 .\templates\landing_new.html:36
@@ -814,19 +1017,20 @@ msgstr "Для бизнеса"
 
 #: .\templates\landing.html:581
 msgid "Yangi"
-msgstr "Новый"
+msgstr "Новое"
 
 #: .\templates\landing.html:590
 msgid "Daromad kalkulyatori"
 msgstr "Калькулятор дохода"
 
 #: .\templates\landing.html:591
+#| msgid "Lokatsiya"
 msgid "Sertifikatsiya"
 msgstr "Сертификация"
 
 #: .\templates\landing.html:592
 msgid "Usta yordami"
-msgstr "Помощь мастера"
+msgstr "Помощь мастеру"
 
 #: .\templates\landing.html:597
 msgid "Yordam"
@@ -836,7 +1040,11 @@ msgstr "Помощь"
 msgid "Savol-javob"
 msgstr "Вопросы и ответы"
 
+# =========================
+# OTP page
+# =========================
 #: .\templates\landing.html:601
+#| msgid "Xavfsiz kirish"
 msgid "Xavfsizlik"
 msgstr "Безопасность"
 
@@ -890,7 +1098,7 @@ msgstr "Глубокая уборка"
 
 #: .\templates\landing.html:661 .\templates\landing.html:684
 msgid "Mirzo Ulug'bek"
-msgstr "Мирзо-Улугбек"
+msgstr "Мирзо Улугбек"
 
 #: .\templates\landing.html:662
 msgid "Split-sistema"
@@ -914,7 +1122,7 @@ msgstr "Замена крана"
 
 #: .\templates\landing.html:664 .\templates\landing.html:687
 msgid "Olmazor"
-msgstr "Олмазар"
+msgstr "Алмазар"
 
 #: .\templates\landing.html:665
 msgid "Lyustra o'rnatish"
@@ -925,8 +1133,9 @@ msgid "Mirobod"
 msgstr "Мирабад"
 
 #: .\templates\landing.html:666
+#| msgid "Rasm tanlash"
 msgid "Oyna tozalash"
-msgstr "Мытье окон"
+msgstr "Мытьё окон"
 
 #: .\templates\landing.html:666 .\templates\landing.html:689
 msgid "Yashnobod"
@@ -934,7 +1143,7 @@ msgstr "Яшнабад"
 
 #: .\templates\landing.html:667
 msgid "Konditsioner servis"
-msgstr "Обслуживание кондиционера"
+msgstr "Сервис кондиционера"
 
 #: .\templates\landing.html:667 .\templates\landing.html:690
 msgid "Uchtepa"
@@ -959,7 +1168,7 @@ msgstr "Амир Темур"
 
 #: .\templates\landing.html:670
 msgid "Sim o'tkazish"
-msgstr "Проводка"
+msgstr "Прокладка проводки"
 
 #: .\templates\landing.html:670 .\templates\landing.html:693
 msgid "TTZ"
@@ -1006,6 +1215,7 @@ msgid "Paxtakor"
 msgstr "Пахтакор"
 
 #: .\templates\landing.html:676
+#| msgid "Rasm tanlash"
 msgid "Xona tozalash"
 msgstr "Уборка комнаты"
 
@@ -1015,7 +1225,7 @@ msgstr "Мустакиллик"
 
 #: .\templates\landing.html:677
 msgid "Gipskarton shift"
-msgstr "Потолок из гипсокартона"
+msgstr "Гипсокартонный потолок"
 
 #: .\templates\landing.html:677 .\templates\landing.html:700
 msgid "Darxon"
@@ -1023,7 +1233,7 @@ msgstr "Дархан"
 
 #: .\templates\landing.html:678
 msgid "Klimat o'rnatish"
-msgstr "Установка климата"
+msgstr "Установка климат-системы"
 
 #: .\templates\landing.html:678 .\templates\landing.html:701
 msgid "Pushkin"
@@ -1035,6 +1245,7 @@ msgid "Uy ta'miri"
 msgstr "Ремонт дома"
 
 #: .\templates\landing_new.html:38
+#| msgid "Yaqin ishlar"
 msgid "Yaqin buyurtmalar"
 msgstr "Ближайшие заказы"
 
@@ -1056,11 +1267,11 @@ msgstr "найдите мастера"
 
 #: .\templates\landing_new.html:82
 msgid ""
-"Sun’iy intellekt 15 daqiqa ichida sizga eng yaxshi va ishonchli ustani topib "
-"beradi."
+"Sun’iy intellekt 15 daqiqa ichida sizga eng yaxshi va ishonchli ustani topib"
+" beradi."
 msgstr ""
-"Искусственный интеллект за 15 минут найдёт лучшего проверенного мастера "
-"рядом с вами."
+"Искусственный интеллект за 15 минут найдёт для вас лучшего и надёжного "
+"мастера."
 
 #: .\templates\landing_new.html:86
 msgid "Qanday xizmat kerak?"
@@ -1076,19 +1287,22 @@ msgstr "Найти мастера"
 
 #: .\templates\landing_new.html:93
 msgid "Kafolatlangan xizmat"
-msgstr "Гарантированный сервис"
+msgstr "Гарантированная услуга"
 
 #: .\templates\landing_new.html:94
 msgid "15 daqiqada"
-msgstr "За 15 минут"
+msgstr "за 15 минут"
 
+# =========================
+# OTP page
+# =========================
 #: .\templates\otp.html:61
 msgid "Xavfsiz kirish"
 msgstr "Безопасный вход"
 
 #: .\templates\otp.html:65
 msgid "Telefon raqamingizni kiriting"
-msgstr "Введите номер телефона"
+msgstr "Введите ваш номер телефона"
 
 #: .\templates\otp.html:69
 msgid "Tasdiqlash kodi SMS orqali yuboriladi"
@@ -1114,215 +1328,283 @@ msgstr "Подтвердить"
 msgid "Kodni hech kimga bermang · Kod 5 daqiqa amal qiladi"
 msgstr "Никому не сообщайте код · Код действует 5 минут"
 
-#: .\templates\role_select.html:9 .\templates\role_select.html:73
-msgid "Kerakli bo'limni tanlang"
+#: .\templates\profile_edit.html:7 .\templates\profile_edit.html:523
+msgid "Edit Profile"
+msgstr "Редактировать профиль"
+
+#: .\templates\profile_edit.html:524
+msgid "Update your personal information"
+msgstr "Обновите вашу личную информацию"
+
+#: .\templates\profile_edit.html:548
+msgid "Profile Photo"
+msgstr "Фото профиля"
+
+#: .\templates\profile_edit.html:559
+msgid "No photo"
+msgstr "Нет фото"
+
+#: .\templates\profile_edit.html:565
+msgid "Upload photo"
+msgstr "Загрузить фото"
+
+#: .\templates\profile_edit.html:566
+msgid "JPG, PNG or WEBP. Maximum size 5 MB."
+msgstr "JPG, PNG или WEBP. Максимальный размер 5 МБ."
+
+#: .\templates\profile_edit.html:573 .\templates\profile_edit.html:689
+msgid "Choose file"
+msgstr "Выбрать файл"
+
+#: .\templates\profile_edit.html:588
+msgid "First name"
+msgstr "Имя"
+
+#: .\templates\profile_edit.html:596
+msgid "Enter your first name"
+msgstr "Введите ваше имя"
+
+#: .\templates\profile_edit.html:602
+msgid "Last name"
+msgstr "Фамилия"
+
+#: .\templates\profile_edit.html:610
+msgid "Enter your last name"
+msgstr "Введите вашу фамилию"
+
+#: .\templates\profile_edit.html:620
+msgid "Age"
+msgstr "Возраст"
+
+#: .\templates\profile_edit.html:630
+msgid "Enter your age"
+msgstr "Введите ваш возраст"
+
+#: .\templates\profile_edit.html:636
+msgid "Gender"
+msgstr "Пол"
+
+#: .\templates\profile_edit.html:647
+msgid "Select your gender"
+msgstr "Выберите ваш пол"
+
+#: .\templates\profile_edit.html:648
+msgid "Male"
+msgstr "Мужской"
+
+#: .\templates\profile_edit.html:649
+msgid "Female"
+msgstr "Женский"
+
+#: .\templates\profile_edit.html:667
+msgid "Select your profession"
+msgstr "Выберите вашу профессию"
+
+#: .\templates\profile_edit.html:679
+msgid "Certificate / Diploma / CV"
+msgstr "Сертификат / Диплом / Резюме"
+
+#: .\templates\profile_edit.html:690
+msgid "PDF, DOC, DOCX or JPG. Maximum size 10 MB."
+msgstr "PDF, DOC, DOCX или JPG. Максимальный размер 10 МБ."
+
+#: .\templates\profile_edit.html:702
+msgid "View uploaded document"
+msgstr "Просмотреть загруженный документ"
+
+#: .\templates\profile_edit.html:711
+msgid "Display name"
+msgstr "Отображаемое имя"
+
+#: .\templates\profile_edit.html:719
+msgid "Enter your display name"
+msgstr "Введите отображаемое имя"
+
+#: .\templates\profile_edit.html:730
+msgid "Save changes"
+msgstr "Сохранить изменения"
+
+# =========================
+# role select
+# =========================
+#: .\templates\role_select.html:8 .\templates\role_select.html:66
+msgid "Kerakli bo‘limni tanlang"
 msgstr "Выберите нужный раздел"
 
-#: .\templates\role_select.html:84
+#: .\templates\role_select.html:78
 msgid "Ish qidiraman"
-msgstr "Я ищу работу"
+msgstr "Ищу работу"
 
-#: .\templates\role_select.html:86
+#: .\templates\role_select.html:80
 msgid "Tez daromad olish uchun bu yerga."
-msgstr "Нажмите сюда, чтобы быстро начать зарабатывать."
+msgstr "Сюда — чтобы быстро начать зарабатывать."
 
-#: .\templates\role_select.html:99
+#: .\templates\role_select.html:94
 msgid "Ish beruvchiman"
 msgstr "Я работодатель"
 
-#: .\templates\role_select.html:101
-msgid "Tez ishchi kerak bo'lsa, bu yerga."
-msgstr "Нажмите сюда, если вам срочно нужен работник."
+#: .\templates\role_select.html:96
+msgid "Tez ishchi kerak bo‘lsa, bu yerga."
+msgstr "Сюда — если срочно нужен работник."
 
-#: .\templates\worker_home.html:15
+# =========================
+# worker home
+# =========================
+#: .\templates\worker_home.html:14
 msgid "Filtrlar"
 msgstr "Фильтры"
 
-#: .\templates\worker_home.html:20
+#: .\templates\worker_home.html:18
 msgid "Hudud"
 msgstr "Регион"
 
-#: .\templates\worker_home.html:22
+#: .\templates\worker_home.html:21
 msgid "Hududni tanlang"
 msgstr "Выберите регион"
 
-#: .\templates\worker_home.html:37
-msgid "Kasb"
-msgstr "Профессия"
+#: .\templates\worker_home.html:36
+msgid "Ish turi"
+msgstr "Тип работы"
 
 #: .\templates\worker_home.html:39
-msgid "Kasbni tanlang"
-msgstr "Выберите профессию"
+msgid "Ish turini tanlang"
+msgstr "Выберите тип работы"
 
 #: .\templates\worker_home.html:58
-msgid "Qo'llash"
+msgid "Qo‘llash"
 msgstr "Применить"
 
-#: .\templates\worker_home.html:77
+#: .\templates\worker_home.html:75
 msgid "Kasb yoki joyni qidiring..."
-msgstr "Поиск по профессии или местоположению..."
+msgstr "Поиск по профессии или месту..."
 
-#: .\templates\worker_home.html:80
+#: .\templates\worker_home.html:79
 msgid "Qidirish"
 msgstr "Поиск"
 
-#: .\templates\worker_home.html:81
+#: .\templates\worker_home.html:80
 msgid "Yaqin ishlar"
-msgstr "Ближайшие вакансии"
+msgstr "Ближайшие работы"
 
-#: .\templates\worker_home.html:144 .\templates\worker_home.html:269
+#: .\templates\worker_home.html:141 .\templates\worker_home.html:251
 msgid "Batafsil"
 msgstr "Подробнее"
 
-#: .\templates\worker_home.html:206
+#: .\templates\worker_home.html:200
 msgid "Yaqin ish"
-msgstr "Ближайшая вакансия"
+msgstr "Ближайшая работа"
 
-#: .\templates\worker_home.html:230
+#: .\templates\worker_home.html:224
 msgid "Tavsiya etilgan ishlar"
-msgstr "Рекомендуемые вакансии"
+msgstr "Рекомендуемые работы"
 
-#: .\templates\worker_home.html:275
+#: .\templates\worker_home.html:256
 msgid "Natija topilmadi"
-msgstr "Ничего не найдено"
+msgstr "Результатов не найдено"
 
-#: .\templates\worker_home.html:277
-msgid "Filtrlarni o'zgartirib ko'ring."
+#: .\templates\worker_home.html:257
+msgid "Filtrlarni o‘zgartirib ko‘ring."
 msgstr "Попробуйте изменить фильтры."
 
-#: .\templates\worker_job_detail.html:200
-#: .\templates\worker_job_detail.html:206
-#: .\templates\worker_job_detail.html:208
+# =========================
+# worker job detail
+# =========================
+#: .\templates\worker_job_detail.html:44
 msgid "Orqaga"
 msgstr "Назад"
 
-#: .\templates\worker_job_detail.html:202
-msgid "Preview mode: Employer is viewing this page as worker"
-msgstr "Режим предпросмотра: работодатель просматривает страницу как работник"
+#: .\templates\worker_job_detail.html:76
+msgid "Oldingi"
+msgstr "Предыдущий"
 
-#: .\templates\worker_job_detail.html:215
-msgid "Rasmlar (tahrirlash)"
-msgstr "Фотографии (редактировать)"
+#: .\templates\worker_job_detail.html:80
+msgid "Keyingi"
+msgstr "Следующий"
 
-#: .\templates\worker_job_detail.html:222
-#: .\templates\worker_job_detail.html:225
-#: .\templates\worker_job_detail.html:228
-#: .\templates\worker_job_detail.html:231 .\templates\worker_register.html:103
-msgid "O'chirish"
-msgstr "Удалить"
-
-#: .\templates\worker_job_detail.html:240
-msgid "Ish sarlavhasi"
-msgstr "Заголовок вакансии"
-
-#: .\templates\worker_job_detail.html:245
-msgid "Holat (yorliqlarni tahrirlash)"
-msgstr "Статус (редактировать метки)"
-
-#: .\templates\worker_job_detail.html:254
-#: .\templates\worker_job_detail.html:358
+#: .\templates\worker_job_detail.html:99
 msgid "Faol"
 msgstr "Активно"
 
-#: .\templates\worker_job_detail.html:256
-#: .\templates\worker_job_detail.html:360
+#: .\templates\worker_job_detail.html:101
 msgid "Yopilgan"
 msgstr "Закрыто"
 
-#: .\templates\worker_job_detail.html:259
-#: .\templates\worker_job_detail.html:465
-msgid "Preview mode"
-msgstr "Режим предпросмотра"
+#: .\templates\worker_job_detail.html:123
+msgid "E’lon beruvchi"
+msgstr "Разместивший объявление"
 
-#: .\templates\worker_job_detail.html:299
-msgid "Ish beruvchi telefoni"
-msgstr "Телефон работодателя"
-
-#: .\templates\worker_job_detail.html:303
-msgid "Ish beruvchi ID"
-msgstr "ID работодателя"
-
-#: .\templates\worker_job_detail.html:310
-#: .\templates\worker_job_detail.html:377
+#: .\templates\worker_job_detail.html:136
 msgid "Tavsif"
 msgstr "Описание"
 
-#: .\templates\worker_job_detail.html:322
-#: .\templates\worker_job_detail.html:388
+#: .\templates\worker_job_detail.html:140
+msgid "Tavsif kiritilmagan."
+msgstr "Описание не указано."
+
+#: .\templates\worker_job_detail.html:151
 msgid "Lokatsiya"
-msgstr "Местоположение"
+msgstr "Локация"
 
-#: .\templates\worker_job_detail.html:324
-msgid "Koordinatalarni tahrirlash"
-msgstr "Редактировать координаты"
-
-#: .\templates\worker_job_detail.html:327
-msgid "Latitude"
-msgstr "Широта"
-
-#: .\templates\worker_job_detail.html:330
-msgid "Longitude"
-msgstr "Долгота"
-
-#: .\templates\worker_job_detail.html:391
+#: .\templates\worker_job_detail.html:155
 msgid "Ish joyi koordinatalari"
 msgstr "Координаты места работы"
 
-#: .\templates\worker_job_detail.html:395
+#: .\templates\worker_job_detail.html:162
+msgid "Yandex Map"
+msgstr "Яндекс Карта"
+
+#: .\templates\worker_job_detail.html:168
+msgid "Google Map"
+msgstr "Google Карта"
+
+#: .\templates\worker_job_detail.html:172
 msgid "Lokatsiya kiritilmagan."
-msgstr "Местоположение не указано."
+msgstr "Локация не указана."
 
-#: .\templates\worker_job_detail.html:402
-msgid "Nomzodlar"
-msgstr "Кандидаты"
+#: .\templates\worker_job_detail.html:177
+#: .\templates\worker_job_detail.html:246
+#: .\templates\worker_job_detail.html:251
+msgid "Mening hozirgi lokatsiyam"
+msgstr "Моё текущее местоположение"
 
-#: .\templates\worker_job_detail.html:411
-msgid "Ishchi"
-msgstr "Работник"
+#: .\templates\worker_job_detail.html:181
+msgid "Sizning lokatsiyangiz"
+msgstr "Ваше местоположение"
 
-#: .\templates\worker_job_detail.html:427
-msgid "Hozircha nomzodlar yo'q."
-msgstr "Пока нет кандидатов."
+#: .\templates\worker_job_detail.html:184
+msgid "Yandex’da ochish"
+msgstr "Открыть в Яндексе"
 
-#: .\templates\worker_job_detail.html:434
-msgid "Yandex xarita"
-msgstr "Яндекс Карты"
+#: .\templates\worker_job_detail.html:185
+msgid "Google’da ochish"
+msgstr "Открыть в Google"
 
-#: .\templates\worker_job_detail.html:435
-msgid "Google xarita"
-msgstr "Google Карты"
-
-#: .\templates\worker_job_detail.html:443
-msgid "Saqlash"
-msgstr "Сохранить"
-
-#: .\templates\worker_job_detail.html:447
-msgid "Qo'ng'iroq qilish"
+#: .\templates\worker_job_detail.html:199
+msgid "Qo‘ng‘iroq qilish"
 msgstr "Позвонить"
 
-#: .\templates\worker_job_detail.html:449
-msgid "Telefon yo'q"
-msgstr "Телефон не указан"
+#: .\templates\worker_job_detail.html:203
+msgid "Telefon yo‘q"
+msgstr "Нет телефона"
 
-#: .\templates\worker_job_detail.html:454
-msgid "Siz allaqachon ariza yuborgansiz"
-msgstr "Вы уже отправили заявку"
-
-#: .\templates\worker_job_detail.html:458
+#: .\templates\worker_job_detail.html:209
 msgid "Ariza yuborish"
-msgstr "Откликнуться"
+msgstr "Отправить заявку"
 
+# =========================
+# worker register
+# =========================
 #: .\templates\worker_register.html:16
 msgid "Ishchi ro'yxatdan o'tish"
 msgstr "Регистрация работника"
 
 #: .\templates\worker_register.html:17
 msgid "Ma'lumotlaringizni kiriting (1-qadam)"
-msgstr "Введите свои данные (шаг 1)"
+msgstr "Введите ваши данные (шаг 1)"
 
 #: .\templates\worker_register.html:23
 msgid "Shaxsiy ma'lumot"
-msgstr "Личная информация"
+msgstr "Личные данные"
 
 #: .\templates\worker_register.html:28
 msgid "Qo'shimcha"
@@ -1338,15 +1620,19 @@ msgstr "Загрузите фото профиля"
 
 #: .\templates\worker_register.html:84
 msgid "Yuzingiz aniq ko'rinadigan rasm tavsiya qilinadi"
-msgstr "Рекомендуется фотография, на которой ваше лицо хорошо видно"
+msgstr "Рекомендуется фото, где чётко видно ваше лицо"
 
 #: .\templates\worker_register.html:95
 msgid "Rasm tanlash"
 msgstr "Выбрать фото"
 
+#: .\templates\worker_register.html:103
+msgid "O'chirish"
+msgstr "Удалить"
+
 #: .\templates\worker_register.html:108
 msgid "5MB gacha"
-msgstr "До 5 МБ"
+msgstr "до 5 МБ"
 
 #: .\templates\worker_register.html:122
 msgid "Ism"
@@ -1354,7 +1640,7 @@ msgstr "Имя"
 
 #: .\templates\worker_register.html:128
 msgid "Masalan: Abdulaziz"
-msgstr "Например: Abdulaziz"
+msgstr "Например: Абдулазиз"
 
 #: .\templates\worker_register.html:143
 msgid "Familiya"
@@ -1362,7 +1648,7 @@ msgstr "Фамилия"
 
 #: .\templates\worker_register.html:149
 msgid "Masalan: Gulomov"
-msgstr "Например: Gulomov"
+msgstr "Например: Гуломов"
 
 #: .\templates\worker_register.html:162
 msgid "Yosh"
@@ -1391,24 +1677,3 @@ msgstr "Пожалуйста, выберите файл изображения"
 #: .\templates\worker_register.html:620
 msgid "Fayl hajmi 5MB dan oshmasligi kerak"
 msgstr "Размер файла не должен превышать 5 МБ"
-
-msgid "Fill in the details below to post a new job listing"
-msgstr "Заполните данные ниже, чтобы разместить новое объявление"
-
-msgid "e.g. Need an electrician for socket installation"
-msgstr "Например: Нужен электрик для установки розетки"
-
-msgid "Basic information"
-msgstr "Основная информация"
-
-msgid "Job details"
-msgstr "Детали работы"
-
-msgid "Payment"
-msgstr "Оплата"
-
-msgid "Description & contact"
-msgstr "Описание и контакт"
-
-msgid "Describe the job in detail..."
-msgstr "Опишите работу подробно..."

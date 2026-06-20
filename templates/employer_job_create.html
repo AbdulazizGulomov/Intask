@@ -5,551 +5,68 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>{% trans "Create Job" %}</title>
-
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-  <style>
-    :root {
-      --primary: #4f6df5;
-      --primary-dark: #3b56d4;
-      --primary-light: #eef2ff;
-      --accent: #fbbf24;
-      --success: #10b981;
-      --success-dark: #059669;
-      --text-dark: #1f2937;
-      --text-muted: #6b7280;
-      --text-light: #9ca3af;
-      --border: #e5e7eb;
-      --border-light: #f3f4f6;
-      --bg: #f9fafb;
-      --white: #ffffff;
-    }
-
-    * {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--text-dark);
-    }
-
-    /* PAGE HEADER */
-    .page-header {
-      margin-bottom: 24px;
-    }
-
-    .page-header h2 {
-      font-weight: 700;
-      font-size: 28px;
-      color: var(--text-dark);
-      margin: 0;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .page-header .header-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      box-shadow: 0 8px 16px -4px rgba(79, 109, 245, 0.3);
-    }
-
-    .page-header .subtitle {
-      color: var(--text-muted);
-      font-size: 14px;
-      margin-top: 6px;
-      margin-left: 56px;
-    }
-
-    /* MAIN CARD */
-    .job-card {
-      border: none;
-      border-radius: 24px;
-      background: var(--white);
-      box-shadow: 0 4px 24px -8px rgba(0, 0, 0, 0.06);
-      padding: 28px;
-    }
-
-    /* SECTION TITLES */
-    .section-title {
-      font-weight: 600;
-      font-size: 14px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .section-title .icon {
-      font-size: 16px;
-    }
-
-    /* FORM LABELS */
-    .form-label {
-      font-weight: 600;
-      font-size: 13px;
-      color: var(--text-dark);
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .form-label .label-icon {
-      font-size: 14px;
-      color: var(--primary);
-    }
-
-    /* FORM CONTROLS */
-    .form-control,
-    .form-select {
-      border-radius: 12px;
-      min-height: 48px;
-      border: 1.5px solid var(--border);
-      background: var(--white);
-      font-size: 15px;
-      font-weight: 500;
-      color: var(--text-dark);
-      padding: 10px 14px;
-      transition: all 0.2s ease;
-    }
-
-    .form-control:hover,
-    .form-select:hover {
-      border-color: #c7d2fe;
-    }
-
-    .form-control:focus,
-    .form-select:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 4px rgba(79, 109, 245, 0.1);
-      outline: none;
-    }
-
-    .form-control::placeholder {
-      color: var(--text-light);
-      font-weight: 400;
-    }
-
-    textarea.form-control {
-      min-height: 120px;
-      resize: vertical;
-    }
-
-    /* PHOTO UPLOAD */
-    .upload-card {
-      width: 100%;
-      min-height: 180px;
-      border: 2px dashed #cbd5e1;
-      border-radius: 18px;
-      background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.25s ease;
-      padding: 16px;
-    }
-
-    .upload-card:hover {
-      border-color: var(--primary);
-      background: linear-gradient(135deg, #eef2ff 0%, #dbeafe 100%);
-      transform: translateY(-2px);
-      box-shadow: 0 12px 24px -8px rgba(79, 109, 245, 0.2);
-    }
-
-    .upload-plus {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: white;
-      font-size: 28px;
-      font-weight: 300;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 8px 16px -4px rgba(79, 109, 245, 0.4);
-      transition: transform 0.25s ease;
-    }
-
-    .upload-card:hover .upload-plus {
-      transform: scale(1.1) rotate(90deg);
-    }
-
-    .upload-title {
-      font-weight: 600;
-      color: var(--text-dark);
-      font-size: 15px;
-    }
-
-    .upload-subtitle {
-      font-size: 13px;
-      color: var(--text-muted);
-    }
-
-    .photo-preview {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .upload-card.has-image {
-      border-style: solid;
-      border-color: var(--border);
-      background: #000;
-      padding: 0;
-    }
-
-    .upload-card.has-image .upload-plus,
-    .upload-card.has-image .upload-title,
-    .upload-card.has-image .upload-subtitle {
-      display: none;
-    }
-
-    .photo-remove-btn {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      z-index: 5;
-      border: 0;
-      border-radius: 999px;
-      width: 36px;
-      height: 36px;
-      background: rgba(0, 0, 0, 0.7);
-      color: white;
-      font-size: 18px;
-      line-height: 1;
-      display: none;
-      backdrop-filter: blur(8px);
-      transition: all 0.2s ease;
-    }
-
-    .photo-remove-btn:hover {
-      background: #ef4444;
-      transform: scale(1.1);
-    }
-
-    .upload-card.has-image .photo-remove-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    #addPhotoBtn {
-      border-radius: 999px;
-      font-weight: 600;
-      font-size: 14px;
-      padding: 8px 18px;
-      border: 1.5px solid var(--primary);
-      color: var(--primary);
-      background: var(--white);
-      transition: all 0.2s ease;
-    }
-
-    #addPhotoBtn:hover {
-      background: var(--primary);
-      color: white;
-      transform: translateY(-1px);
-      box-shadow: 0 8px 16px -4px rgba(79, 109, 245, 0.3);
-    }
-
-    /* MONEY INPUT */
-    .money-input {
-      font-weight: 600;
-      letter-spacing: 0.4px;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .money-hint {
-      font-size: 12px;
-      color: var(--text-light);
-      margin-top: 6px;
-      font-weight: 500;
-    }
-
-    /* DIVIDER */
-    .form-divider {
-      height: 1px;
-      background: linear-gradient(to right, transparent, var(--border), transparent);
-      margin: 28px 0 20px;
-    }
-
-    /* LOCATION */
-    .location-section {
-      background: linear-gradient(135deg, #fef3c7 0%, #fef9c3 100%);
-      border-radius: 16px;
-      padding: 18px;
-      border: 1.5px solid #fde68a;
-      margin-top: 20px;
-    }
-
-    .location-btn {
-      width: 100%;
-      border-radius: 12px;
-      padding: 12px 18px;
-      font-weight: 600;
-      font-size: 14px;
-      border: 1.5px solid var(--accent);
-      color: #92400e;
-      background: white;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .location-btn:hover {
-      background: var(--accent);
-      color: white;
-      transform: translateY(-1px);
-      box-shadow: 0 8px 16px -4px rgba(251, 191, 36, 0.4);
-    }
-
-    .location-status {
-      font-size: 13px;
-      margin-top: 10px;
-      font-weight: 500;
-      color: #92400e;
-    }
-
-    /* ACTION BUTTONS */
-    .action-buttons {
-      display: flex;
-      gap: 12px;
-      margin-top: 28px;
-      padding-top: 24px;
-      border-top: 1px solid var(--border-light);
-    }
-
-    .btn-save {
-      flex: 1;
-      border-radius: 12px;
-      padding: 13px 24px;
-      font-weight: 600;
-      font-size: 15px;
-      background: linear-gradient(135deg, var(--success), var(--success-dark));
-      color: white;
-      border: none;
-      transition: all 0.2s ease;
-      box-shadow: 0 8px 16px -4px rgba(16, 185, 129, 0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .btn-save:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 24px -6px rgba(16, 185, 129, 0.4);
-      color: white;
-    }
-
-    .btn-back {
-      border-radius: 12px;
-      padding: 13px 24px;
-      font-weight: 600;
-      font-size: 15px;
-      border: 1.5px solid var(--border);
-      color: var(--text-muted);
-      background: white;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      text-decoration: none;
-    }
-
-    .btn-back:hover {
-      border-color: var(--text-muted);
-      color: var(--text-dark);
-      background: var(--bg);
-    }
-
-    /* ALERT */
-    .alert-danger {
-      border-radius: 14px;
-      border: 1.5px solid #fecaca;
-      background: #fef2f2;
-      color: #b91c1c;
-      padding: 14px 18px;
-      font-weight: 500;
-      font-size: 14px;
-    }
-
-    /* RESPONSIVE */
-    @media (max-width: 576px) {
-      .container {
-        padding-left: 14px;
-        padding-right: 14px;
-      }
-
-      .job-card {
-        padding: 18px;
-        border-radius: 18px;
-      }
-
-      .upload-card {
-        min-height: 160px;
-      }
-
-      .page-header h2 {
-        font-size: 22px;
-      }
-
-      .page-header .subtitle {
-        margin-left: 0;
-        margin-top: 8px;
-      }
-
-      .action-buttons {
-        flex-direction: column-reverse;
-      }
-    }
-  </style>
 </head>
+<body class="bg-light">
 
-<body>
-
-<div class="container py-4 py-md-5" style="max-width: 760px;">
-
-  <!-- PAGE HEADER -->
-  <div class="page-header">
-    <h2>
-      <span class="header-icon">✨</span>
-      {% trans "Create Job" %}
-    </h2>
-    <div class="subtitle">{% trans "Fill in the details below to post a new job listing" %}</div>
-  </div>
+<div class="container py-4" style="max-width: 720px;">
+  <h3 class="mb-3">{% trans "Create Job" %}</h3>
 
   {% if error %}
-    <div class="alert alert-danger">⚠️ {{ error }}</div>
+    <div class="alert alert-danger">{{ error }}</div>
   {% endif %}
 
-  <form method="post" enctype="multipart/form-data" class="job-card" id="jobCreateForm">
+  <form method="post" enctype="multipart/form-data" class="card p-3 shadow-sm">
     {% csrf_token %}
 
-    <!-- BASIC INFO SECTION -->
-    <div class="section-title">
-      <span class="icon">📋</span>
-      {% trans "Basic information" %}
-    </div>
-
     <!-- TITLE -->
-    <div class="mb-4">
-      <label class="form-label" for="titleField">
-        <span class="label-icon">✏️</span>
-        {% trans "Title" %}
-      </label>
-      <input name="title" id="titleField" class="form-control" placeholder="{% trans 'e.g. Need an electrician for socket installation' %}" required>
+    <div class="mb-3">
+      <label class="form-label">{% trans "Title" %}</label>
+      <input name="title" class="form-control" required>
     </div>
 
-    <!-- PHOTOS -->
-    <div class="mb-4">
-      <label class="form-label">
-        <span class="label-icon">📸</span>
-        {% trans "Job photo" %}
-      </label>
+    <!-- ✅ PHOTOS (4) -->
+    <div class="mb-3">
+      <label class="form-label">{% trans "Job photos" %}</label>
 
-      <div id="photoUploadArea" class="row g-3">
+      <div class="row g-3">
 
-        <!-- Photo 1 -->
-        <div class="col-md-6 photo-box" id="photoBox1">
-          <label for="photo1" class="upload-card">
-            <button type="button" class="photo-remove-btn" data-input="photo1" data-preview="preview1" data-box="photoBox1">×</button>
-            <div class="upload-plus">+</div>
-            <div class="upload-title">{% trans "Upload main photo" %}</div>
-            <div class="upload-subtitle">{% trans "Click to choose image" %}</div>
-            <img id="preview1" class="photo-preview" style="display:none;" alt="">
-          </label>
-          <input type="file" name="photo1" id="photo1" class="d-none" accept="image/*">
+        <!-- PHOTO 1 -->
+        <div class="col-md-6">
+          <input type="file" name="photo1" id="photo1" class="form-control" accept="image/*">
+          <img id="preview1" class="img-fluid mt-2 rounded border" style="display:none; max-height:220px; object-fit:cover;">
         </div>
 
-        <!-- Photo 2 -->
-        <div class="col-md-6 photo-box d-none" id="photoBox2">
-          <label for="photo2" class="upload-card">
-            <button type="button" class="photo-remove-btn" data-input="photo2" data-preview="preview2" data-box="photoBox2">×</button>
-            <div class="upload-plus">+</div>
-            <div class="upload-title">{% trans "Upload photo" %}</div>
-            <div class="upload-subtitle">{% trans "Click to choose image" %}</div>
-            <img id="preview2" class="photo-preview" style="display:none;" alt="">
-          </label>
-          <input type="file" name="photo2" id="photo2" class="d-none" accept="image/*">
+        <!-- PHOTO 2 -->
+        <div class="col-md-6">
+          <input type="file" name="photo2" id="photo2" class="form-control" accept="image/*">
+          <img id="preview2" class="img-fluid mt-2 rounded border" style="display:none; max-height:220px; object-fit:cover;">
         </div>
 
-        <!-- Photo 3 -->
-        <div class="col-md-6 photo-box d-none" id="photoBox3">
-          <label for="photo3" class="upload-card">
-            <button type="button" class="photo-remove-btn" data-input="photo3" data-preview="preview3" data-box="photoBox3">×</button>
-            <div class="upload-plus">+</div>
-            <div class="upload-title">{% trans "Upload photo" %}</div>
-            <div class="upload-subtitle">{% trans "Click to choose image" %}</div>
-            <img id="preview3" class="photo-preview" style="display:none;" alt="">
-          </label>
-          <input type="file" name="photo3" id="photo3" class="d-none" accept="image/*">
+        <!-- PHOTO 3 -->
+        <div class="col-md-6">
+          <input type="file" name="photo3" id="photo3" class="form-control" accept="image/*">
+          <img id="preview3" class="img-fluid mt-2 rounded border" style="display:none; max-height:220px; object-fit:cover;">
         </div>
 
-        <!-- Photo 4 -->
-        <div class="col-md-6 photo-box d-none" id="photoBox4">
-          <label for="photo4" class="upload-card">
-            <button type="button" class="photo-remove-btn" data-input="photo4" data-preview="preview4" data-box="photoBox4">×</button>
-            <div class="upload-plus">+</div>
-            <div class="upload-title">{% trans "Upload photo" %}</div>
-            <div class="upload-subtitle">{% trans "Click to choose image" %}</div>
-            <img id="preview4" class="photo-preview" style="display:none;" alt="">
-          </label>
-          <input type="file" name="photo4" id="photo4" class="d-none" accept="image/*">
+        <!-- PHOTO 4 -->
+        <div class="col-md-6">
+          <input type="file" name="photo4" id="photo4" class="form-control" accept="image/*">
+          <img id="preview4" class="img-fluid mt-2 rounded border" style="display:none; max-height:220px; object-fit:cover;">
         </div>
 
       </div>
 
-      <button type="button" id="addPhotoBtn" class="mt-3">
-        + {% trans "Add another photo" %}
-      </button>
-
-      <div class="money-hint mt-2">
-        💡 {% trans "Upload one photo first. You can add more photos if needed, up to 4." %}
+      <div class="form-text mt-2">
+        {% trans "You can upload up to 4 photos. Each selected photo will preview immediately." %}
       </div>
     </div>
 
-    <div class="form-divider"></div>
-
-    <!-- JOB DETAILS SECTION -->
-    <div class="section-title">
-      <span class="icon">🔍</span>
-      {% trans "Job details" %}
-    </div>
-
-    <!-- REGION + PROFESSION + TYPE -->
-    <div class="row g-3 mb-4">
-
-      <div class="col-md-4">
-        <label class="form-label" for="regionField">
-          <span class="label-icon">📍</span>
-          {% trans "Region" %}
-        </label>
-        <select name="region" id="regionField" class="form-select" required>
+    <!-- REGION + TYPE -->
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">{% trans "Region" %}</label>
+        <select name="region" class="form-select" required>
           <option value="">--</option>
           {% for k,v in regions %}
             <option value="{{ k }}">{{ v }}</option>
@@ -557,50 +74,22 @@
         </select>
       </div>
 
-      <div class="col-md-4">
-        <label class="form-label" for="professionField">
-          <span class="label-icon">🛠️</span>
-          {% trans "Profession" %}
-        </label>
-        <select name="profession" id="professionField" class="form-select" required>
-          <option value="">--</option>
-          {% for profession in professions %}
-            <option value="{{ profession.id }}">{{ profession.name }}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="col-md-4">
-        <label class="form-label" for="jobTypeField">
-          <span class="label-icon">⏱️</span>
-          {% trans "Job type" %}
-        </label>
-        <select name="job_type" id="jobTypeField" class="form-select" required>
+      <div class="col-md-6">
+        <label class="form-label">{% trans "Job type" %}</label>
+        <select name="job_type" class="form-select" required>
           <option value="">--</option>
           {% for k,v in job_types %}
             <option value="{{ k }}">{{ v }}</option>
           {% endfor %}
         </select>
       </div>
-
     </div>
 
-    <div class="form-divider"></div>
-
-    <!-- PAY SECTION -->
-    <div class="section-title">
-      <span class="icon">💰</span>
-      {% trans "Payment" %}
-    </div>
-
-    <div class="row g-3 mb-3">
-
+    <!-- ✅ PAY: currency + min/max -->
+    <div class="row g-3 mt-3">
       <div class="col-md-4">
-        <label class="form-label" for="payCurrency">
-          <span class="label-icon">💵</span>
-          {% trans "Currency" %}
-        </label>
-        <select name="pay_currency" id="payCurrency" class="form-select">
+        <label class="form-label">{% trans "Currency" %}</label>
+        <select name="pay_currency" class="form-select">
           {% for k,v in currencies %}
             <option value="{{ k }}">{{ v }}</option>
           {% endfor %}
@@ -608,130 +97,94 @@
       </div>
 
       <div class="col-md-4">
-        <label class="form-label" for="payMin">
-          <span class="label-icon">📉</span>
-          {% trans "Minimum Pay" %}
-        </label>
-        <input
-          name="pay_min"
-          id="payMin"
-          type="text"
-          inputmode="numeric"
-          autocomplete="off"
-          class="form-control money-input"
-          placeholder="6 000 000"
-        >
-        <div class="money-hint">{% trans "Example" %}: 6 000 000</div>
+        <label class="form-label">{% trans "Pay min" %}</label>
+        <input name="pay_min" type="number" step="0.01" class="form-control" placeholder="6000000">
       </div>
 
       <div class="col-md-4">
-        <label class="form-label" for="payMax">
-          <span class="label-icon">📈</span>
-          {% trans "Maximum Pay" %}
-        </label>
-        <input
-          name="pay_max"
-          id="payMax"
-          type="text"
-          inputmode="numeric"
-          autocomplete="off"
-          class="form-control money-input"
-          placeholder="8 000 000"
-        >
-        <div class="money-hint">{% trans "Example" %}: 8 000 000</div>
+        <label class="form-label">{% trans "Pay max" %}</label>
+        <input name="pay_max" type="number" step="0.01" class="form-control" placeholder="8000000">
       </div>
-
     </div>
 
-    <!-- PAY TEXT -->
-    <div class="mb-4">
-      <label class="form-label" for="payText">
-        <span class="label-icon">💬</span>
-        {% trans "Pay text (optional)" %}
-      </label>
-      <input name="pay_text" id="payText" class="form-control" placeholder="6–8 mln so‘m">
-    </div>
-
-    <div class="form-divider"></div>
-
-    <!-- DESCRIPTION SECTION -->
-    <div class="section-title">
-      <span class="icon">📝</span>
-      {% trans "Description & contact" %}
+    <!-- optional text -->
+    <div class="mt-2">
+      <label class="form-label">{% trans "Pay text (optional)" %}</label>
+      <input name="pay_text" class="form-control" placeholder="6–8 mln so‘m (optional)">
+      <div class="form-text">{% trans "Optional: for human-friendly text." %}</div>
     </div>
 
     <!-- DESCRIPTION -->
-    <div class="mb-3">
-      <label class="form-label" for="descriptionField">
-        <span class="label-icon">📄</span>
-        {% trans "Description" %}
-      </label>
-      <textarea name="description" id="descriptionField" class="form-control" rows="4" placeholder="{% trans 'Describe the job in detail...' %}"></textarea>
+    <div class="mb-3 mt-3">
+      <label class="form-label">{% trans "Description" %}</label>
+      <textarea name="description" class="form-control" rows="4"></textarea>
     </div>
 
-    <!-- CONTACT -->
-    <div class="mb-3">
-      <label class="form-label" for="contactPhone">
-        <span class="label-icon">📞</span>
-        {% trans "Contact phone" %}
-      </label>
-      <input name="contact_phone" id="contactPhone" class="form-control" placeholder="+998901234567">
+    <!-- CONTACT + LOCATION -->
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">{% trans "Contact phone" %}</label>
+        <input name="contact_phone" class="form-control" placeholder="+998901234567">
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">{% trans "Lat" %}</label>
+        <input id="lat" name="lat" class="form-control" placeholder="41.2995">
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">{% trans "Lng" %}</label>
+        <input id="lng" name="lng" class="form-control" placeholder="69.2401">
+      </div>
     </div>
 
-    <!-- HIDDEN LOCATION VALUES -->
-    <input type="hidden" id="lat" name="lat">
-    <input type="hidden" id="lng" name="lng">
-
-    <!-- LOCATION SECTION -->
-    <div class="location-section">
-      <button type="button" id="getLocationBtn" class="location-btn">
+    <!-- current location -->
+    <div class="mt-3">
+      <button type="button" id="getLocationBtn" class="btn btn-outline-primary w-100">
         📍 {% trans "Use my current location" %}
       </button>
-      <div id="locMsg" class="location-status"></div>
+      <div id="locMsg" class="small text-muted mt-2"></div>
     </div>
 
-    <!-- ACTION BUTTONS -->
-    <div class="action-buttons">
-      <a class="btn-back" href="{% url 'accounts:employer_home' %}">
-        ← {% trans "Back" %}
+    <!-- BUTTONS -->
+    <div class="d-flex gap-2 mt-3">
+      <button class="btn btn-success" type="submit">{% trans "Save" %}</button>
+      <a class="btn btn-outline-secondary" href="{% url 'accounts:employer_home' %}">
+        {% trans "Back" %}
       </a>
-      <button class="btn-save" type="submit">
-        ✓ {% trans "Save" %}
-      </button>
     </div>
-
   </form>
 </div>
 
 <script>
-  // =====================================================
-  // PHOTO UPLOAD PREVIEW
-  // =====================================================
-  let visiblePhotoCount = 1;
-  const maxPhotos = 4;
-
+  // ✅ Photo preview helper
   function bindPreview(inputId, imgId) {
     const input = document.getElementById(inputId);
     const img = document.getElementById(imgId);
-
     if (!input || !img) return;
 
     input.addEventListener("change", () => {
       const file = input.files && input.files[0];
-      const box = input.closest(".photo-box");
-      const card = box.querySelector(".upload-card");
-
       if (!file) {
+        img.src = "";
         img.style.display = "none";
-        img.removeAttribute("src");
-        card.classList.remove("has-image");
+        return;
+      }
+
+      if (!file.type.startsWith("image/")) {
+        img.src = "";
+        img.style.display = "none";
+        alert("Please select an image file.");
+        input.value = "";
         return;
       }
 
       const url = URL.createObjectURL(file);
       img.src = url;
       img.style.display = "block";
-      card.classList.add("has-image");
+
+      // release memory when image loaded
+      img.onload = () => URL.revokeObjectURL(url);
     });
   }
 
@@ -740,155 +193,33 @@
   bindPreview("photo3", "preview3");
   bindPreview("photo4", "preview4");
 
-  const addPhotoBtn = document.getElementById("addPhotoBtn");
-
-  addPhotoBtn.addEventListener("click", () => {
-    if (visiblePhotoCount >= maxPhotos) return;
-
-    visiblePhotoCount++;
-
-    const nextBox = document.getElementById("photoBox" + visiblePhotoCount);
-
-    if (nextBox) {
-      nextBox.classList.remove("d-none");
-    }
-
-    if (visiblePhotoCount >= maxPhotos) {
-      addPhotoBtn.style.display = "none";
-    }
-  });
-
-  document.querySelectorAll(".photo-remove-btn").forEach((btn) => {
-    btn.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-
-      const input = document.getElementById(btn.dataset.input);
-      const preview = document.getElementById(btn.dataset.preview);
-      const box = document.getElementById(btn.dataset.box);
-      const card = box.querySelector(".upload-card");
-
-      input.value = "";
-      preview.style.display = "none";
-      preview.removeAttribute("src");
-      card.classList.remove("has-image");
-    });
-  });
-
-  // =====================================================
-  // MONEY FORMATTER
-  // =====================================================
-  function formatMoney(value) {
-    value = value.replace(/\D/g, "");
-    return value.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-  }
-
-  function unformatMoney(value) {
-    return value.replace(/\s/g, "");
-  }
-
-  function shortMoneyText(value) {
-    const numberValue = Number(unformatMoney(value));
-
-    if (!numberValue) {
-      return "";
-    }
-
-    if (numberValue >= 1000000) {
-      const mln = numberValue / 1000000;
-      return Number.isInteger(mln) ? mln + " mln" : mln.toFixed(1) + " mln";
-    }
-
-    if (numberValue >= 1000) {
-      const ming = numberValue / 1000;
-      return Number.isInteger(ming) ? ming + " ming" : ming.toFixed(1) + " ming";
-    }
-
-    return numberValue.toString();
-  }
-
-  function updatePayTextSuggestion() {
-    const payMin = document.getElementById("payMin");
-    const payMax = document.getElementById("payMax");
-    const payText = document.getElementById("payText");
-    const currency = document.getElementById("payCurrency");
-
-    if (!payMin || !payMax || !payText || !currency) return;
-
-    const minText = shortMoneyText(payMin.value);
-    const maxText = shortMoneyText(payMax.value);
-
-    if (!minText && !maxText) return;
-
-    const currencyText = currency.value === "USD" ? "$" : "so‘m";
-
-    if (minText && maxText) {
-      payText.value = minText + " – " + maxText + " " + currencyText;
-    } else if (minText) {
-      payText.value = minText + " " + currencyText;
-    } else if (maxText) {
-      payText.value = maxText + " " + currencyText;
-    }
-  }
-
-  document.addEventListener("DOMContentLoaded", function () {
-    const moneyInputs = document.querySelectorAll(".money-input");
-
-    moneyInputs.forEach((input) => {
-      input.addEventListener("input", function () {
-        this.value = formatMoney(this.value);
-        updatePayTextSuggestion();
-      });
-
-      if (input.value) {
-        input.value = formatMoney(input.value);
-      }
-    });
-
-    const currency = document.getElementById("payCurrency");
-    if (currency) {
-      currency.addEventListener("change", updatePayTextSuggestion);
-    }
-
-    const form = document.getElementById("jobCreateForm");
-
-    if (form) {
-      form.addEventListener("submit", function () {
-        moneyInputs.forEach((input) => {
-          input.value = unformatMoney(input.value);
-        });
-      });
-    }
-  });
-
-  // =====================================================
-  // GEOLOCATION
-  // =====================================================
+  // ✅ Location button
   const btn = document.getElementById("getLocationBtn");
-  const lat = document.getElementById("lat");
-  const lng = document.getElementById("lng");
+  const latInput = document.getElementById("lat");
+  const lngInput = document.getElementById("lng");
   const msg = document.getElementById("locMsg");
 
   btn.addEventListener("click", () => {
     if (!navigator.geolocation) {
-      msg.textContent = "⚠️ Geolocation not supported";
+      msg.textContent = "❌ Geolocation is not supported in this browser.";
       return;
     }
 
     btn.disabled = true;
-    msg.textContent = "⏳ Getting location...";
+    msg.textContent = "📍 Getting your location...";
 
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        lat.value = pos.coords.latitude.toFixed(6);
-        lng.value = pos.coords.longitude.toFixed(6);
-        msg.textContent = "✅ Location added successfully";
+        latInput.value = pos.coords.latitude.toFixed(6);
+        lngInput.value = pos.coords.longitude.toFixed(6);
+        msg.textContent = "✅ Location added.";
         btn.disabled = false;
       },
       (err) => {
         msg.textContent = "❌ Location error: " + err.message;
         btn.disabled = false;
-      }
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
     );
   });
 </script>

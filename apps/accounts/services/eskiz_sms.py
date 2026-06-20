@@ -1,6 +1,7 @@
 import requests
 from django.conf import settings
 
+
 LOGIN_URL = "https://notify.eskiz.uz/api/auth/login"
 SEND_SMS_URL = "https://notify.eskiz.uz/api/message/sms/send"
 
@@ -14,7 +15,6 @@ def get_eskiz_token():
         },
         timeout=15,
     )
-
     response.raise_for_status()
     data = response.json()
 
@@ -40,11 +40,10 @@ def send_sms(phone: str, message: str):
         },
         timeout=15,
     )
-
     response.raise_for_status()
     return response.json()
 
 
 def send_otp_sms(phone: str, otp_code: str):
-    message = f"Intask platformasida ro'yxatdan o'tish uchun tasdiqlash kodingiz: {otp_code}. Kod 2 daqiqa ichida amal qiladi."
+    message = f"TaskIN: TaskIN platformasida ro'yxatdan o'tish uchun tasdiqlash kodingiz: {otp_code}"
     return send_sms(phone, message)

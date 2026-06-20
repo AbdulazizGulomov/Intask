@@ -1,0 +1,434 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-03-07 20:12+0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+#: .\apps\accounts\models.py:85 .\templates\worker_register.html:190
+msgid "Erkak"
+msgstr ""
+
+#: .\apps\accounts\models.py:86 .\templates\worker_register.html:191
+msgid "Ayol"
+msgstr ""
+
+#: .\apps\jobs\models.py:8 .\templates\worker_home.html:43
+msgid "Doimiy"
+msgstr ""
+
+#: .\apps\jobs\models.py:9 .\templates\worker_home.html:48
+msgid "Vaqtinchalik"
+msgstr ""
+
+#: .\apps\jobs\models.py:12
+msgid "UZS"
+msgstr ""
+
+#: .\apps\jobs\models.py:13
+msgid "USD"
+msgstr ""
+
+#: .\apps\jobs\models.py:27
+msgid "Region key, e.g. buxoro, toshkent_city"
+msgstr ""
+
+#: .\apps\jobs\models.py:46
+msgid "Old salary text (optional), e.g. '6–8 mln so‘m'"
+msgstr ""
+
+#: .\apps\jobs\models.py:58
+msgid "Latitude for map pin"
+msgstr ""
+
+#: .\apps\jobs\models.py:59
+msgid "Longitude for map pin"
+msgstr ""
+
+#: .\apps\jobs\models.py:68
+msgid "Job"
+msgstr ""
+
+#: .\apps\jobs\models.py:69
+msgid "Jobs"
+msgstr ""
+
+#: .\apps\jobs\models.py:79
+msgid "Profession"
+msgstr ""
+
+#: .\apps\jobs\models.py:80
+msgid "Professions"
+msgstr ""
+
+#: .\templates\base.html:129
+msgid "Chiqish"
+msgstr ""
+
+#: .\templates\base.html:137
+msgid "RO‘YXATDAN O‘TISH"
+msgstr ""
+
+#: .\templates\employer_job_create.html:7
+#: .\templates\employer_job_create.html:13
+msgid "Create Job"
+msgstr ""
+
+#: .\templates\employer_job_create.html:24
+msgid "Title"
+msgstr ""
+
+#: .\templates\employer_job_create.html:30
+msgid "Job photos"
+msgstr ""
+
+#: .\templates\employer_job_create.html:61
+msgid ""
+"You can upload up to 4 photos. Each selected photo will preview immediately."
+msgstr ""
+
+#: .\templates\employer_job_create.html:68
+msgid "Region"
+msgstr ""
+
+#: .\templates\employer_job_create.html:78
+msgid "Job type"
+msgstr ""
+
+#: .\templates\employer_job_create.html:91
+msgid "Currency"
+msgstr ""
+
+#: .\templates\employer_job_create.html:100
+msgid "Pay min"
+msgstr ""
+
+#: .\templates\employer_job_create.html:105
+msgid "Pay max"
+msgstr ""
+
+#: .\templates\employer_job_create.html:112
+msgid "Pay text (optional)"
+msgstr ""
+
+#: .\templates\employer_job_create.html:114
+msgid "Optional: for human-friendly text."
+msgstr ""
+
+#: .\templates\employer_job_create.html:119
+msgid "Description"
+msgstr ""
+
+#: .\templates\employer_job_create.html:126
+msgid "Contact phone"
+msgstr ""
+
+#: .\templates\employer_job_create.html:131
+msgid "Lat"
+msgstr ""
+
+#: .\templates\employer_job_create.html:136
+msgid "Lng"
+msgstr ""
+
+#: .\templates\employer_job_create.html:144
+msgid "Use my current location"
+msgstr ""
+
+#: .\templates\employer_job_create.html:151
+msgid "Save"
+msgstr ""
+
+#: .\templates\employer_job_create.html:153
+msgid "Back"
+msgstr ""
+
+#: .\templates\otp.html:61
+msgid "Xavfsiz kirish"
+msgstr ""
+
+#: .\templates\otp.html:65
+msgid "Telefon raqamingizni kiriting"
+msgstr ""
+
+#: .\templates\otp.html:69
+msgid "Tasdiqlash kodi SMS orqali yuboriladi"
+msgstr ""
+
+#: .\templates\otp.html:75
+msgid "Telefon raqami"
+msgstr ""
+
+#: .\templates\otp.html:89
+msgid "Kodni yuborish"
+msgstr ""
+
+#: .\templates\otp.html:94
+msgid "Tasdiqlash kodi"
+msgstr ""
+
+#: .\templates\otp.html:105
+msgid "Tasdiqlash"
+msgstr ""
+
+#: .\templates\otp.html:112
+msgid "Kodni hech kimga bermang · Kod 5 daqiqa amal qiladi"
+msgstr ""
+
+#: .\templates\role_select.html:8 .\templates\role_select.html:66
+msgid "Kerakli bo‘limni tanlang"
+msgstr ""
+
+#: .\templates\role_select.html:78
+msgid "Ish qidiraman"
+msgstr ""
+
+#: .\templates\role_select.html:80
+msgid "Tez daromad olish uchun bu yerga."
+msgstr ""
+
+#: .\templates\role_select.html:94
+msgid "Ish beruvchiman"
+msgstr ""
+
+#: .\templates\role_select.html:96
+msgid "Tez ishchi kerak bo‘lsa, bu yerga."
+msgstr ""
+
+#: .\templates\worker_home.html:14
+msgid "Filtrlar"
+msgstr ""
+
+#: .\templates\worker_home.html:18
+msgid "Hudud"
+msgstr ""
+
+#: .\templates\worker_home.html:21
+msgid "Hududni tanlang"
+msgstr ""
+
+#: .\templates\worker_home.html:36
+msgid "Ish turi"
+msgstr ""
+
+#: .\templates\worker_home.html:39
+msgid "Ish turini tanlang"
+msgstr ""
+
+#: .\templates\worker_home.html:58
+msgid "Qo‘llash"
+msgstr ""
+
+#: .\templates\worker_home.html:75
+msgid "Kasb yoki joyni qidiring..."
+msgstr ""
+
+#: .\templates\worker_home.html:79
+msgid "Qidirish"
+msgstr ""
+
+#: .\templates\worker_home.html:80
+msgid "Yaqin ishlar"
+msgstr ""
+
+#: .\templates\worker_home.html:141 .\templates\worker_home.html:251
+msgid "Batafsil"
+msgstr ""
+
+#: .\templates\worker_home.html:200
+msgid "Yaqin ish"
+msgstr ""
+
+#: .\templates\worker_home.html:224
+msgid "Tavsiya etilgan ishlar"
+msgstr ""
+
+#: .\templates\worker_home.html:256
+msgid "Natija topilmadi"
+msgstr ""
+
+#: .\templates\worker_home.html:257
+msgid "Filtrlarni o‘zgartirib ko‘ring."
+msgstr ""
+
+#: .\templates\worker_job_detail.html:44
+msgid "Orqaga"
+msgstr ""
+
+#: .\templates\worker_job_detail.html:76
+msgid "Oldingi"
+msgstr ""
+
+#: .\templates\worker_job_detail.html:80
+msgid "Keyingi"
+msgstr ""
+
+#: .\templates\worker_job_detail.html:99
+msgid "Faol"
+msgstr ""
+
+#: .\templates\worker_job_detail.html:101
+msgid "Yopilgan"
+msgstr ""
+
+#: .\templates\worker_job_detail.html:123
+msgid "E’lon beruvchi"
+msgstr ""
+
+#: .\templates\worker_job_detail.html:136
+msgid "Tavsif"
+msgstr ""
+
+#: .\templates\worker_job_detail.html:140
+msgid "Tavsif kiritilmagan."
+msgstr ""
+
+#: .\templates\worker_job_detail.html:146
+msgid "Telefon"
+msgstr ""
+
+#: .\templates\worker_job_detail.html:151
+msgid "Lokatsiya"
+msgstr ""
+
+#: .\templates\worker_job_detail.html:155
+msgid "Ish joyi koordinatalari"
+msgstr ""
+
+#: .\templates\worker_job_detail.html:162
+msgid "Yandex Map"
+msgstr ""
+
+#: .\templates\worker_job_detail.html:168
+msgid "Google Map"
+msgstr ""
+
+#: .\templates\worker_job_detail.html:172
+msgid "Lokatsiya kiritilmagan."
+msgstr ""
+
+#: .\templates\worker_job_detail.html:177
+#: .\templates\worker_job_detail.html:246
+#: .\templates\worker_job_detail.html:251
+msgid "Mening hozirgi lokatsiyam"
+msgstr ""
+
+#: .\templates\worker_job_detail.html:181
+msgid "Sizning lokatsiyangiz"
+msgstr ""
+
+#: .\templates\worker_job_detail.html:184
+msgid "Yandex’da ochish"
+msgstr ""
+
+#: .\templates\worker_job_detail.html:185
+msgid "Google’da ochish"
+msgstr ""
+
+#: .\templates\worker_job_detail.html:199
+msgid "Qo‘ng‘iroq qilish"
+msgstr ""
+
+#: .\templates\worker_job_detail.html:203
+msgid "Telefon yo‘q"
+msgstr ""
+
+#: .\templates\worker_job_detail.html:209
+msgid "Ariza yuborish"
+msgstr ""
+
+#: .\templates\worker_register.html:16
+msgid "Ishchi ro'yxatdan o'tish"
+msgstr ""
+
+#: .\templates\worker_register.html:17
+msgid "Ma'lumotlaringizni kiriting (1-qadam)"
+msgstr ""
+
+#: .\templates\worker_register.html:23
+msgid "Shaxsiy ma'lumot"
+msgstr ""
+
+#: .\templates\worker_register.html:28
+msgid "Qo'shimcha"
+msgstr ""
+
+#: .\templates\worker_register.html:55
+msgid "Profil rasmi"
+msgstr ""
+
+#: .\templates\worker_register.html:83
+msgid "Profil rasmini yuklang"
+msgstr ""
+
+#: .\templates\worker_register.html:84
+msgid "Yuzingiz aniq ko'rinadigan rasm tavsiya qilinadi"
+msgstr ""
+
+#: .\templates\worker_register.html:95
+msgid "Rasm tanlash"
+msgstr ""
+
+#: .\templates\worker_register.html:103
+msgid "O'chirish"
+msgstr ""
+
+#: .\templates\worker_register.html:108
+msgid "5MB gacha"
+msgstr ""
+
+#: .\templates\worker_register.html:122
+msgid "Ism"
+msgstr ""
+
+#: .\templates\worker_register.html:128
+msgid "Masalan: Abdulaziz"
+msgstr ""
+
+#: .\templates\worker_register.html:143
+msgid "Familiya"
+msgstr ""
+
+#: .\templates\worker_register.html:149
+msgid "Masalan: Gulomov"
+msgstr ""
+
+#: .\templates\worker_register.html:162
+msgid "Yosh"
+msgstr ""
+
+#: .\templates\worker_register.html:168
+msgid "Masalan: 25"
+msgstr ""
+
+#: .\templates\worker_register.html:186
+msgid "Jins"
+msgstr ""
+
+#: .\templates\worker_register.html:189
+msgid "Tanlang"
+msgstr ""
+
+#: .\templates\worker_register.html:198
+msgid "Davom etish"
+msgstr ""
+
+#: .\templates\worker_register.html:613
+msgid "Iltimos, rasm faylini tanlang"
+msgstr ""
+
+#: .\templates\worker_register.html:620
+msgid "Fayl hajmi 5MB dan oshmasligi kerak"
+msgstr ""

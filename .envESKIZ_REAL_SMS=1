@@ -1,0 +1,7 @@
+ESKIZ_EMAIL=shohmir0007@gmail.com
+ESKIZ_PASSWORD=22102005
+ESKIZ_FROM=4546
+
+# 0 = keep debug_code (until template is Одобрено)
+# 1 = real SMS
+ESKIZ_REAL_SMS=0

@@ -95,6 +95,123 @@ class OperatorMeView(APIView):
 
 
 # =====================================================
+# Settings — My Profile
+# =====================================================
+from .serializers import SettingsProfileSerializer
+
+
+class SettingsProfileView(APIView):
+    """
+    GET/PATCH /api/dashboard/settings/profile/
+
+    The logged-in operator/admin views and edits their own profile.
+    Phone and role are read-only; only username (display name) is editable.
+    """
+    permission_classes = [IsAuthenticated, IsOperatorOrAdmin]
+
+    def get(self, request, *args, **kwargs):
+        return Response(SettingsProfileSerializer(request.user).data)
+
+    def patch(self, request, *args, **kwargs):
+        serializer = SettingsProfileSerializer(
+            request.user, data=request.data, partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+
+# =====================================================
+# Settings — Change Password
+# =====================================================
+from .serializers import ChangePasswordSerializer
+
+
+class SettingsPasswordView(APIView):
+    """
+    POST /api/dashboard/settings/password/
+
+    Body: {current_password, new_password, confirm}
+    The logged-in operator/admin changes only their own password.
+    400 if the current password is wrong or new != confirm.
+    """
+    permission_classes = [IsAuthenticated, IsOperatorOrAdmin]
+
+    def post(self, request, *args, **kwargs):
+        serializer = ChangePasswordSerializer(
+            data=request.data, context={"request": request}
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"detail": "Password changed successfully."})
+
+
+# =====================================================
+# Settings — Operator Management (admin-only)
+# =====================================================
+from apps.accounts.models import User as _User
+from .permissions import IsAdminOnly
+from .serializers import OperatorListItemSerializer, OperatorCreateSerializer
+
+
+class OperatorListCreateView(APIView):
+    """
+    GET  /api/dashboard/settings/operators/  — list all operators
+    POST /api/dashboard/settings/operators/  — create one (phone + username + password)
+
+    Admin-only (IsAdminOnly reuses the existing role mechanism). Non-admins get 403.
+    """
+    permission_classes = [IsAuthenticated, IsAdminOnly]
+
+    def get(self, request, *args, **kwargs):
+        operators = _User.objects.filter(role=_User.Role.OPERATOR).order_by("-created_at")
+        return Response(OperatorListItemSerializer(operators, many=True).data)
+
+    def post(self, request, *args, **kwargs):
+        serializer = OperatorCreateSerializer(
+            data=request.data, context={"request": request}
+        )
+        serializer.is_valid(raise_exception=True)
+        operator = serializer.save()
+        return Response(
+            OperatorListItemSerializer(operator).data,
+            status=status.HTTP_201_CREATED,
+        )
+
+
+class OperatorDetailView(APIView):
+    """
+    PATCH /api/dashboard/settings/operators/<id>/  — activate/deactivate via is_active
+
+    Admin-only. Only the is_active flag may be changed here.
+    """
+    permission_classes = [IsAuthenticated, IsAdminOnly]
+
+    def patch(self, request, pk, *args, **kwargs):
+        try:
+            operator = _User.objects.get(pk=pk, role=_User.Role.OPERATOR)
+        except _User.DoesNotExist:
+            return Response(
+                {"detail": "Operator not found."}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        raw = request.data.get("is_active")
+        if raw is None:
+            return Response(
+                {"detail": "is_active is required."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        if isinstance(raw, str):
+            is_active = raw.strip().lower() in ("true", "1", "yes")
+        else:
+            is_active = bool(raw)
+
+        operator.is_active = is_active
+        operator.save(update_fields=["is_active"])
+        return Response(OperatorListItemSerializer(operator).data)
+
+
+# =====================================================
 # Dashboard data endpoints (stats + charts)
 # =====================================================
 

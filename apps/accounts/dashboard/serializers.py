@@ -89,6 +89,133 @@ class OperatorMeSerializer(serializers.ModelSerializer):
 
 
 # =====================================================
+# Settings serializers (for /api/dashboard/settings/)
+# =====================================================
+class SettingsProfileSerializer(serializers.ModelSerializer):
+    """
+    My Profile — phone + role are read-only; only username (display name)
+    can be edited. No new model fields.
+    """
+
+    class Meta:
+        model = User
+        fields = ("id", "phone", "username", "role", "is_staff", "is_superuser", "is_active")
+        read_only_fields = ("id", "phone", "role", "is_staff", "is_superuser", "is_active")
+
+    def validate_username(self, value):
+        value = (value or "").strip()
+        if not value:
+            raise serializers.ValidationError(_("Username cannot be empty."))
+        # Enforce model's unique constraint with a friendly error (exclude self)
+        qs = User.objects.filter(username__iexact=value)
+        if self.instance is not None:
+            qs = qs.exclude(pk=self.instance.pk)
+        if qs.exists():
+            raise serializers.ValidationError(_("This username is already taken."))
+        return value
+
+
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError as DjangoValidationError
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    """
+    Change the logged-in user's own password.
+    Verifies the current password, requires new == confirm, and runs Django's
+    configured password validators. 400 on wrong current OR mismatch.
+    """
+
+    current_password = serializers.CharField(write_only=True, trim_whitespace=False)
+    new_password = serializers.CharField(write_only=True, trim_whitespace=False)
+    confirm = serializers.CharField(write_only=True, trim_whitespace=False)
+
+    def validate_current_password(self, value):
+        user = self.context["request"].user
+        if not user.check_password(value):
+            raise serializers.ValidationError(_("Current password is incorrect."))
+        return value
+
+    def validate(self, attrs):
+        if attrs.get("new_password") != attrs.get("confirm"):
+            raise serializers.ValidationError(
+                {"confirm": _("New password and confirmation do not match.")}
+            )
+        user = self.context["request"].user
+        try:
+            validate_password(attrs["new_password"], user=user)
+        except DjangoValidationError as exc:
+            raise serializers.ValidationError({"new_password": list(exc.messages)})
+        return attrs
+
+    def save(self, **kwargs):
+        user = self.context["request"].user
+        user.set_password(self.validated_data["new_password"])
+        user.save(update_fields=["password"])
+        return user
+
+
+class OperatorListItemSerializer(serializers.ModelSerializer):
+    """Read-only row for the operator-management table."""
+
+    class Meta:
+        model = User
+        fields = ("id", "phone", "username", "role", "is_active", "created_at")
+        read_only_fields = fields
+
+
+class OperatorCreateSerializer(serializers.ModelSerializer):
+    """
+    Admin creates a new operator: phone + username + initial password.
+    Role is forced to 'operator'; password is hashed via set_password().
+    """
+
+    password = serializers.CharField(write_only=True, trim_whitespace=False)
+
+    class Meta:
+        model = User
+        fields = ("id", "phone", "username", "password", "role", "is_active", "created_at")
+        read_only_fields = ("id", "role", "is_active", "created_at")
+
+    def validate_phone(self, value):
+        phone = (value or "").strip()
+        if not phone:
+            raise serializers.ValidationError(_("Phone is required."))
+        if not phone.startswith("+"):
+            phone = "+" + phone
+        if User.objects.filter(phone=phone).exists():
+            raise serializers.ValidationError(_("A user with this phone already exists."))
+        return phone
+
+    def validate_username(self, value):
+        username = (value or "").strip()
+        if not username:
+            raise serializers.ValidationError(_("Username is required."))
+        if User.objects.filter(username__iexact=username).exists():
+            raise serializers.ValidationError(_("This username is already taken."))
+        return username
+
+    def validate_password(self, value):
+        try:
+            validate_password(value)
+        except DjangoValidationError as exc:
+            raise serializers.ValidationError(list(exc.messages))
+        return value
+
+    def create(self, validated_data):
+        password = validated_data.pop("password")
+        user = User(
+            phone=validated_data["phone"],
+            username=validated_data["username"],
+            role=User.Role.OPERATOR,
+            is_active=True,
+        )
+        user.set_password(password)  # never assign raw
+        user.save()
+        return user
+
+
+# =====================================================
 # Order serializers (for /api/dashboard/orders/)
 # =====================================================
 from apps.orders.models import Order, OrderStatusHistory

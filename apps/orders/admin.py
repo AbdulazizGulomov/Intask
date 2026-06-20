@@ -44,7 +44,7 @@ class OrderAdmin(admin.ModelAdmin):
         "worker__username",
     )
     ordering = ("-created_at",)
-    autocomplete_fields = ("employer", "worker", "job", "job_application", "cancelled_by")
+    autocomplete_fields = ("employer", "worker", "job", "cancelled_by")
     readonly_fields = ("created_at", "updated_at")
 
     fieldsets = (

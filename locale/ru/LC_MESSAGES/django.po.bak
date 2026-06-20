@@ -1,0 +1,300 @@
+# Russian translations for Task_in
+msgid ""
+msgstr ""
+"Language: ru\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# =========================
+# accounts models
+# =========================
+
+msgid "Erkak"
+msgstr "Мужчина"
+
+msgid "Ayol"
+msgstr "Женщина"
+
+
+# =========================
+# jobs models
+# =========================
+
+msgid "Doimiy"
+msgstr "Постоянная"
+
+msgid "Vaqtinchalik"
+msgstr "Временная"
+
+msgid "UZS"
+msgstr "СУМ"
+
+msgid "USD"
+msgstr "ДОЛЛАР"
+
+msgid "Region key, e.g. buxoro, toshkent_city"
+msgstr "Ключ региона, например buxoro, toshkent_city"
+
+msgid "Old salary text (optional), e.g. '6–8 mln so‘m'"
+msgstr "Старый текст зарплаты (необязательно), например '6–8 млн сум'"
+
+msgid "Latitude for map pin"
+msgstr "Широта для точки на карте"
+
+msgid "Longitude for map pin"
+msgstr "Долгота для точки на карте"
+
+msgid "Job"
+msgstr "Вакансия"
+
+msgid "Jobs"
+msgstr "Вакансии"
+
+msgid "Profession"
+msgstr "Профессия"
+
+msgid "Professions"
+msgstr "Профессии"
+
+
+# =========================
+# navbar
+# =========================
+
+msgid "Chiqish"
+msgstr "Выход"
+
+msgid "RO‘YXATDAN O‘TISH"
+msgstr "РЕГИСТРАЦИЯ"
+
+
+# =========================
+# OTP page
+# =========================
+
+msgid "Xavfsiz kirish"
+msgstr "Безопасный вход"
+
+msgid "Telefon raqamingizni kiriting"
+msgstr "Введите номер телефона"
+
+msgid "Tasdiqlash kodi SMS orqali yuboriladi"
+msgstr "Код подтверждения будет отправлен по SMS"
+
+msgid "Telefon raqami"
+msgstr "Номер телефона"
+
+msgid "Kodni yuborish"
+msgstr "Отправить код"
+
+msgid "Tasdiqlash kodi"
+msgstr "Код подтверждения"
+
+msgid "Tasdiqlash"
+msgstr "Подтвердить"
+
+msgid "Kodni hech kimga bermang · Kod 5 daqiqa amal qiladi"
+msgstr "Никому не сообщайте код · Код действует 5 минут"
+
+
+# =========================
+# role select
+# =========================
+
+msgid "Kerakli bo‘limni tanlang"
+msgstr "Выберите нужный раздел"
+
+msgid "Ish qidiraman"
+msgstr "Ищу работу"
+
+msgid "Tez daromad olish uchun bu yerga."
+msgstr "Для быстрого заработка — сюда."
+
+msgid "Ish beruvchiman"
+msgstr "Я работодатель"
+
+msgid "Tez ishchi kerak bo‘lsa, bu yerga."
+msgstr "Если нужен работник — сюда."
+
+
+# =========================
+# worker home
+# =========================
+
+msgid "Filtrlar"
+msgstr "Фильтры"
+
+msgid "Hudud"
+msgstr "Регион"
+
+msgid "Hududni tanlang"
+msgstr "Выберите регион"
+
+msgid "Ish turi"
+msgstr "Тип работы"
+
+msgid "Ish turini tanlang"
+msgstr "Выберите тип работы"
+
+msgid "Qo‘llash"
+msgstr "Применить"
+
+msgid "Kasb yoki joyni qidiring..."
+msgstr "Поиск по профессии или месту..."
+
+msgid "Qidirish"
+msgstr "Поиск"
+
+msgid "Yaqin ishlar"
+msgstr "Ближайшие вакансии"
+
+msgid "Batafsil"
+msgstr "Подробнее"
+
+msgid "Yaqin ish"
+msgstr "Ближайшая работа"
+
+msgid "Tavsiya etilgan ishlar"
+msgstr "Рекомендуемые вакансии"
+
+msgid "Natija topilmadi"
+msgstr "Результаты не найдены"
+
+msgid "Filtrlarni o‘zgartirib ko‘ring."
+msgstr "Попробуйте изменить фильтры."
+
+
+# =========================
+# worker job detail
+# =========================
+
+msgid "Orqaga"
+msgstr "Назад"
+
+msgid "Oldingi"
+msgstr "Предыдущий"
+
+msgid "Keyingi"
+msgstr "Следующий"
+
+msgid "Faol"
+msgstr "Активно"
+
+msgid "Yopilgan"
+msgstr "Закрыто"
+
+msgid "E’lon beruvchi"
+msgstr "Работодатель"
+
+msgid "Tavsif"
+msgstr "Описание"
+
+msgid "Tavsif kiritilmagan."
+msgstr "Описание не указано"
+
+msgid "Telefon"
+msgstr "Телефон"
+
+msgid "Lokatsiya"
+msgstr "Локация"
+
+msgid "Ish joyi koordinatalari"
+msgstr "Координаты места работы"
+
+msgid "Yandex Map"
+msgstr "Яндекс Карта"
+
+msgid "Google Map"
+msgstr "Google Карта"
+
+msgid "Lokatsiya kiritilmagan."
+msgstr "Локация не указана"
+
+msgid "Mening hozirgi lokatsiyam"
+msgstr "Моя текущая локация"
+
+msgid "Sizning lokatsiyangiz"
+msgstr "Ваша локация"
+
+msgid "Yandex’da ochish"
+msgstr "Открыть в Яндексе"
+
+msgid "Google’da ochish"
+msgstr "Открыть в Google"
+
+msgid "Qo‘ng‘iroq qilish"
+msgstr "Позвонить"
+
+msgid "Telefon yo‘q"
+msgstr "Телефон отсутствует"
+
+msgid "Ariza yuborish"
+msgstr "Откликнуться"
+
+
+# =========================
+# worker register
+# =========================
+
+msgid "Ishchi ro'yxatdan o'tish"
+msgstr "Регистрация работника"
+
+msgid "Ma'lumotlaringizni kiriting (1-qadam)"
+msgstr "Введите ваши данные (шаг 1)"
+
+msgid "Shaxsiy ma'lumot"
+msgstr "Личная информация"
+
+msgid "Qo'shimcha"
+msgstr "Дополнительно"
+
+msgid "Profil rasmi"
+msgstr "Фото профиля"
+
+msgid "Profil rasmini yuklang"
+msgstr "Загрузите фото профиля"
+
+msgid "Yuzingiz aniq ko'rinadigan rasm tavsiya qilinadi"
+msgstr "Рекомендуется фото, где хорошо видно ваше лицо"
+
+msgid "Rasm tanlash"
+msgstr "Выбрать фото"
+
+msgid "O'chirish"
+msgstr "Удалить"
+
+msgid "5MB gacha"
+msgstr "До 5MB"
+
+msgid "Ism"
+msgstr "Имя"
+
+msgid "Masalan: Abdulaziz"
+msgstr "Например: Abdulaziz"
+
+msgid "Familiya"
+msgstr "Фамилия"
+
+msgid "Masalan: Gulomov"
+msgstr "Например: Gulomov"
+
+msgid "Yosh"
+msgstr "Возраст"
+
+msgid "Masalan: 25"
+msgstr "Например: 25"
+
+msgid "Jins"
+msgstr "Пол"
+
+msgid "Tanlang"
+msgstr "Выберите"
+
+msgid "Davom etish"
+msgstr "Продолжить"
+
+msgid "Iltimos, rasm faylini tanlang"
+msgstr "Пожалуйста, выберите файл изображения"
+
+msgid "Fayl hajmi 5MB dan oshmasligi kerak"
+msgstr "Размер файла не должен превышать 5MB"

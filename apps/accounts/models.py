@@ -4,9 +4,6 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
-from apps import jobs
-from apps.accounts import auth
-
 
 class UserManager(BaseUserManager):
     def create_user(self, phone=None, username=None, password=None, **extra_fields):
@@ -69,24 +66,27 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     # OTP login identifier
     USERNAME_FIELD = "phone"
+    # for createsuperuser prompt (username will be asked)
     REQUIRED_FIELDS = ["username"]
 
+    # --- THE FIX: Explicitly defining these to prevent E304 clashes ---
     groups = models.ManyToManyField(
-        "auth.Group",
-        verbose_name=_("groups"),
+        'auth.Group',
+        verbose_name=_('groups'),
         blank=True,
-        help_text=_("The groups this user belongs to."),
+        help_text=_('The groups this user belongs to.'),
         related_name="accounts_user_groups",
         related_query_name="user",
     )
     user_permissions = models.ManyToManyField(
-        "auth.Permission",
-        verbose_name=_("user permissions"),
+        'auth.Permission',
+        verbose_name=_('user permissions'),
         blank=True,
-        help_text=_("Specific permissions for this user."),
+        help_text=_('Specific permissions for this user.'),
         related_name="accounts_user_permissions",
         related_query_name="user",
     )
+    # -----------------------------------------------------------------
 
     def __str__(self):
         return self.phone or self.username or f"User({self.pk})"
@@ -94,14 +94,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class WorkerProfile(models.Model):
     """
-    Worker registration info:
+    Worker registration info (minimal):
     - first_name
     - last_name
     - age
     - gender
-    - photo
-    - profession
-    - certificate
     """
 
     class Gender(models.TextChoices):
@@ -117,21 +114,15 @@ class WorkerProfile(models.Model):
     first_name = models.CharField(max_length=60, blank=True)
     last_name = models.CharField(max_length=60, blank=True)
     age = models.PositiveIntegerField(null=True, blank=True)
-
-    photo = models.ImageField(
-        upload_to="worker_photos/",
-        blank=True,
-        null=True,
-    )
-
+    photo = models.ImageField(upload_to="worker_photos/", blank=True, null=True)
     gender = models.CharField(
         max_length=10,
         choices=Gender.choices,
         null=True,
         blank=True,
-
     )
 
+    # optional: keep for old data / display
     full_name = models.CharField(max_length=120, blank=True)
 
     profession = models.ForeignKey(
@@ -142,19 +133,14 @@ class WorkerProfile(models.Model):
         related_name="worker_profiles",
     )
 
-    certificate = models.FileField(
-        upload_to="worker_certificates/",
-        null=True,
-        blank=True,
-    )
-
     is_completed = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
-        self.full_name = f"{self.first_name} {self.last_name}".strip()
+        if (not self.full_name) and (self.first_name or self.last_name):
+            self.full_name = f"{self.first_name} {self.last_name}".strip()
         super().save(*args, **kwargs)
 
     def __str__(self):

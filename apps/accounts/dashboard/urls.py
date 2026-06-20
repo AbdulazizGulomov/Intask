@@ -8,6 +8,11 @@ from .api_views import (
     OperatorLoginView,
     OperatorLogoutView,
     OperatorMeView,
+    # Settings
+    SettingsProfileView,
+    SettingsPasswordView,
+    OperatorListCreateView,
+    OperatorDetailView,
     # Stats + Charts
     DashboardStatsView,
     OrdersTrendChartView,
@@ -37,6 +42,12 @@ urlpatterns = [
     path("auth/refresh/", TokenRefreshView.as_view(), name="refresh"),
     path("auth/me/", OperatorMeView.as_view(), name="me"),
 
+    # Settings
+    path("settings/profile/", SettingsProfileView.as_view(), name="settings_profile"),
+    path("settings/password/", SettingsPasswordView.as_view(), name="settings_password"),
+    path("settings/operators/", OperatorListCreateView.as_view(), name="settings_operators"),
+    path("settings/operators/<int:pk>/", OperatorDetailView.as_view(), name="settings_operator_detail"),
+
     # Stats (KPIs)
     path("stats/", DashboardStatsView.as_view(), name="stats"),
 
@@ -45,6 +56,9 @@ urlpatterns = [
     path("charts/status-mix/", StatusMixChartView.as_view(), name="chart_status_mix"),
     path("charts/top-professions/", TopProfessionsChartView.as_view(), name="chart_top_professions"),
     path("charts/revenue-by-district/", RevenueByDistrictChartView.as_view(), name="chart_revenue_district"),
+
+    # Analytics (operator-gated trend/funnel/cohort endpoints)
+    path("analytics/", include("apps.analytics.urls")),
 
     # CRUD ViewSets (auto-generates: /orders/, /orders/<id>/, /masters/, /masters/<id>/, /clients/, /clients/<id>/)
     path("", include(router.urls)),

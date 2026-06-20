@@ -1,23 +1,18 @@
 # apps/accounts/urls.py
-
 from django.urls import path
 from apps.accounts import views
-from apps.jobs import views as job_views
+from apps.jobs import views as job_views   # ✅ ADD THIS IMPORT
 
 from .auth.api_views import send_otp_view, verify_otp_view
 from .views import me
 from rest_framework_simplejwt.views import TokenRefreshView
-from django.shortcuts import render
+
 app_name = "accounts"
 
 urlpatterns = [
-
-
-path("landing-new/", lambda request: render(request, "landing_new.html"), name="landing_new"),
     # Role & start
-    # path("", views.landing_page, name="landing_page"),
-    path("", views.landing_page, name="landing_page"),
-    path("select-role/", views.role_select, name="role_select"),
+    path("", views.landing, name="landing"),
+    path("role/", views.role_select, name="role_select"),
     path("choose-role/<str:role>/", views.choose_role, name="choose_role"),
     path("after-otp/", views.after_otp_redirect, name="after_otp_redirect"),
 
@@ -28,13 +23,9 @@ path("landing-new/", lambda request: render(request, "landing_new.html"), name="
     # Worker pages
     path("worker/", views.worker_home, name="worker_home"),
     path("worker/register/", views.worker_register, name="worker_register"),
-    path("worker/apply/<int:job_id>/", views.worker_apply, name="worker_apply"),
+    path("worker/apply/", views.require_login_for_apply, name="worker_apply"),
 
-    # Worker profile pages
-    path("profile/edit/", views.profile_edit, name="profile_edit"),
-    path("worker/profile/<int:user_id>/", views.worker_public_profile, name="worker_public_profile"),
-
-    # Job detail
+    # ✅ FIXED: use jobs app view
     path("worker/job/<int:job_id>/", job_views.worker_job_detail, name="worker_job_detail"),
 
     # Employer pages

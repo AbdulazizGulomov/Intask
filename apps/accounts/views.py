@@ -2,14 +2,13 @@
 import json
 from functools import wraps
 
-from django.contrib import messages
 from django.utils.safestring import mark_safe
 from django.http import HttpResponseBadRequest, HttpResponseForbidden
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q, Count
+from django.db.models import Q
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -17,7 +16,7 @@ from rest_framework.response import Response
 
 from apps.accounts.models import User, WorkerProfile
 from apps.accounts.auth.otp import verify_otp, normalize_phone
-from apps.jobs.models import Job, Profession, JobApplication
+from apps.jobs.models import Job
 
 
 ALLOWED_ROLES = {"worker", "employer"}
@@ -42,9 +41,8 @@ UZ_REGIONS = [
 
 def require_role(*allowed_roles):
     """
-    Uses authenticated user's role first.
-    Falls back to session role only if user role is missing.
-    Keeps session synced with actual authenticated user role.
+    Uses request.user.role first (if authenticated), then session fallback.
+    Keeps session role synced to avoid Access denied loops.
     """
     def decorator(view_func):
         @wraps(view_func)
@@ -62,13 +60,13 @@ def require_role(*allowed_roles):
 
             request.session["user_role"] = role
             return view_func(request, *args, **kwargs)
-
         return _wrapped
     return decorator
 
-def landing_page(request):
-    """Public landing page — no login required."""
+
+def landing(request):
     return render(request, "landing.html")
+
 
 def role_select(request):
     return render(request, "role_select.html")
@@ -86,7 +84,6 @@ def choose_role(request, role):
         if getattr(request.user, "role", None) != role:
             request.user.role = role
             request.user.save(update_fields=["role"])
-
         request.session["user_role"] = role
         return redirect(next_url)
 
@@ -163,28 +160,19 @@ def get_display_name(user) -> str:
 def worker_home(request):
     selected_regions = request.GET.getlist("region")
     selected_types = request.GET.getlist("type")
-    selected_professions = request.GET.getlist("profession")
     q = (request.GET.get("q") or "").strip()
 
     region_label_map = dict(UZ_REGIONS)
     regions = [{"value": k, "label": v, "checked": k in selected_regions} for k, v in UZ_REGIONS]
 
-    professions = Profession.objects.all().order_by("name")
-
-    qs = Job.objects.filter(is_active=True).select_related("profession")
+    qs = Job.objects.filter(is_active=True)
 
     if selected_regions:
         qs = qs.filter(region__in=selected_regions)
     if selected_types:
         qs = qs.filter(job_type__in=selected_types)
-    if selected_professions:
-        qs = qs.filter(profession_id__in=selected_professions)
     if q:
-        qs = qs.filter(
-            Q(title__icontains=q) |
-            Q(region__icontains=q) |
-            Q(profession__name__icontains=q)
-        )
+        qs = qs.filter(Q(title__icontains=q) | Q(region__icontains=q))
 
     qs = qs.order_by("-created_at")
 
@@ -192,8 +180,8 @@ def worker_home(request):
     for j in qs:
         region_label = region_label_map.get(j.region, j.region)
         type_label = j.get_job_type_display() if hasattr(j, "get_job_type_display") else j.job_type
-        profession_name = j.profession.name if getattr(j, "profession", None) else ""
-        detail_url = reverse("jobs:detail", args=[j.id])
+
+        detail_url = reverse("jobs:detail", args=[j.id])  # ✅ ALWAYS BUILD HERE
 
         filtered_jobs.append(
             {
@@ -203,17 +191,17 @@ def worker_home(request):
                 "region_label": region_label,
                 "type": j.job_type,
                 "type_label": type_label,
-                "profession_name": profession_name,
                 "pay": _pay_display(j),
                 "lat": j.lat,
                 "lng": j.lng,
                 "photo_url": _first_photo_url(j),
-                "detail_url": detail_url,
+                "detail_url": detail_url,  # ✅ for card click
             }
         )
 
     selected_region_labels = [region_label_map.get(r, r) for r in selected_regions]
 
+    # ✅ IMPORTANT: include detail_url in jobs_map too (for Yandex map balloon)
     jobs_map = []
     for j in filtered_jobs:
         if j.get("lat") is not None and j.get("lng") is not None:
@@ -226,8 +214,7 @@ def worker_home(request):
                     "lng": j["lng"],
                     "region_label": j["region_label"],
                     "job_type": j["type_label"],
-                    "profession_name": j["profession_name"],
-                    "detail_url": j["detail_url"],
+                    "detail_url": j["detail_url"],  # ✅ map uses this
                 }
             )
 
@@ -237,12 +224,10 @@ def worker_home(request):
         {
             "display_name": get_display_name(request.user),
             "regions": regions,
-            "professions": professions,
             "jobs": filtered_jobs,
             "selected_regions": selected_regions,
             "selected_region_labels": selected_region_labels,
             "selected_types": selected_types,
-            "selected_professions": selected_professions,
             "q": q,
             "jobs_map": mark_safe(json.dumps(jobs_map)),
         },
@@ -252,13 +237,7 @@ def worker_home(request):
 @login_required
 @require_role("employer")
 def employer_home(request):
-    jobs = (
-        Job.objects
-        .filter(employer=request.user)
-        .annotate(applications_count=Count("applications"))
-        .order_by("-created_at")
-    )
-
+    jobs = Job.objects.filter(employer=request.user).order_by("-created_at")
     region_label_map = dict(UZ_REGIONS)
 
     items = []
@@ -276,17 +255,13 @@ def employer_home(request):
                 "created_at": j.created_at,
                 "photo_url": _first_photo_url(j),
                 "detail_url": reverse("jobs:detail", args=[j.id]),
-                "applications_count": j.applications_count,
             }
         )
 
     return render(
         request,
         "employer_home.html",
-        {
-            "display_name": get_display_name(request.user),
-            "jobs": items,
-        },
+        {"display_name": get_display_name(request.user), "jobs": items},
     )
 
 
@@ -325,73 +300,30 @@ def otp_verify_web(request):
     if not verify_otp(phone, code):
         return render(request, "otp.html", {"error": "Invalid or expired code", "next": next_url})
 
-    requested_role = (request.session.get("user_role") or "").strip().lower()
+    role = request.session.get("user_role") or "worker"
 
     user, created = User.objects.get_or_create(
         phone=phone,
-        defaults={
-            "role": requested_role if requested_role in ALLOWED_ROLES else "worker",
-            "is_active": True,
-        },
+        defaults={"role": role, "is_active": True},
     )
 
-    if created:
-        request.session["user_role"] = user.role
-    else:
-        if getattr(user, "role", None) in ALLOWED_ROLES:
-            request.session["user_role"] = user.role
-        elif requested_role in ALLOWED_ROLES:
-            user.role = requested_role
-            user.save(update_fields=["role"])
-            request.session["user_role"] = user.role
-        else:
-            user.role = "worker"
-            user.save(update_fields=["role"])
-            request.session["user_role"] = user.role
+    if (not created) and role in ("worker", "employer") and user.role != role:
+        user.role = role
+        user.save(update_fields=["role"])
 
     user.backend = "django.contrib.auth.backends.ModelBackend"
     login(request, user)
+    request.session["user_role"] = user.role
 
     if user.role == "worker":
         profile, _ = WorkerProfile.objects.get_or_create(user=user)
         if not profile.is_completed:
             return redirect("accounts:worker_register")
 
-    if next_url and next_url != "/":
-        return redirect(next_url)
-
     return redirect(
-        reverse("accounts:worker_home") if user.role == "worker" else reverse("accounts:employer_home")
+        next_url
+        or (reverse("accounts:worker_home") if user.role == "worker" else reverse("accounts:employer_home"))
     )
-
-
-@login_required
-@require_role("worker")
-def worker_apply(request, job_id: int):
-    job = Job.objects.filter(id=job_id, is_active=True).select_related("employer").first()
-    if not job:
-        messages.error(request, "Ish topilmadi.")
-        return redirect("accounts:worker_home")
-
-    if not job.employer:
-        messages.error(request, "Bu ish uchun employer biriktirilmagan.")
-        return redirect("jobs:detail", pk=job.id)
-
-    application, created = JobApplication.objects.get_or_create(
-        job=job,
-        worker=request.user,
-        defaults={
-            "employer": job.employer,
-            "status": JobApplication.Status.PENDING,
-        },
-    )
-
-    if created:
-        messages.success(request, "Arizangiz muvaffaqiyatli yuborildi.")
-    else:
-        messages.info(request, "Siz allaqachon bu ishga ariza yuborgansiz.")
-
-    return redirect("accounts:worker_job_detail", job_id=job.id)
 
 
 @login_required
@@ -437,9 +369,6 @@ def after_otp_redirect(request):
     if not request.user.is_authenticated:
         return redirect("accounts:role_select")
 
-    if getattr(request.user, "role", None) in ALLOWED_ROLES:
-        request.session["user_role"] = request.user.role
-
     next_url = request.GET.get("next") or "/"
 
     if request.user.role == "worker":
@@ -447,137 +376,10 @@ def after_otp_redirect(request):
         if not profile.is_completed:
             return redirect("accounts:worker_register")
 
-    if next_url and next_url != "/":
-        return redirect(next_url)
-
-    return redirect(
-        reverse("accounts:worker_home") if request.user.role == "worker" else reverse("accounts:employer_home")
-    )
+    return redirect(next_url)
 
 
 def logout_view(request):
     logout(request)
     request.session.flush()
     return redirect(reverse("accounts:role_select"))
-
-
-@login_required
-def profile_edit(request):
-    user = request.user
-    role = getattr(user, "role", "worker")
-    profile = None
-    professions = Profession.objects.all().order_by("name")
-
-    if role == "worker":
-        profile, _ = WorkerProfile.objects.get_or_create(user=user)
-
-    if request.method == "POST":
-        if role == "worker":
-            first_name = (request.POST.get("first_name") or "").strip()
-            last_name = (request.POST.get("last_name") or "").strip()
-            age_raw = (request.POST.get("age") or "").strip()
-            gender = (request.POST.get("gender") or "").strip()
-            profession_id = (request.POST.get("profession") or "").strip()
-
-            if not first_name or not last_name or not age_raw or not gender:
-                return render(
-                    request,
-                    "profile_edit.html",
-                    {
-                        "error": "All fields are required",
-                        "profile": profile,
-                        "role": role,
-                        "professions": professions,
-                    },
-                )
-
-            try:
-                age = int(age_raw)
-            except ValueError:
-                return render(
-                    request,
-                    "profile_edit.html",
-                    {
-                        "error": "Age must be a number",
-                        "profile": profile,
-                        "role": role,
-                        "professions": professions,
-                    },
-                )
-
-            profile.first_name = first_name
-            profile.last_name = last_name
-            profile.age = age
-            profile.gender = gender
-
-            if profession_id:
-                profession = Profession.objects.filter(id=profession_id).first()
-                profile.profession = profession
-            else:
-                profile.profession = None
-
-            photo = request.FILES.get("photo")
-            if photo:
-                profile.photo = photo
-
-            certificate = request.FILES.get("certificate")
-            if certificate:
-                profile.certificate = certificate
-
-            profile.is_completed = True
-            profile.save()
-
-        else:
-            # Employer branch — safely save full_name to whichever field exists on User model.
-            full_name = (request.POST.get("full_name") or "").strip()
-            if full_name:
-                user_fields = {f.name for f in user._meta.get_fields() if hasattr(f, "name")}
-
-                # Try common field names in order of preference
-                if "full_name" in user_fields:
-                    user.full_name = full_name
-                    user.save(update_fields=["full_name"])
-                elif "first_name" in user_fields:
-                    user.first_name = full_name
-                    user.save(update_fields=["first_name"])
-                elif "name" in user_fields:
-                    user.name = full_name
-                    user.save(update_fields=["name"])
-                elif "display_name" in user_fields:
-                    user.display_name = full_name
-                    user.save(update_fields=["display_name"])
-                # If none of these fields exist, silently skip — name won't be saved
-                # but the page won't crash. Add a real field to your User model later.
-
-        messages.success(request, "Profile updated successfully.")
-        return redirect("accounts:profile_edit")
-
-    return render(
-        request,
-        "profile_edit.html",
-        {
-            "profile": profile,
-            "role": role,
-            "professions": professions,
-        },
-    )
-
-@login_required
-@require_role("employer")
-def worker_public_profile(request, user_id: int):
-    worker_user = User.objects.filter(id=user_id).first()
-    if not worker_user:
-        return HttpResponseBadRequest("Worker not found")
-
-    profile = WorkerProfile.objects.filter(user=worker_user).first()
-    if not profile:
-        return HttpResponseBadRequest("Worker profile not found")
-
-    return render(
-        request,
-        "worker_public_profile.html",
-        {
-            "worker_user": worker_user,
-            "profile": profile,
-        },
-    )

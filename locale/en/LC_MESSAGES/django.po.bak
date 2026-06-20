@@ -1,0 +1,350 @@
+# English translations for Task_in
+msgid ""
+msgstr ""
+"Language: en\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+# =========================
+# accounts models
+# =========================
+
+msgid "Erkak"
+msgstr "Male"
+
+msgid "Ayol"
+msgstr "Female"
+
+# =========================
+# jobs models
+# =========================
+
+msgid "Doimiy"
+msgstr "Permanent"
+
+msgid "Vaqtinchalik"
+msgstr "Temporary"
+
+msgid "UZS"
+msgstr "UZS"
+
+msgid "USD"
+msgstr "USD"
+
+msgid "Region key, e.g. buxoro, toshkent_city"
+msgstr "Region key, e.g. buxoro, toshkent_city"
+
+msgid "Old salary text (optional), e.g. '6–8 mln so‘m'"
+msgstr "Old salary text (optional), e.g. '6–8 million UZS'"
+
+msgid "Latitude for map pin"
+msgstr "Latitude for map pin"
+
+msgid "Longitude for map pin"
+msgstr "Longitude for map pin"
+
+msgid "Job"
+msgstr "Job"
+
+msgid "Jobs"
+msgstr "Jobs"
+
+msgid "Profession"
+msgstr "Profession"
+
+msgid "Professions"
+msgstr "Professions"
+
+# =========================
+# navbar
+# =========================
+
+msgid "Chiqish"
+msgstr "Logout"
+
+msgid "RO‘YXATDAN O‘TISH"
+msgstr "SIGN UP"
+
+# =========================
+# employer job create
+# =========================
+
+msgid "Create Job"
+msgstr "Create Job"
+
+msgid "Title"
+msgstr "Title"
+
+msgid "Job photos"
+msgstr "Job photos"
+
+msgid "You can upload up to 4 photos. Each selected photo will preview immediately."
+msgstr "You can upload up to 4 photos. Each selected photo will preview immediately."
+
+msgid "Region"
+msgstr "Region"
+
+msgid "Job type"
+msgstr "Job type"
+
+msgid "Currency"
+msgstr "Currency"
+
+msgid "Pay min"
+msgstr "Minimum pay"
+
+msgid "Pay max"
+msgstr "Maximum pay"
+
+msgid "Pay text (optional)"
+msgstr "Pay text (optional)"
+
+msgid "Optional: for human-friendly text."
+msgstr "Optional: for human-friendly text."
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Contact phone"
+msgstr "Contact phone"
+
+msgid "Lat"
+msgstr "Latitude"
+
+msgid "Lng"
+msgstr "Longitude"
+
+msgid "Use my current location"
+msgstr "Use my current location"
+
+msgid "Save"
+msgstr "Save"
+
+msgid "Back"
+msgstr "Back"
+
+# =========================
+# OTP page
+# =========================
+
+msgid "Xavfsiz kirish"
+msgstr "Secure login"
+
+msgid "Telefon raqamingizni kiriting"
+msgstr "Enter your phone number"
+
+msgid "Tasdiqlash kodi SMS orqali yuboriladi"
+msgstr "A verification code will be sent via SMS"
+
+msgid "Telefon raqami"
+msgstr "Phone number"
+
+msgid "Kodni yuborish"
+msgstr "Send code"
+
+msgid "Tasdiqlash kodi"
+msgstr "Verification code"
+
+msgid "Tasdiqlash"
+msgstr "Confirm"
+
+msgid "Kodni hech kimga bermang · Kod 5 daqiqa amal qiladi"
+msgstr "Do not share the code with anyone · Code is valid for 5 minutes"
+
+# =========================
+# role select
+# =========================
+
+msgid "Kerakli bo‘limni tanlang"
+msgstr "Select the required section"
+
+msgid "Ish qidiraman"
+msgstr "I am looking for a job"
+
+msgid "Tez daromad olish uchun bu yerga."
+msgstr "Click here to earn quickly."
+
+msgid "Ish beruvchiman"
+msgstr "I am an employer"
+
+msgid "Tez ishchi kerak bo‘lsa, bu yerga."
+msgstr "Click here if you need a worker."
+
+# =========================
+# worker home
+# =========================
+
+msgid "Filtrlar"
+msgstr "Filters"
+
+msgid "Hudud"
+msgstr "Region"
+
+msgid "Hududni tanlang"
+msgstr "Select region"
+
+msgid "Ish turi"
+msgstr "Job type"
+
+msgid "Ish turini tanlang"
+msgstr "Select job type"
+
+msgid "Qo‘llash"
+msgstr "Apply"
+
+msgid "Kasb yoki joyni qidiring..."
+msgstr "Search by profession or location..."
+
+msgid "Qidirish"
+msgstr "Search"
+
+msgid "Yaqin ishlar"
+msgstr "Nearby jobs"
+
+msgid "Batafsil"
+msgstr "Details"
+
+msgid "Yaqin ish"
+msgstr "Nearby job"
+
+msgid "Tavsiya etilgan ishlar"
+msgstr "Recommended jobs"
+
+msgid "Natija topilmadi"
+msgstr "No results found"
+
+msgid "Filtrlarni o‘zgartirib ko‘ring."
+msgstr "Try changing the filters."
+
+# =========================
+# worker job detail
+# =========================
+
+msgid "Orqaga"
+msgstr "Back"
+
+msgid "Oldingi"
+msgstr "Previous"
+
+msgid "Keyingi"
+msgstr "Next"
+
+msgid "Faol"
+msgstr "Active"
+
+msgid "Yopilgan"
+msgstr "Closed"
+
+msgid "E’lon beruvchi"
+msgstr "Employer"
+
+msgid "Tavsif"
+msgstr "Description"
+
+msgid "Tavsif kiritilmagan."
+msgstr "Description not provided"
+
+msgid "Telefon"
+msgstr "Phone"
+
+msgid "Lokatsiya"
+msgstr "Location"
+
+msgid "Ish joyi koordinatalari"
+msgstr "Workplace coordinates"
+
+msgid "Yandex Map"
+msgstr "Yandex Map"
+
+msgid "Google Map"
+msgstr "Google Map"
+
+msgid "Lokatsiya kiritilmagan."
+msgstr "Location not provided"
+
+msgid "Mening hozirgi lokatsiyam"
+msgstr "My current location"
+
+msgid "Sizning lokatsiyangiz"
+msgstr "Your location"
+
+msgid "Yandex’da ochish"
+msgstr "Open in Yandex"
+
+msgid "Google’da ochish"
+msgstr "Open in Google"
+
+msgid "Qo‘ng‘iroq qilish"
+msgstr "Call"
+
+msgid "Telefon yo‘q"
+msgstr "No phone number"
+
+msgid "Ariza yuborish"
+msgstr "Apply"
+
+# =========================
+# worker register
+# =========================
+
+msgid "Ishchi ro'yxatdan o'tish"
+msgstr "Worker registration"
+
+msgid "Ma'lumotlaringizni kiriting (1-qadam)"
+msgstr "Enter your information (step 1)"
+
+msgid "Shaxsiy ma'lumot"
+msgstr "Personal information"
+
+msgid "Qo'shimcha"
+msgstr "Additional"
+
+msgid "Profil rasmi"
+msgstr "Profile photo"
+
+msgid "Profil rasmini yuklang"
+msgstr "Upload profile photo"
+
+msgid "Yuzingiz aniq ko'rinadigan rasm tavsiya qilinadi"
+msgstr "A photo where your face is clearly visible is recommended"
+
+msgid "Rasm tanlash"
+msgstr "Choose photo"
+
+msgid "O'chirish"
+msgstr "Delete"
+
+msgid "5MB gacha"
+msgstr "Up to 5MB"
+
+msgid "Ism"
+msgstr "First name"
+
+msgid "Masalan: Abdulaziz"
+msgstr "Example: Abdulaziz"
+
+msgid "Familiya"
+msgstr "Last name"
+
+msgid "Masalan: Gulomov"
+msgstr "Example: Gulomov"
+
+msgid "Yosh"
+msgstr "Age"
+
+msgid "Masalan: 25"
+msgstr "Example: 25"
+
+msgid "Jins"
+msgstr "Gender"
+
+msgid "Tanlang"
+msgstr "Select"
+
+msgid "Davom etish"
+msgstr "Continue"
+
+msgid "Iltimos, rasm faylini tanlang"
+msgstr "Please select an image file"
+
+msgid "Fayl hajmi 5MB dan oshmasligi kerak"
+msgstr "File size must not exceed 5MB"

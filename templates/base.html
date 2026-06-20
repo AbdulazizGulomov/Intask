@@ -41,6 +41,7 @@
             border-radius: 20px;
         }
 
+        /* OTP page fix */
         body.otp-page {
             margin: 0;
             padding: 0;
@@ -53,319 +54,97 @@
             width: 100%;
             max-width: 100%;
         }
-
-        .app-navbar {
-            background: rgba(255,255,255,0.92);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid #eceff3;
-            position: sticky;
-            top: 0;
-            z-index: 1030;
-        }
-
-        .app-navbar .container {
-            min-height: 72px;
-        }
-
-        .brand-logo {
-            font-weight: 800;
-            font-size: 1.5rem;
-            color: #2563eb !important;
-            text-decoration: none;
-            letter-spacing: -0.3px;
-        }
-
-        .top-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .icon-btn {
-            width: 42px;
-            height: 42px;
-            border-radius: 14px;
-            border: 1px solid #e7ebf0;
-            background: #f8fafc;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            color: #334155;
-            transition: all 0.2s ease;
-            position: relative;
-            padding: 0;
-        }
-
-        .icon-btn:hover {
-            background: #eef4ff;
-            border-color: #cfe0ff;
-            color: #2563eb;
-            transform: translateY(-1px);
-        }
-
-        .notif-badge {
-            position: absolute;
-            top: -4px;
-            right: -4px;
-            min-width: 18px;
-            height: 18px;
-            border-radius: 999px;
-            background: #ef4444;
-            color: #fff;
-            font-size: 10px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 5px;
-            line-height: 1;
-        }
-
-        .avatar-btn {
-            width: 42px;
-            height: 42px;
-            border-radius: 14px;
-            overflow: hidden;
-            border: 1px solid #e7ebf0;
-            background: #f8fafc;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            color: #334155;
-        }
-
-        .avatar-btn img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .avatar-fallback {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #eef2f7;
-            font-size: 18px;
-        }
-
-        .lang-dropdown .dropdown-toggle {
-            border-radius: 14px;
-            border: 1px solid #e7ebf0;
-            background: #f8fafc;
-            color: #334155;
-            font-weight: 600;
-            padding: 9px 12px;
-            min-width: 82px;
-        }
-
-        .lang-dropdown .dropdown-menu,
-        .user-dropdown .dropdown-menu {
-            border-radius: 16px;
-            border: 1px solid #e7ebf0;
-            box-shadow: 0 10px 35px rgba(15, 23, 42, 0.08);
-            padding: 8px;
-        }
-
-        .lang-dropdown .dropdown-item,
-        .user-dropdown .dropdown-item {
-            border-radius: 12px;
-            padding: 10px 12px;
-            font-weight: 500;
-        }
-
-        .dropdown-item-form {
-            margin: 0;
-        }
-
-        .dropdown-item-form button {
-            width: 100%;
-            text-align: left;
-            background: none;
-            border: 0;
-            padding: 10px 12px;
-            border-radius: 12px;
-            font-weight: 500;
-            color: #212529;
-        }
-
-        .dropdown-item-form button:hover {
-            background: #f3f6fb;
-        }
-
-        .user-summary {
-            padding: 10px 12px 8px;
-        }
-
-        .user-name {
-            font-weight: 700;
-            font-size: 14px;
-            color: #0f172a;
-            margin: 0;
-        }
-
-        .user-phone {
-            font-size: 12px;
-            color: #64748b;
-            margin: 2px 0 0;
-        }
-
-        .menu-divider {
-            height: 1px;
-            background: #edf1f5;
-            margin: 8px 0;
-        }
-
-        .auth-btn {
-            border-radius: 14px;
-            font-weight: 700;
-            padding: 10px 16px;
-        }
-
-        @media (max-width: 576px) {
-            .app-navbar .container {
-                min-height: 64px;
-                padding-left: 14px;
-                padding-right: 14px;
-            }
-
-            .brand-logo {
-                font-size: 1.35rem;
-            }
-
-            .top-actions {
-                gap: 8px;
-            }
-
-            .icon-btn,
-            .avatar-btn {
-                width: 40px;
-                height: 40px;
-                border-radius: 12px;
-            }
-
-            .lang-dropdown .dropdown-toggle {
-                min-width: auto;
-                padding: 8px 10px;
-                font-size: 13px;
-            }
-        }
     </style>
 </head>
 
-<body class="{% if request.path == '/otp/' %}otp-page{% else %}bg-light{% endif %}">
+<body class="{% if request.path == '/auth/otp/' %}otp-page{% else %}bg-light{% endif %}">
 
-    {% if request.path != '/otp/' %}
-    <nav class="navbar app-navbar">
+    {% if request.path != '/auth/otp/' %}
+    <nav class="navbar navbar-expand-lg navbar-white bg-white shadow-sm py-2">
         <div class="container">
 
-            <a class="brand-logo" href="/">InTask</a>
+            <a class="navbar-brand fw-bold text-primary" href="/">InTask</a>
 
-            <div class="ms-auto d-flex align-items-center gap-2">
+            <div class="ms-auto d-flex align-items-center gap-3">
 
-                <div class="dropdown lang-dropdown">
-                    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        {% get_current_language as LANGUAGE_CODE %}
-                        {% if LANGUAGE_CODE == 'uz' %}
+                <!-- LANGUAGE SWITCHER -->
+                <div class="small d-flex gap-2 align-items-center">
+
+                    <form action="{% url 'set_language' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                        <button type="submit" name="language" value="uz"
+                            class="btn btn-link p-0 text-decoration-none small">
                             UZB
-                        {% elif LANGUAGE_CODE == 'ru' %}
-                            RUS
-                        {% elif LANGUAGE_CODE == 'en' %}
-                            ENG
-                        {% else %}
-                            LANG
-                        {% endif %}
-                    </button>
+                        </button>
+                    </form>
 
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li>
-                            <form action="{% url 'set_language' %}" method="post" class="dropdown-item-form">
-                                {% csrf_token %}
-                                <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                                <button type="submit" name="language" value="uz">UZB</button>
-                            </form>
-                        </li>
-                        <li>
-                            <form action="{% url 'set_language' %}" method="post" class="dropdown-item-form">
-                                {% csrf_token %}
-                                <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                                <button type="submit" name="language" value="ru">RUS</button>
-                            </form>
-                        </li>
-                        <li>
-                            <form action="{% url 'set_language' %}" method="post" class="dropdown-item-form">
-                                {% csrf_token %}
-                                <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                                <button type="submit" name="language" value="en">ENG</button>
-                            </form>
-                        </li>
-                    </ul>
+                    |
+
+                    <form action="{% url 'set_language' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                        <button type="submit" name="language" value="ru"
+                            class="btn btn-link p-0 text-decoration-none small">
+                            RUS
+                        </button>
+                    </form>
+
+                    |
+
+                    <form action="{% url 'set_language' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                        <button type="submit" name="language" value="en"
+                            class="btn btn-link p-0 text-decoration-none small">
+                            ENG
+                        </button>
+                    </form>
+
                 </div>
 
                 {% if request.user.is_authenticated %}
 
-                    <a href="#" class="icon-btn" title="{% trans 'Notifications' %}">
-                        🔔
-                        <span class="notif-badge">2</span>
-                    </a>
+                    <div class="d-flex align-items-center gap-2">
 
-                    <a href="{% url 'accounts:profile_edit' %}" class="avatar-btn" title="{% trans 'Profile' %}">
                         {% if request.user.role == "worker" and request.user.worker_profile.photo %}
-                            <img src="{{ request.user.worker_profile.photo.url }}" alt="avatar">
+                            <img src="{{ request.user.worker_profile.photo.url }}"
+                                 style="width:35px;height:35px;border-radius:50%;object-fit:cover;">
                         {% else %}
-                            <div class="avatar-fallback">👤</div>
-                        {% endif %}
-                    </a>
-
-                    <div class="dropdown user-dropdown">
-                        <button class="icon-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="{% trans 'Menu' %}">
-                            ☰
-                        </button>
-
-                        <div class="dropdown-menu dropdown-menu-end">
-                            <div class="user-summary">
-                                <p class="user-name">{{ display_name }}</p>
-                                <p class="user-phone">{{ request.user.phone }}</p>
+                            <div style="width:35px;height:35px;border-radius:50%;background:#eee;display:flex;align-items:center;justify-content:center;">
+                                👤
                             </div>
+                        {% endif %}
 
-                            <div class="menu-divider"></div>
-
-                            <a class="dropdown-item" href="{% url 'accounts:profile_edit' %}">
-                                👤 {% trans "Profile" %}
-                            </a>
-
-                            <a class="dropdown-item" href="/employer/">
-                                📋 {% trans "My Jobs" %}
-                            </a>
-
-                            <a class="dropdown-item" href="#">
-                                🔔 {% trans "Notifications" %}
-                            </a>
-
-                            <div class="menu-divider"></div>
-
-                            <a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}">
-                                ↩ {% trans "Chiqish" %}
-                            </a>
+                        <div class="small">
+                            <div class="fw-semibold">
+                                {{ display_name }}
+                            </div>
+                            <div class="text-muted" style="font-size:11px;">
+                                {{ request.user.phone }}
+                            </div>
                         </div>
+
+                        <a href="{% url 'accounts:logout' %}" class="btn btn-outline-secondary btn-sm">
+                            {% trans "Chiqish" %}
+                        </a>
+
                     </div>
 
                 {% else %}
 
-                    <a href="{% url 'accounts:otp' %}" class="btn btn-primary auth-btn">
+                    <a href="{% url 'accounts:otp' %}" class="btn btn-primary btn-sm">
                         {% trans "RO‘YXATDAN O‘TISH" %}
                     </a>
 
                 {% endif %}
+
             </div>
         </div>
     </nav>
     {% endif %}
 
-    <main class="page-content {% if request.path != '/otp/' %}container-fluid mt-4{% endif %}">
+    <main class="page-content {% if request.path != '/auth/otp/' %}container-fluid mt-4{% endif %}">
         {% block content %}{% endblock %}
     </main>
 

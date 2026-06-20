@@ -1,408 +1,332 @@
-{% load static i18n %}
-{% get_current_language as LANGUAGE_CODE %}
+{% load static %}
 <!doctype html>
-<html lang="{{ LANGUAGE_CODE }}">
+<html lang="uz">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{% trans "Intask — Employer" %}</title>
+  <title>TaskiN — Employer</title>
 
+  <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Inter font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'css/employer_home.css' %}?v=2">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="{% static 'css/employer_home.css' %}">
 </head>
 
 <body>
-<div class="dash-shell">
-  <div class="dash-frame">
+  <div class="dash-shell">
+    <div class="dash-frame">
 
-    <!-- SIDEBAR -->
-    <aside class="side glass">
-      <div class="side-head d-flex align-items-center justify-content-between">
-        <a href="/" class="brand d-flex align-items-center gap-2 text-decoration-none">
-          <div class="brand-badge">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+      <!-- Sidebar -->
+      <aside class="side glass">
+        <div class="side-head d-flex align-items-center justify-content-between">
+          <div class="brand d-flex align-items-center gap-2">
+            <div class="brand-badge">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </div>
+            <div class="brand-name">Intask</div>
           </div>
-          <div class="brand-name">Intask</div>
-        </a>
-      </div>
 
-      <nav class="side-nav d-none d-lg-flex flex-column">
-        <a class="side-link" href="#">
-          <span class="ico">▦</span>
-          {% trans "Sections" %}
-        </a>
-
-        <a class="side-link active" href="#">
-          <span class="ico">≋</span>
-          {% trans "My Jobs" %}
-          <span class="pill-new">{% trans "New" %}</span>
-        </a>
-
-        <a class="side-link" href="#">
-          <span class="ico">👤</span>
-          {% trans "Candidates" %}
-        </a>
-
-        <a class="side-link" href="{% url 'accounts:workers_base' %}">
-          <span class="ico">👥</span>
-          {% trans "Workers Base" %}
-        </a>
-
-        <a class="side-link" href="#">
-          <span class="ico">✉</span>
-          {% trans "Messages" %}
-        </a>
-
-        <a class="side-link" href="#">
-          <span class="ico">⚙</span>
-          {% trans "Settings" %}
-        </a>
-      </nav>
-
-      <div class="side-footer d-none d-lg-block">
-        <a class="btn btn-soft w-100" href="{% url 'jobs:employer_job_create' %}">
-          <span class="me-2">＋</span>
-          {% trans "Create Job" %}
-        </a>
-      </div>
-    </aside>
-
-    <!-- MAIN -->
-    <main class="main">
-
-      <!-- TOPBAR -->
-      <div class="top glass d-flex align-items-center justify-content-between gap-3">
-        <div>
-          <div class="page-title">{% trans "My Jobs" %}</div>
-          <div class="page-sub">{% trans "All listings and candidates" %}</div>
+          <!-- ✅ FIX: offcanvas (not "off canvas") -->
+          <button class="icon-btn d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas">
+            <span class="hamburger"></span>
+          </button>
         </div>
 
-        <div class="top-right">
-          <!-- Language switcher -->
-          <div class="dropdown lang-dropdown">
-            <button
-              class="btn dropdown-toggle"
-              type="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-              aria-label="{% trans 'Language' %}">
-              {% if LANGUAGE_CODE == 'uz' %}
-                UZB
-              {% elif LANGUAGE_CODE == 'ru' %}
-                RUS
-              {% elif LANGUAGE_CODE == 'en' %}
-                ENG
-              {% else %}
-                LANG
-              {% endif %}
-            </button>
+        <nav class="side-nav d-none d-lg-block">
+          <a class="side-link" href="#"><span class="ico">▦</span> Bo‘limlar</a>
+          <a class="side-link active" href="#"><span class="ico">≋</span> E’lonlarim <span class="pill-new ms-auto">New</span></a>
+          <a class="side-link" href="#"><span class="ico">👤</span> Nomzodlar <span class="pill-count ms-auto">3</span></a>
 
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li>
-                <form action="{% url 'set_language' %}" method="post" class="dropdown-item-form">
-                  {% csrf_token %}
-                  <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                  <button type="submit" name="language" value="uz">UZB</button>
-                </form>
-              </li>
-              <li>
-                <form action="{% url 'set_language' %}" method="post" class="dropdown-item-form">
-                  {% csrf_token %}
-                  <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                  <button type="submit" name="language" value="ru">RUS</button>
-                </form>
-              </li>
-              <li>
-                <form action="{% url 'set_language' %}" method="post" class="dropdown-item-form">
-                  {% csrf_token %}
-                  <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                  <button type="submit" name="language" value="en">ENG</button>
-                </form>
-              </li>
-            </ul>
+          <a class="side-link" href="{% url 'accounts:workers_base' %}">
+            <span class="ico">👥</span> Ishchilar bazasi
+          </a>
+
+          <a class="side-link" href="#"><span class="ico">✉</span> Xabarlar</a>
+          <a class="side-link" href="#"><span class="ico">⚙</span> Sozlamalar</a>
+
+          <div class="side-cta mt-3">
+            <a class="btn btn-soft w-100" href="{% url 'jobs:employer_job_create' %}">
+              <span class="me-2">＋</span> E’lon yaratish
+            </a>
           </div>
+        </nav>
 
-          <!-- User box -->
-          <div class="userbox">
-            <a href="#" class="mini-ico" title="{% trans 'Notifications' %}" aria-label="{% trans 'Notifications' %}">
-              🔔
-              <span class="notif-badge">2</span>
+        <div class="side-footer d-none d-lg-block">
+          <a class="btn btn-soft w-100" href="{% url 'jobs:employer_job_create' %}">
+            <span class="me-2">＋</span> E’lon yaratish
+          </a>
+        </div>
+      </aside>
+
+      <!-- Offcanvas sidebar (mobile) -->
+      <div class="offcanvas offcanvas-start glass offcanvas-glass" tabindex="-1" id="sidebarOffcanvas">
+        <div class="offcanvas-header">
+          <div class="brand d-flex align-items-center gap-2">
+            <div class="brand-badge">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <path d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </div>
+            <div class="brand-name">TaskiN</div>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+
+        <div class="offcanvas-body">
+          <nav class="side-nav">
+            <a class="side-link" href="#"><span class="ico">▦</span> Bo‘limlar</a>
+            <a class="side-link active" href="#"><span class="ico">≋</span> E’lonlarim <span class="pill-new ms-auto">New</span></a>
+            <a class="side-link" href="#"><span class="ico">👤</span> Nomzodlar <span class="pill-count ms-auto">3</span></a>
+
+            <a class="side-link" href="{% url 'accounts:workers_base' %}">
+              <span class="ico">👥</span> Ishchilar bazasi
             </a>
 
-            <div class="dropdown user-dropdown">
-              <button
-                class="avatar-btn"
-                type="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-                aria-label="{% trans 'Profile menu' %}">
-                {% if request.user.role == "worker" and request.user.worker_profile.photo %}
-                  <img src="{{ request.user.worker_profile.photo.url }}" alt="{% trans 'Profile photo' %}">
-                {% else %}
-                  <span class="avatar-fallback">👤</span>
-                {% endif %}
-              </button>
+            <a class="side-link" href="#"><span class="ico">✉</span> Xabarlar</a>
+            <a class="side-link" href="#"><span class="ico">⚙</span> Sozlamalar</a>
 
-              <div class="dropdown-menu dropdown-menu-end">
-                <div class="user-summary">
-                  <p class="user-name">{{ display_name|default:request.user.phone }}</p>
-                  <p class="user-phone">{{ request.user.phone }}</p>
-                </div>
-
-                <div class="menu-divider"></div>
-
-                <a class="dropdown-item" href="{% url 'accounts:profile_edit' %}">👤 {% trans "Profile" %}</a>
-                <a class="dropdown-item" href="#">📋 {% trans "My Jobs" %}</a>
-                <a class="dropdown-item" href="#">🔔 {% trans "Notifications" %}</a>
-
-                <div class="menu-divider"></div>
-
-                <a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}">↩ {% trans "Logout" %}</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- STATS -->
-      <div class="stats-row">
-        <div class="stat-card">
-          <div class="stat-ico blue">📋</div>
-          <div>
-            <div class="stat-num">{{ jobs|length }}</div>
-            <div class="stat-lbl">{% trans "Active listings" %}</div>
-            <div class="stat-delta up">↑ {% trans "This week" %}</div>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-ico green">👤</div>
-          <div>
-            <div class="stat-num">—</div>
-            <div class="stat-lbl">{% trans "Total candidates" %}</div>
-            <div class="stat-delta up">↑ {% trans "New" %}</div>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-ico amber">📨</div>
-          <div>
-            <div class="stat-num">—</div>
-            <div class="stat-lbl">{% trans "Offers sent" %}</div>
-            <div class="stat-delta up">↑ {% trans "This month" %}</div>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-ico red">✅</div>
-          <div>
-            <div class="stat-num">—</div>
-            <div class="stat-lbl">{% trans "Hired" %}</div>
-            <div class="stat-delta up">↑ {% trans "This month" %}</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- SEARCH -->
-      <section class="search glass">
-        <div class="row g-3 align-items-center">
-          <div class="col-12 col-lg-9">
-            <div class="searchbar">
-              <span class="search-ico" aria-hidden="true">🔎</span>
-              <label class="w-100">
-                <input
-                  class="form-control form-control-lg"
-                  placeholder="{% trans 'Search by profession, name or region...' %}"
-                  aria-label="{% trans 'Search by profession, name or region...' %}">
-              </label>
-
-              <div class="search-actions">
-                <button class="chip-icon" title="{% trans 'Filter' %}" type="button">⚙</button>
-                <button class="chip-icon" title="{% trans 'Favourite' %}" type="button">★</button>
-              </div>
-            </div>
-
-            <div class="chips mt-3">
-              <div class="chip"><span class="me-1">📍</span> {% trans "Tashkent" %}</div>
-              <div class="chip"><span class="me-1">✅</span> {% trans "Active" %}</div>
-              <div class="chip"><span class="me-1">🗓</span> {% trans "Last 7 days" %}</div>
-              <button class="chip add" type="button" aria-label="{% trans 'Add filter' %}">＋</button>
-            </div>
-          </div>
-
-          <div class="col-12 col-lg-3">
-            <button class="btn btn-search w-100 btn-lg" type="button">
-              {% trans "Search" %}
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <!-- CONTENT GRID -->
-      <section class="content-grid">
-        <div class="row g-4">
-
-          <!-- LEFT -->
-          <div class="col-12 col-xl-8">
-            <div class="panel glass">
-              <div class="panel-head d-flex align-items-center justify-content-between">
-                <div class="panel-title">{% trans "My Jobs" %}</div>
-                <a class="btn btn-green btn-sm px-3" href="{% url 'jobs:employer_job_create' %}">
-                  ＋ {% trans "Create Job" %}
-                </a>
-              </div>
-
-              {% for job in jobs %}
-                <div class="job glass-soft">
-                  <div class="d-flex align-items-start justify-content-between gap-3 flex-wrap">
-                    <div class="d-flex align-items-start gap-3">
-                      {% if job.photo_url %}
-                        <a href="{% url 'accounts:worker_job_detail' job.id %}" aria-label="{% trans 'Open job details' %}">
-                          <img
-                            src="{{ job.photo_url }}"
-                            alt="{% trans 'Job image' %}"
-                            style="width:52px;height:52px;border-radius:12px;object-fit:cover;border:1px solid rgba(67,97,238,0.14);">
-                        </a>
-                      {% else %}
-                        <a
-                          href="{% url 'accounts:worker_job_detail' job.id %}"
-                          style="width:52px;height:52px;border-radius:12px;background:rgba(67,97,238,0.09);display:flex;align-items:center;justify-content:center;border:1px solid rgba(67,97,238,0.14);text-decoration:none;font-size:22px;"
-                          aria-label="{% trans 'Open job details' %}">
-                          🧰
-                        </a>
-                      {% endif %}
-
-                      <div>
-                        <div class="job-title">
-                          <a href="{% url 'accounts:worker_job_detail' job.id %}" class="text-decoration-none text-reset">
-                            {{ job.title }}
-                          </a>
-                        </div>
-
-                        <div class="job-meta">
-                          <span>📍 {{ job.region_label }}</span>
-                          <span class="dot">•</span>
-                          <span>{{ job.pay|default:"—" }}</span>
-                        </div>
-
-                        <div class="job-meta mt-1">
-                          <span>🕒 {{ job.created_at|date:"d.m.Y H:i" }}</span>
-                          <span class="dot">•</span>
-                          <span>{{ job.type_label }}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="d-flex align-items-center gap-2 flex-wrap">
-                      <a class="btn btn-green btn-sm px-3" href="{% url 'accounts:worker_job_detail' job.id %}">
-                        {% trans "Candidates" %} {{ job.applications_count }}
-                      </a>
-
-                      {% if job.is_active %}
-                        <button class="btn btn-soft2 btn-sm px-3" type="button">✅ {% trans "Active" %}</button>
-                      {% else %}
-                        <button class="btn btn-soft2 btn-sm px-3" type="button">⏸ {% trans "Inactive" %}</button>
-                      {% endif %}
-
-                      <div class="dropdown">
-                        <button
-                          class="btn btn-soft2 btn-sm px-3 dropdown-toggle"
-                          type="button"
-                          data-bs-toggle="dropdown"
-                          aria-expanded="false"
-                          aria-label="{% trans 'More actions' %}">
-                          ⋯
-                        </button>
-
-                        <ul class="dropdown-menu dropdown-menu-end">
-                          <li>
-                            <a class="dropdown-item" href="{% url 'accounts:worker_job_detail' job.id %}">
-                              📋 {% trans "Open candidates" %}
-                            </a>
-                          </li>
-                          <li>
-                            <a class="dropdown-item" href="{% url 'accounts:worker_job_detail' job.id %}?preview=1">
-                              👀 {% trans "View as worker" %}
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="job-stats mt-3">
-                    <div class="stat">
-                      <span class="sico">👁</span>
-                      {% trans "Viewed" %}: <b>0</b>
-                    </div>
-                    <div class="stat">
-                      <span class="sico">🎯</span>
-                      {% trans "Selected" %}: <b>0</b>
-                    </div>
-                  </div>
-                </div>
-              {% empty %}
-                <div class="job glass-soft text-center py-4">
-                  <div style="font-size:36px;margin-bottom:10px;">📭</div>
-                  <div class="job-title" style="font-size:16px;">{% trans "No jobs yet" %}</div>
-                  <div class="job-meta mt-1 justify-content-center">
-                    {% trans "Click the button below to post your first job" %}
-                  </div>
-                  <div class="mt-3">
-                    <a class="btn btn-green btn-sm px-4" href="{% url 'jobs:employer_job_create' %}">
-                      ＋ {% trans "Create Job" %}
-                    </a>
-                  </div>
-                </div>
-              {% endfor %}
-
-              <div class="show-more">{% trans "Show more" %} <span>›</span></div>
-            </div>
-
-            <div class="panel glass mt-4">
-              <div class="panel-head d-flex align-items-center justify-content-between">
-                <div class="panel-title">{% trans "Candidate Flow" %}</div>
-                <div class="muted" style="font-size:13px;">...</div>
-              </div>
-
-              <div class="flow">
-                <div class="flow-chip active"><span>📍</span> {% trans "New" %} <b>0</b></div>
-                <div class="flow-chip"><span>💬</span> {% trans "Interview" %} <b>0</b></div>
-                <div class="flow-chip"><span>📨</span> {% trans "Offer" %} <b>0</b></div>
-                <div class="flow-chip"><span>✅</span> {% trans "Hired" %} <b>0</b></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- RIGHT -->
-          <div class="col-12 col-xl-4">
-            <div class="panel glass">
-              <div class="panel-title mb-3">{% trans "Quick Actions" %}</div>
-
-              <a class="btn btn-green w-100 py-3 mb-3 d-flex align-items-center justify-content-center gap-2"
-                 href="{% url 'jobs:employer_job_create' %}">
-                ＋ {% trans "Create Job" %}
+            <div class="side-cta mt-3">
+              <a class="btn btn-soft w-100" href="{% url 'jobs:employer_job_create' %}">
+                <span class="me-2">＋</span> E’lon yaratish
               </a>
+            </div>
+          </nav>
+        </div>
+      </div>
 
-              <div class="qa glass-soft">
-                <div class="qa-row"><span class="qico">🧾</span> {% trans "Create in 1 step" %}</div>
-                <div class="qa-row"><span class="qico">📄</span> {% trans "Choose from templates" %}</div>
-                <div class="qa-row"><span class="qico">⭐</span> {% trans "Top workers" %}</div>
+      <!-- Main -->
+      <main class="main">
+        <!-- Topbar -->
+        <div class="top glass d-flex align-items-center justify-content-between gap-3">
+          <div>
+            <div class="page-title">E’lonlarim</div>
+          </div>
+
+          <div class="top-right d-flex align-items-center gap-3">
+            <div class="langs d-none d-md-flex">
+              <a href="#">UZB</a><span>|</span><a href="#">RUS</a><span>|</span><a href="#">ENG</a>
+            </div>
+
+            <div class="userbox d-flex align-items-center gap-2">
+              <button class="mini-ico" title="Notifications">🔔</button>
+              <button class="mini-ico" title="Profile">👤</button>
+              <div class="avatar"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Search row (kept UI) -->
+        <section class="search glass">
+          <div class="row g-3 align-items-center">
+            <div class="col-12 col-lg-9">
+              <div class="searchbar">
+                <span class="search-ico">🔎</span>
+                <label>
+                  <input class="form-control form-control-lg" placeholder="Kasb, ism yoki hudud bo‘yicha qidiring..." />
+                </label>
+                <div class="search-actions">
+                  <button class="chip-icon" title="Filter" type="button">⚙</button>
+                  <button class="chip-icon" title="Star" type="button">★</button>
+                </div>
+              </div>
+
+              <div class="chips mt-3">
+                <div class="chip"><span class="me-1">📍</span> Toshkent</div>
+                <div class="chip"><span class="me-1">✅</span> Faol</div>
+                <div class="chip"><span class="me-1">🗓</span> Oxirgi 7 kun</div>
+                <button class="chip add" type="button">＋</button>
+              </div>
+            </div>
+
+            <div class="col-12 col-lg-3">
+              <button class="btn btn-primary btn-search w-100 btn-lg" type="button">Qidirish</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Content grid -->
+        <section class="content-grid">
+          <div class="row g-4">
+            <!-- Left: job cards + flow -->
+            <div class="col-12 col-xl-8">
+              <div class="panel glass">
+                <div class="panel-head d-flex align-items-center justify-content-between">
+                  <div class="panel-title">E’lonlarim</div>
+                  <a class="btn btn-green btn-sm px-3" href="{% url 'jobs:employer_job_create' %}">
+                    ＋ E’lon yaratish
+                  </a>
+                </div>
+
+                <!-- ✅ REAL JOBS (DB) -->
+                {% for job in jobs %}
+                  <div class="job glass-soft">
+                    <div class="d-flex align-items-start justify-content-between gap-3 flex-wrap">
+
+                      <!-- left: photo + info -->
+                      <div class="d-flex align-items-start gap-3">
+                        {% if job.photo1 %}
+                          <img src="{{ job.photo1.url }}"
+                               alt="job"
+                               style="width:56px;height:56px;border-radius:12px;object-fit:cover;border:1px solid rgba(255,255,255,0.25);">
+                        {% else %}
+                          <div style="width:56px;height:56px;border-radius:12px;background:rgba(255,255,255,0.18);
+                                      display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.25);">
+                            🧰
+                          </div>
+                        {% endif %}
+
+                        <div>
+                          <div class="job-title">{{ job.title }}</div>
+
+                          <div class="job-meta">
+                            <span>📍 {{ job.region }}</span><span class="dot">•</span>
+                            <span>
+                              {% if job.pay_min and job.pay_max %}
+                                {{ job.pay_min }}–{{ job.pay_max }} {{ job.pay_currency }}
+                              {% elif job.pay_min %}
+                                {{ job.pay_min }}+ {{ job.pay_currency }}
+                              {% elif job.pay_max %}
+                                ≤ {{ job.pay_max }} {{ job.pay_currency }}
+                              {% else %}
+                                {{ job.pay_text }}
+                              {% endif %}
+                            </span>
+                          </div>
+
+                          <div class="job-meta mt-1">
+                            <span>🕒 {{ job.created_at|date:"d.m.Y H:i" }}</span>
+                            <span class="dot">•</span>
+                            <span>{{ job.get_job_type_display }}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- right actions -->
+                      <div class="d-flex align-items-center gap-2">
+                        <button class="btn btn-green btn-sm px-3" type="button">Nomzodlar</button>
+
+                        {% if job.is_active %}
+                          <button class="btn btn-soft2 btn-sm px-3" type="button">Faol</button>
+                        {% else %}
+                          <button class="btn btn-soft2 btn-sm px-3" type="button">NoFaol</button>
+                        {% endif %}
+
+                        <!-- menu -->
+                        <div class="dropdown">
+                          <button class="btn btn-soft2 btn-sm px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            ⋯
+                          </button>
+                          <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                              <a class="dropdown-item" href="/worker/job/{{ job.id }}/">👀 View as worker</a>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- stats: MVP placeholders (later real) -->
+                    <div class="job-stats mt-3">
+                      <div class="stat"><span class="sico">👁</span> Ko‘rildi: <b>0</b></div>
+                      <div class="stat"><span class="sico">🎯</span> Tanlangan: <b>0</b></div>
+                    </div>
+                  </div>
+                {% empty %}
+                  <div class="job glass-soft">
+                    <div class="job-title">Hozircha e’lon yo‘q</div>
+                    <div class="job-meta mt-1">＋ E’lon yaratish tugmasini bosing</div>
+                    <div class="mt-3">
+                      <a class="btn btn-green btn-sm px-3" href="{% url 'jobs:employer_job_create' %}">
+                        ＋ E’lon yaratish
+                      </a>
+                    </div>
+                  </div>
+                {% endfor %}
+
+                <div class="show-more">Ko‘proq ko‘rsatish <span>›</span></div>
+              </div>
+
+              <!-- Flow panel (kept design) -->
+              <div class="panel glass mt-4">
+                <div class="panel-head d-flex align-items-center justify-content-between">
+                  <div class="panel-title">Nomzodlar oqimi</div>
+                  <div class="muted">...</div>
+                </div>
+
+                <div class="flow">
+                  <div class="flow-chip active"><span>📍</span> Yangi 0</div>
+                  <div class="flow-chip"><span>💬</span> Suhbat 0</div>
+                  <div class="flow-chip"><span>📨</span> Taklif 0</div>
+                  <div class="flow-chip"><span>✅</span> Ishga oldim</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: quick actions + recommended -->
+            <div class="col-12 col-xl-4">
+              <div class="panel glass">
+                <div class="panel-title mb-3">Tezkor amallar</div>
+
+                <a class="btn btn-green w-100 py-3 mb-3" href="{% url 'jobs:employer_job_create' %}">
+                  <span class="me-2">＋</span> E’lon yaratish
+                </a>
+
+                <div class="qa glass-soft">
+                  <div class="qa-row"><span class="qico">🧾</span> 1 bosqichda e’lon</div>
+                  <div class="qa-row"><span class="qico">📄</span> Shablonlardan tanlash</div>
+                  <div class="qa-row"><span class="qico">⭐</span> Top ishchilar</div>
+                </div>
+              </div>
+
+              <!-- Recommended workers (kept demo UI for now) -->
+              <div class="panel glass mt-4">
+                <div class="panel-title mb-3">Tavsiya qilingan ishchilar</div>
+
+                <div class="worker glass-soft">
+                  <div class="w-ava"></div>
+                  <div class="flex-grow-1">
+                    <div class="w-name">Jasurbek</div>
+                    <div class="w-sub">⭐⭐⭐⭐⭐ <span class="muted">4.9</span></div>
+                  </div>
+                  <div class="score">4.0</div>
+                </div>
+
+                <div class="worker glass-soft">
+                  <div class="w-ava"></div>
+                  <div class="flex-grow-1">
+                    <div class="w-name">Akmalbek</div>
+                    <div class="w-sub">⭐⭐⭐⭐⭐ <span class="muted">4.8</span></div>
+                  </div>
+                  <div class="score">4.8</div>
+                </div>
+
+                <div class="worker glass-soft">
+                  <div class="w-ava"></div>
+                  <div class="flex-grow-1">
+                    <div class="w-name">Dilbar</div>
+                    <div class="w-sub">⭐⭐⭐⭐⭐ <span class="muted">4.7</span></div>
+                  </div>
+                  <div class="score">4.2</div>
+                </div>
+
+                <button class="btn btn-green w-100 mt-3 py-3" type="button">Taklif yuborish</button>
               </div>
             </div>
           </div>
+        </section>
+      </main>
 
-        </div>
-      </section>
-    </main>
+    </div>
   </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

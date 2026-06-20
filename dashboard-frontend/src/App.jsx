@@ -27,7 +27,7 @@ function ComingSoonPage({ title }) {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/dashboard">
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<LoginPage />} />

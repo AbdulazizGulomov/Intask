@@ -108,7 +108,7 @@ apiClient.interceptors.response.use(
       tokenStorage.clear();
       // Trigger redirect to /login by reloading; AuthContext will catch it
       if (typeof window !== "undefined") {
-        window.location.href = "/login";
+        window.location.href = "/dashboard/login";
       }
       return Promise.reject(refreshError);
     } finally {

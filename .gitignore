@@ -26,3 +26,10 @@ db.sqlite3
 *.sqlite3.backup_*
 .env*
 *.bak
+
+# Node / React dashboard
+node_modules/
+dashboard-frontend/node_modules/
+dashboard-frontend/dist/
+dashboard-frontend/.env
+dashboard-frontend/.env.*

@@ -1,0 +1,86 @@
+:root {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* ===== Theme tokens (light) ===== */
+  color-scheme: light;
+  --bg: #f5f6fa;            /* page background */
+  --card: #ffffff;          /* card / surface */
+  --surface-2: #fafbfc;     /* subtle surface: table headers, hovers, read-only */
+  --surface-3: #f0f0f0;     /* slightly stronger fill */
+  --border: #e5e7eb;        /* primary borders */
+  --border-subtle: #f0f0f0; /* row separators */
+  --text: #1a2b4a;          /* primary text (navy) */
+  --text-muted: #666666;    /* secondary text */
+  --text-faint: #888888;    /* tertiary text */
+  --text-faint-2: #aaaaaa;  /* hints */
+  --sidebar-bg: #1a2b4a;    /* navy sidebar */
+  --grid-line: #f0f0f0;     /* chart gridlines */
+  --shadow: rgba(0, 0, 0, 0.1);
+
+  color: var(--text);
+  background-color: var(--bg);
+}
+
+/* ===== Theme tokens (dark) ===== */
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0e1420;
+  --card: #171f2e;
+  --surface-2: #1f2838;
+  --surface-3: #263044;
+  --border: #2c3a52;
+  --border-subtle: #263048;
+  --text: #e7eaf0;
+  --text-muted: #aab3c5;
+  --text-faint: #8b94a8;
+  --text-faint-2: #6e7689;
+  --sidebar-bg: #10182a;
+  --grid-line: #232e44;
+  --shadow: rgba(0, 0, 0, 0.5);
+}
+
+/*
+ * Brighten the navy chart series in dark mode.
+ * recharts renders colors as SVG fill/stroke attributes, which can't read CSS
+ * variables — but a CSS `fill`/`stroke` property overrides a presentation
+ * attribute, so we retarget the navy (#1A2B4A) chart elements here. Scoped to
+ * .recharts-wrapper so only charts (bars, line + dots, area, donut, legend) are
+ * affected — never icons or avatar gradients elsewhere.
+ */
+[data-theme="dark"] .recharts-wrapper [fill="#1A2B4A"] {
+  fill: #6189cf;
+}
+[data-theme="dark"] .recharts-wrapper [stroke="#1A2B4A"] {
+  stroke: #6189cf;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+button {
+  font-family: inherit;
+  font-size: 14px;
+}

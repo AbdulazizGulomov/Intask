@@ -24,3 +24,5 @@ db.sqlite3
 # Local DB files
 *.sqlite3
 *.sqlite3.backup_*
+.env*
+*.bak

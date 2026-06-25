@@ -1,0 +1,183 @@
+{% load static i18n %}
+{% get_current_language as CURRENT_LANGUAGE %}
+<!DOCTYPE html>
+<html lang="{{ CURRENT_LANGUAGE }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}InTask{% endblock %}</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Standardized Bootstrap version across all post-login pages -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=1">
+
+  <style>
+    /* ===== Shared site shell (uses brand palette from theme.css) ===== */
+    body.site-body {
+      margin: 0;
+      font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(180deg, #F8FAFC 0%, #EEF2F8 100%);
+      background-color: var(--it-bg, #F1F5F9);
+      color: var(--navy);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .site-main { flex: 1 0 auto; }
+
+    /* Header */
+    .site-hdr {
+      position: sticky; top: 0; z-index: 1000;
+      background: #fff;
+      border-bottom: 1px solid var(--it-border, #e2e8f0);
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+    }
+    .site-hdr-in {
+      max-width: 1240px; margin: 0 auto; padding: 12px 24px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .site-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .site-logo-box {
+      width: 36px; height: 36px; border-radius: 9px;
+      background: var(--navy); display: grid; place-items: center; overflow: hidden;
+    }
+    .site-logo-box img { width: 28px; height: 28px; border-radius: 6px; }
+    .site-logo-wm { font-weight: 800; font-size: 1.15rem; color: var(--navy); line-height: 1; }
+    .site-logo-sub { display: block; font-size: .7rem; color: var(--teal); font-weight: 600; }
+    .site-hdr-spacer { flex: 1; }
+
+    /* Language switcher — small rounded-full pills */
+    .site-lang { display: flex; gap: 6px; }
+    .site-lang form { margin: 0; }
+    .site-lang button {
+      border: 1px solid var(--it-border, #e2e8f0); background: #fff;
+      color: var(--it-label, #334155); font-weight: 600; font-size: .8rem;
+      padding: 4px 12px; border-radius: 999px; cursor: pointer; font-family: inherit;
+      transition: background-color .15s, border-color .15s, color .15s;
+    }
+    .site-lang button:hover {
+      background: rgba(79, 70, 229, 0.08);
+      border-color: var(--it-primary, #4F46E5);
+      color: var(--it-primary-600, #4338CA);
+    }
+    .site-lang button.active,
+    .site-lang button.active:hover {
+      background: var(--it-primary, #4F46E5);
+      border-color: var(--it-primary, #4F46E5);
+      color: #fff;
+      cursor: default;
+    }
+
+    /* Auth button */
+    .site-btn {
+      text-decoration: none; font-weight: 700; font-size: .9rem;
+      padding: 8px 18px; border-radius: 9px; display: inline-block;
+    }
+    .site-btn-primary { background: var(--teal); color: #fff; }
+    .site-btn-primary:hover { background: #237272; }
+    .site-btn-outline { border: 1.5px solid var(--navy); color: var(--navy); background: #fff; }
+    .site-btn-outline:hover { background: var(--navy); color: #fff; }
+
+    /* Footer — clean light, clearly separated from the form */
+    .site-ftr {
+      flex-shrink: 0;
+      background: #F8FAFC;
+      border-top: 1px solid var(--it-border);
+    }
+    .site-ftr-in {
+      max-width: 1240px; margin: 0 auto; padding: 26px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 14px;
+    }
+    .site-ftr-brand {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 800; color: var(--it-navy); text-decoration: none;
+    }
+    .site-ftr-links { display: flex; gap: 20px; flex-wrap: wrap; }
+    .site-ftr-links a {
+      color: var(--it-muted); text-decoration: none;
+      font-size: .88rem; font-weight: 500; transition: color .15s ease;
+    }
+    .site-ftr-links a:hover { color: var(--it-primary); }
+    .site-ftr-links a[href^="mailto"]:hover { text-decoration: underline; }
+    .site-ftr-copy { font-size: .78rem; color: #94A3B8; }
+
+    @media (max-width: 640px) {
+      .site-logo-sub { display: none; }
+      .site-hdr-in { gap: 10px; padding: 10px 14px; }
+      .site-ftr-in { flex-direction: column; text-align: center; justify-content: center; }
+      .site-ftr-links { justify-content: center; }
+    }
+  </style>
+
+  {% block extra_css %}{% endblock %}
+</head>
+<body class="site-body">
+
+  <header class="site-hdr">
+    <div class="site-hdr-in">
+      <a href="{% url 'accounts:role_select' %}" class="site-logo">
+        <span class="site-logo-box">
+          <img src="{% static 'img/In_task.png' %}" alt="InTask">
+        </span>
+        <span class="site-logo-tx">
+          <span class="site-logo-wm">InTask</span>
+          <span class="site-logo-sub">{% trans "Tekshirilgan ustalar" %}</span>
+        </span>
+      </a>
+
+      <div class="site-hdr-spacer"></div>
+
+      {% block header_extra %}{% endblock %}
+
+      {# Always show all three; highlight the active language #}
+      {% get_available_languages as AVAILABLE_LANGUAGES %}
+      <div class="site-lang">
+        {% for code, name in AVAILABLE_LANGUAGES %}
+          <form action="{% url 'set_language' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.path }}">
+            <button type="submit" name="language" value="{{ code }}"
+              class="{% if code == CURRENT_LANGUAGE %}active{% endif %}">{% if code == 'uz' %}UZB{% elif code == 'ru' %}RUS{% elif code == 'en' %}ENG{% else %}{{ code|upper }}{% endif %}</button>
+          </form>
+        {% endfor %}
+      </div>
+
+      {% block header_actions %}
+        {% if request.user.is_authenticated %}
+          <a href="{% url 'accounts:logout' %}" class="site-btn site-btn-outline">{% trans "Chiqish" %}</a>
+        {% else %}
+          <a href="{% url 'accounts:otp' %}" class="site-btn site-btn-primary">{% trans "Kirish" %}</a>
+        {% endif %}
+      {% endblock %}
+    </div>
+  </header>
+
+  <main class="site-main">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-ftr">
+    <div class="site-ftr-in">
+      <a href="{% url 'accounts:role_select' %}" class="site-ftr-brand">
+        <span class="site-logo-box"><img src="{% static 'img/In_task.png' %}" alt="InTask"></span>
+        InTask
+      </a>
+      <nav class="site-ftr-links">
+        <a href="{% url 'accounts:role_select' %}">{% trans "Bosh sahifa" %}</a>
+        <a href="{% url 'accounts:choose_role' 'worker' %}">{% trans "Usta bo'lish" %}</a>
+        <a href="#">{% trans "Yordam" %}</a>
+        <a href="mailto:info@intask.uz">info@intask.uz</a>
+      </nav>
+      <div class="site-ftr-copy">© 2026 InTask LLC</div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

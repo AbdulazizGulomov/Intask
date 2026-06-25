@@ -5,8 +5,8 @@ from django.utils.translation import gettext_lazy as _
 
 class Job(models.Model):
     class JobType(models.TextChoices):
-        DOIMIY = "doimiy", _("Doimiy")
-        VAQTINCHALIK = "vaqtinchalik", _("Vaqtinchalik")
+        HOURLY = "hourly", _("Hourly")
+        DAILY = "daily", _("Daily")
 
     class Currency(models.TextChoices):
         UZS = "UZS", _("UZS")

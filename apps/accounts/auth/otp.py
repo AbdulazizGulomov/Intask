@@ -1,7 +1,9 @@
 # apps/accounts/auth/otp.py
+import hashlib
+import hmac
 import logging
-import random
 import re
+import secrets
 
 import requests
 from django.conf import settings
@@ -31,11 +33,31 @@ def normalize_phone(phone: str) -> str:
 
 
 def generate_otp_code() -> str:
-    return f"{random.randint(100000, 999999)}"
+    # Cryptographically secure 6-digit code (000000–999999), always zero-padded.
+    return f"{secrets.randbelow(1_000_000):06d}"
+
+
+def _hash_code(code: str) -> str:
+    """HMAC-SHA256 of the code (keyed with SECRET_KEY) → 64-char hex digest.
+
+    Only the hash is stored in the cache; the plaintext OTP is never persisted.
+    """
+    return hmac.new(
+        settings.SECRET_KEY.encode(),
+        (code or "").strip().encode(),
+        hashlib.sha256,
+    ).hexdigest()
 
 
 def otp_cache_key(phone: str) -> str:
     return f"otp:{phone}"
+
+
+def otp_attempts_key(phone: str) -> str:
+    return f"otp_attempts:{phone}"
+
+
+MAX_OTP_ATTEMPTS = 5
 
 
 def get_eskiz_token():
@@ -112,30 +134,71 @@ def send_eskiz_sms(phone: str, code: str):
 
 def send_otp(phone: str) -> str:
     phone = normalize_phone(phone)
-    code = generate_otp_code()
+
+    # DEBUG-ONLY: fixed test numbers get a deterministic code and no SMS. Gated on
+    # settings.DEBUG so it FAILS CLOSED in production — when DEBUG is False the dict
+    # is ignored and the number falls through to the normal real-OTP path below.
+    test_numbers = getattr(settings, "OTP_TEST_NUMBERS", {}) if settings.DEBUG else {}
+    is_test_number = phone in test_numbers
+    code = test_numbers[phone] if is_test_number else generate_otp_code()
 
     ttl = getattr(settings, "OTP_TTL_SECONDS", 120)
-    cache.set(otp_cache_key(phone), code, timeout=ttl)
+    # Store only the HASH of the code (never the plaintext). The plaintext `code`
+    # is still returned for SMS delivery / the debug-return path. Test numbers use
+    # the SAME storage path, so the same hashing/key/TTL applies and verify works
+    # through the normal flow (lockout/expiry included).
+    cache.set(otp_cache_key(phone), _hash_code(code), timeout=ttl)
+    # NOTE: do NOT clear the failed-attempt counter here. The brute-force lockout
+    # must persist independently of code issuance, otherwise a locked phone could
+    # be reset simply by requesting a new code. The counter expires on its own
+    # (~OTP_TTL_SECONDS) and is cleared on a successful verify.
 
-    if getattr(settings, "ESKIZ_REAL_SMS", False):
+    # Never attempt a real SMS for a fixed test number.
+    if not is_test_number and getattr(settings, "ESKIZ_REAL_SMS", False):
         send_eskiz_sms(phone, code)
 
     return code
 
 
-def verify_otp(phone: str, code: str) -> bool:
+def verify_otp(phone: str, code: str) -> tuple[bool, str]:
     phone = normalize_phone(phone)
     code = (code or "").strip()
 
     if getattr(settings, "FAKE_OTP_ENABLED", False):
         fake_code = str(getattr(settings, "FAKE_OTP_CODE", "111111")).strip()
-        return code == fake_code
+        return (code == fake_code, "")
+
+    # LOCAL DEV ONLY — never active in production (DEBUG=False on server)
+    if settings.DEBUG and phone == "+998901112233":
+        return (code == "999999", "")
+
+    attempts_key = otp_attempts_key(phone)
+
+    # Already locked out — reject until a new code is requested.
+    if (cache.get(attempts_key) or 0) >= MAX_OTP_ATTEMPTS:
+        cache.delete(otp_cache_key(phone))
+        return (False, "Too many attempts, request a new code.")
 
     saved = cache.get(otp_cache_key(phone))
     if not saved:
-        return False
+        return (False, "Invalid or expired code")
 
-    ok = str(saved).strip() == code
-    if ok:
+    # Constant-time compare of the stored hash against the submitted code's hash.
+    if secrets.compare_digest(str(saved), _hash_code(code)):
+        # Success → clear both the code and the attempt counter.
         cache.delete(otp_cache_key(phone))
-    return ok
+        cache.delete(attempts_key)
+        return (True, "")
+
+    # Wrong code → count this attempt atomically (avoids a get-then-set TOCTOU,
+    # so parallel guesses can't overshoot the lock). `add` seeds the counter with
+    # the OTP TTL only if absent; `incr` returns the post-increment value.
+    ttl = getattr(settings, "OTP_TTL_SECONDS", 120)
+    cache.add(attempts_key, 0, ttl)
+    attempts = cache.incr(attempts_key)
+
+    if attempts >= MAX_OTP_ATTEMPTS:
+        cache.delete(otp_cache_key(phone))
+        return (False, "Too many attempts, request a new code.")
+
+    return (False, "Invalid or expired code")

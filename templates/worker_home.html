@@ -1,267 +1,480 @@
+
+
+
+
 {% extends "base.html" %}
 {% load static %}
 {% load i18n %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/worker_home.css' %}">
+{% get_current_language as LANGUAGE_CODE %}
+<link rel="stylesheet" href="{% static 'css/theme.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/worker_home.css' %}?v=7">
 
-<div class="app-shell">
-  <main class="page container-fluid">
-    <div class="row g-4">
+<div class="wh-root">
 
-      <aside class="col-12 col-lg-4 col-xl-3">
-        <div class="panel">
-          <div class="panel-title">{% trans "Filtrlar" %}</div>
+  <!-- ============ HEADER (real logo, real language switcher, real user) ============ -->
+  <header class="wh-hdr">
+    <a class="wh-brand" href="{% url 'accounts:landing' %}">
+      <span class="wh-mark"><img src="{% static 'img/In_task.png' %}" alt="InTask"></span>
+      <span class="wh-name">InTask</span>
+    </a>
 
-          <form method="get" id="filtersForm">
-            <div class="filter-block">
-              <div class="filter-title">{% trans "Hudud" %}</div>
+    {# Minimal worker nav — links to existing worker pages only (no role switch) #}
+    <nav class="wh-nav">
+      <a class="wh-back" href="{% url 'accounts:role_select' %}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        {% trans "Orqaga" %}
+      </a>
+    </nav>
 
-              <details class="region-dropdown" {% if selected_regions %}open{% endif %}>
-                <summary class="region-summary">{% trans "Hududni tanlang" %}</summary>
-                <div class="region-options">
-                  {% for r in regions %}
-                    <label class="check">
-                      <input type="checkbox" name="region" value="{{ r.value }}" {% if r.checked %}checked{% endif %}>
-                      <span>{{ r.label }}</span>
-                    </label>
-                  {% endfor %}
-                </div>
-              </details>
-            </div>
+    <div class="wh-spacer"></div>
 
-            <div class="divider"></div>
+    {# Real, working language switcher — set_language POST forms (restyled pills) #}
+    <div class="wh-lang">
+      <form action="{% url 'set_language' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+        <button type="submit" name="language" value="uz" class="{% if LANGUAGE_CODE == 'uz' %}on{% endif %}">UZ</button>
+      </form>
+      <form action="{% url 'set_language' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+        <button type="submit" name="language" value="ru" class="{% if LANGUAGE_CODE == 'ru' %}on{% endif %}">RU</button>
+      </form>
+      <form action="{% url 'set_language' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+        <button type="submit" name="language" value="en" class="{% if LANGUAGE_CODE == 'en' %}on{% endif %}">EN</button>
+      </form>
+    </div>
 
-            <div class="filter-block">
-              <div class="filter-title">{% trans "Ish turi" %}</div>
+    <div class="wh-user">
+      {% if request.user.worker_profile.photo %}
+        <span class="wh-av wh-av-img"><img src="{{ request.user.worker_profile.photo.url }}" alt=""></span>
+      {% else %}
+        <span class="wh-av">{{ display_name|first|upper|default:"U" }}</span>
+      {% endif %}
+      <span class="wh-who">
+        <b>{{ display_name }}</b>
+        <span>{{ request.user.phone }}</span>
+      </span>
+      <a class="wh-logout" href="{% url 'accounts:logout' %}">{% trans "Chiqish" %}</a>
+    </div>
+  </header>
 
-              <details class="region-dropdown" {% if selected_types %}open{% endif %}>
-                <summary class="region-summary">{% trans "Ish turini tanlang" %}</summary>
-                <div class="region-options">
-                  <label class="check">
-                    <input type="checkbox" name="type" value="doimiy" {% if "doimiy" in selected_types %}checked{% endif %}>
-                    <span>{% trans "Doimiy" %}</span>
+  <div class="wh-wrap">
+    <h1 class="wh-h1">{% trans "Ishlar" %}</h1>
+
+    <div class="wh-grid">
+
+      <!-- ============ FILTERS (existing form/fields/names kept) ============ -->
+      <aside class="wh-filters">
+        <h2>{% trans "Filtrlar" %}</h2>
+
+        <form method="get" id="filtersForm">
+          <div class="wh-filter-block">
+            <label class="wh-filter-label">{% trans "Hudud" %}</label>
+            <details class="wh-dropdown" {% if selected_regions %}open{% endif %}>
+              <summary class="wh-dropdown-sum">{% trans "Hududni tanlang" %}</summary>
+              <div class="wh-dropdown-opts">
+                {% for r in regions %}
+                  <label class="wh-check">
+                    <input type="checkbox" name="region" value="{{ r.value }}" {% if r.checked %}checked{% endif %}>
+                    <span>{{ r.label }}</span>
                   </label>
+                {% endfor %}
+              </div>
+            </details>
+          </div>
 
-                  <label class="check">
-                    <input type="checkbox" name="type" value="vaqtinchalik" {% if "vaqtinchalik" in selected_types %}checked{% endif %}>
-                    <span>{% trans "Vaqtinchalik" %}</span>
+          <div class="wh-filter-block">
+            <label class="wh-filter-label">{% trans "Ish turi" %}</label>
+            <details class="wh-dropdown" {% if selected_types %}open{% endif %}>
+              <summary class="wh-dropdown-sum">{% trans "Ish turini tanlang" %}</summary>
+              <div class="wh-dropdown-opts">
+                {% for key, label in job_type_choices %}
+                  <label class="wh-check">
+                    <input type="checkbox" name="type" value="{{ key }}" {% if key in selected_types %}checked{% endif %}>
+                    <span>{{ label }}</span>
                   </label>
-                </div>
-              </details>
-            </div>
+                {% endfor %}
+              </div>
+            </details>
+          </div>
 
-            {% if q %}
-              <input type="hidden" name="q" value="{{ q }}">
-            {% endif %}
+          {% if q %}
+            <input type="hidden" name="q" value="{{ q }}">
+          {% endif %}
 
-            <button class="btn-apply w-100 mt-3" type="submit">{% trans "Qo‘llash" %}</button>
-          </form>
-        </div>
+          <button class="wh-btn" type="submit">{% trans "Qo‘llash" %}</button>
+        </form>
       </aside>
 
-      <section class="col-12 col-lg-8 col-xl-9">
+      <!-- ============ CONTENT: search → FULL-WIDTH MAP → job cards (stacked) ============ -->
+      <div class="wh-listcol">
 
-        <form class="searchbar" method="get">
+        <!-- SEARCH (existing form/fields/names kept) -->
+        <form class="wh-search" method="get">
           {% for r in selected_regions %}<input type="hidden" name="region" value="{{ r }}">{% endfor %}
           {% for t in selected_types %}<input type="hidden" name="type" value="{{ t }}">{% endfor %}
 
-          <div class="search-left">
-            <span class="search-ico">🔎</span>
-            <label style="width:100%">
-              <input class="search-input"
-                     name="q"
-                     value="{{ q|default:'' }}"
-                     placeholder="{% trans 'Kasb yoki joyni qidiring...' %}" />
-            </label>
+          <div class="wh-field">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+            <input class="search-input" name="q" value="{{ q|default:'' }}"
+                   placeholder="{% trans 'Kasb yoki joyni qidiring...' %}">
           </div>
 
-          <button class="btn-search" type="submit">{% trans "Qidirish" %}</button>
-          <button class="btn-search" type="button" id="nearMeBtn">📍 {% trans "Yaqin ishlar" %}</button>
+          <button class="wh-btn-go" type="submit">{% trans "Qidirish" %}</button>
+          <button class="wh-btn-near" type="button" id="nearMeBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            {% trans "Yaqin ishlar" %}
+          </button>
         </form>
 
-        <div id="nearMeInfo"
-             style="display:none; margin:12px 0; padding:12px 14px;
-                    border-radius:12px; background:#eef6ff; font-weight:600;">
+        <div id="nearMeInfo" class="wh-nearinfo" style="display:none;"></div>
+
+        <!-- MAP: real Yandex map (single instance) — full width, on top of the list -->
+        <div class="wh-map" id="mapBox">
+          <div id="yandexMap" style="width:100%; height:100%;"></div>
+
+          <!-- styled controls (drive the real map; Yandex default chrome disabled) -->
+          <button class="wh-mapctl wh-mapctl--expand" id="mapExpandBtn" type="button" aria-label="{% trans 'Kengaytirish' %}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+            <span class="wh-mapctl-txt">{% trans "Kengaytirish" %}</span>
+          </button>
+          <button class="wh-mapctl wh-mapctl--close" id="mapCloseBtn" type="button" aria-label="{% trans 'Yopish' %}">✕</button>
+
+          <div class="wh-mapctl-stack">
+            <button class="wh-mapctl wh-mapctl--icon" id="mapLocateBtn" type="button" aria-label="{% trans 'Joylashuvim' %}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+            </button>
+            <div class="wh-zoom">
+              <button class="wh-mapctl wh-zoom-btn" id="mapZoomIn" type="button" aria-label="{% trans 'Kattalashtirish' %}">+</button>
+              <button class="wh-mapctl wh-zoom-btn" id="mapZoomOut" type="button" aria-label="{% trans 'Kichiklashtirish' %}">−</button>
+            </div>
+          </div>
+
+          <div class="wh-mapcount" id="mapCountChip"></div>
         </div>
 
-        <div id="yandexMap" style="width:100%; height:420px; border-radius:16px; overflow:hidden;"></div>
+        <h2 class="wh-sec-h">{% trans "Tavsiya etilgan ishlar" %}</h2>
 
-        <script>
-          const JOBS_MAP = {{ jobs_map|default:"[]"|safe }};
-        </script>
-
-        <script src="https://api-maps.yandex.ru/2.1/?lang=en_US"></script>
-
-        <script>
-          function escapeHtml(s) {
-            return String(s ?? "").replace(/[&<>"']/g, m => ({
-              "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-            }[m]));
-          }
-
-          function haversineKm(lat1, lon1, lat2, lon2) {
-            const R = 6371;
-            const dLat = (lat2 - lat1) * Math.PI / 180;
-            const dLon = (lon2 - lon1) * Math.PI / 180;
-            const a =
-              Math.sin(dLat/2) * Math.sin(dLat/2) +
-              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-              Math.sin(dLon/2) * Math.sin(dLon/2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            return R * c;
-          }
-
-          let map, collection;
-
-          ymaps.ready(() => {
-            map = new ymaps.Map("yandexMap", {
-              center: [41.2995, 69.2401],
-              zoom: 11,
-              controls: ["zoomControl", "geolocationControl"]
-            });
-
-            setTimeout(() => { try { map.container.fitToViewport(); } catch(e) {} }, 200);
-
-            collection = new ymaps.GeoObjectCollection();
-            map.geoObjects.add(collection);
-
-            JOBS_MAP.forEach(job => {
-              if (job.lat == null || job.lng == null) return;
-
-              const detailUrl = job.detail_url || "#";
-
-              const balloon = `
-                <div style="min-width:240px">
-                  <div style="font-weight:800; font-size:14px;">${escapeHtml(job.title)}</div>
-                  <div style="margin-top:6px;">📍 ${escapeHtml(job.region_label)} • ${escapeHtml(job.job_type)}</div>
-                  <div style="margin-top:8px; font-weight:900;">💰 ${escapeHtml(job.pay)}</div>
-                  <div style="margin-top:10px;">
-                    <a href="${detailUrl}" style="font-weight:700; text-decoration:none;">
-                      ➜ {% trans "Batafsil" %}
-                    </a>
-                  </div>
-                </div>
-              `;
-
-              const placemark = new ymaps.Placemark(
-                [job.lat, job.lng],
-                { hintContent: escapeHtml(job.pay), balloonContent: balloon, iconCaption: job.pay },
-                { preset: "islands#blueDotIconWithCaption" }
-              );
-
-              placemark.properties.set("jobId", job.id);
-              collection.add(placemark);
-            });
-
-            if (JOBS_MAP.length) {
-              const bounds = collection.getBounds();
-              if (bounds) map.setBounds(bounds, { checkZoomRange: true, zoomMargin: 40 });
-            }
-          });
-
-          document.addEventListener("DOMContentLoaded", () => {
-            const btn = document.getElementById("nearMeBtn");
-            const info = document.getElementById("nearMeInfo");
-            if (!btn) return;
-
-            btn.addEventListener("click", () => {
-              if (!navigator.geolocation) {
-                info.style.display = "block";
-                info.textContent = "❌ Geolocation is not supported";
-                return;
-              }
-
-              btn.disabled = true;
-              const oldText = btn.textContent;
-              btn.textContent = "📍 ...";
-
-              info.style.display = "block";
-              info.textContent = "📍 Locating...";
-
-              navigator.geolocation.getCurrentPosition(
-                (pos) => {
-                  const uLat = pos.coords.latitude;
-                  const uLng = pos.coords.longitude;
-
-                  const withDist = JOBS_MAP
-                    .filter(j => j.lat != null && j.lng != null)
-                    .map(j => ({ ...j, distKm: haversineKm(uLat, uLng, j.lat, j.lng) }))
-                    .sort((a,b) => a.distKm - b.distKm);
-
-                  if (!withDist.length) {
-                    info.textContent = "⚠️ No jobs with coordinates";
-                    btn.disabled = false;
-                    btn.textContent = oldText;
-                    return;
-                  }
-
-                  const nearest = withDist[0];
-                  info.innerHTML = `✅ {% trans "Yaqin ish" %}: <b>${escapeHtml(nearest.title)}</b> — <b>${nearest.distKm.toFixed(1)} km</b>`;
-
-                  if (map) map.setCenter([uLat, uLng], 12);
-
-                  if (collection) {
-                    collection.each(pm => {
-                      if (pm.properties.get("jobId") === nearest.id) pm.balloon.open();
-                    });
-                  }
-
-                  btn.disabled = false;
-                  btn.textContent = oldText;
-                },
-                (err) => {
-                  info.textContent = "❌ Location error: " + err.message;
-                  btn.disabled = false;
-                  btn.textContent = oldText;
-                },
-                { enableHighAccuracy: true, timeout: 10000 }
-              );
-            });
-          });
-        </script>
-
-        <h2 class="section-title mt-3">{% trans "Tavsiya etilgan ishlar" %}</h2>
-
-        <div class="job-list">
+        <!-- ============ JOB CARDS (real for-loop over the real job queryset) ============ -->
+        <div class="wh-jobs">
           {% for job in jobs %}
-            <a href="{{ job.detail_url }}"
-               class="job-card text-decoration-none text-dark"
-               style="display:flex; gap:14px; align-items:center; justify-content:space-between;">
-
-              <div style="display:flex; gap:12px; align-items:center;">
-                {% if job.photo_url %}
-                  <img src="{{ job.photo_url }}"
-                       alt="job"
-                       style="width:56px;height:56px;border-radius:14px;object-fit:cover;border:1px solid #e5e7eb;">
-                {% else %}
-                  <div style="width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;
-                              border:1px solid #e5e7eb;background:#f8fafc;color:#94a3b8;font-weight:800;">
-                    🧰
-                  </div>
-                {% endif %}
-
-                <div>
-                  <div class="job-title">{{ job.title }}</div>
-                  <div class="job-meta">📍 {{ job.region_label }} • {{ job.type_label|default:job.type }}</div>
-                  <div class="job-pay">💰 {{ job.pay }}</div>
+            <article class="wh-job">
+              <div class="wh-job-top">
+                <span class="wh-ico">
+                  {% if job.photo_url %}
+                    <img src="{{ job.photo_url }}" alt="{{ job.title }}">
+                  {% else %}
+                    <svg viewBox="0 0 24 24"><path d="M4 10V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3M3 10h18v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM7 18v2M17 18v2"/></svg>
+                  {% endif %}
+                </span>
+                <div class="wh-job-h">
+                  <h3><a href="{{ job.detail_url }}">{{ job.title }}</a></h3>
+                  <span class="wh-badge {% if job.type == 'hourly' %}wh-b-hourly{% else %}wh-b-daily{% endif %}">{{ job.type_label|default:job.type }}</span>
                 </div>
               </div>
 
-              <span class="btn-cta">{% trans "Batafsil" %}</span>
-            </a>
-          {% empty %}
-            <div class="job-card">
-              <div>
-                <div class="job-title">{% trans "Natija topilmadi" %}</div>
-                <div class="job-meta">{% trans "Filtrlarni o‘zgartirib ko‘ring." %}</div>
+              <div class="wh-job-meta">
+                <svg viewBox="0 0 24 24"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                {{ job.region_label }}
               </div>
-            </div>
+
+              <div class="wh-job-foot">
+                <div class="wh-salary">{{ job.pay }}</div>
+                <a class="wh-detail" href="{{ job.detail_url }}">
+                  {% trans "Batafsil" %}
+                  <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </a>
+              </div>
+            </article>
+          {% empty %}
+            <article class="wh-job wh-job-empty">
+              <div class="wh-job-h">
+                <h3>{% trans "Natija topilmadi" %}</h3>
+                <div class="wh-job-meta">{% trans "Filtrlarni o‘zgartirib ko‘ring." %}</div>
+              </div>
+            </article>
           {% endfor %}
         </div>
+      </div>
 
-      </section>
+    </div><!-- /wh-grid -->
+  </div>
+
+  <!-- ===== Map data + Yandex API + init (single instance; custom markers/clusters/controls) ===== -->
+  <script>
+    const JOBS_MAP = {{ jobs_map|default:"[]"|safe }};
+    // translatable strings used inside JS-built markup
+    const T_DETAIL = "{% trans 'Batafsil' %}";
+    const T_NEAR = "{% trans 'Yaqin ish' %}";
+    const T_ON_MAP = "{% trans 'Xaritada' %}";
+    const T_JOBS_WORD = "{% trans 'ta ish' %}";
+  </script>
+
+  <script src="https://api-maps.yandex.ru/2.1/?lang=en_US"></script>
+
+  <script>
+    function escapeHtml(s) {
+      return String(s ?? "").replace(/[&<>"']/g, m => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+      }[m]));
+    }
+    function haversineKm(lat1, lon1, lat2, lon2) {
+      const R = 6371;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    }
+
+    // Real job preview card (.wh-pop) used as the marker balloon content.
+    function popHtml(job) {
+      const url = job.detail_url || "#";
+      return `
+        <div class="wh-pop">
+          <div class="wh-pop-top">
+            <span class="wh-pop-ic">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3M3 10h18v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM7 18v2M17 18v2"/></svg>
+            </span>
+            <div class="wh-pop-h">
+              <div class="wh-pop-title">${escapeHtml(job.title)}</div>
+              <span class="wh-pop-badge ${job.type === 'hourly' ? 'wh-pop-badge--hourly' : 'wh-pop-badge--daily'}">${escapeHtml(job.job_type)}</span>
+            </div>
+          </div>
+          <div class="wh-pop-meta">📍 ${escapeHtml(job.region_label)}</div>
+          <div class="wh-pop-foot">
+            <span class="wh-pop-pay">${escapeHtml(job.pay)}</span>
+            <a class="wh-pop-btn" href="${url}">${escapeHtml(T_DETAIL)} →</a>
+          </div>
+        </div>`;
+    }
+
+    let map, clusterer;
+    const pmById = {};
+    let selectedPm = null;
+
+    ymaps.ready(() => {
+      // Single map instance. Default zoom/geo chrome OFF — we provide styled controls.
+      map = new ymaps.Map("yandexMap", {
+        center: [41.2995, 69.2401],
+        zoom: 11,
+        controls: []
+      }, { suppressMapOpenBlock: true });
+
+      // Price-pill marker: the price IS the pin (no separate overlapping caption).
+      const PinLayout = ymaps.templateLayoutFactory.createClass(
+        '<div class="wh-pin $[properties.selClass]">$[properties.payText]<i class="wh-pin-tip"></i></div>'
+      );
+      // Indigo cluster bubble with a white count.
+      const ClusterLayout = ymaps.templateLayoutFactory.createClass(
+        '<div class="wh-cluster">$[properties.geoObjects.length]</div>'
+      );
+
+      clusterer = new ymaps.Clusterer({
+        clusterIconLayout: ClusterLayout,
+        clusterIconShape: { type: "Circle", coordinates: [0, 0], radius: 22 },
+        clusterDisableClickZoom: false,
+        hasBalloon: false,
+        gridSize: 48,
+        minClusterSize: 2
+      });
+
+      // --- Part B: fan out jobs that share an (almost) identical coordinate ---
+      // Clustering can never split co-located points, so first GROUP jobs that sit
+      // within ~40 m of each other, then place each on a small circle around the
+      // group's centroid. Genuinely distinct locations stay put and still cluster.
+      const valid = JOBS_MAP.filter(j => j.lat != null && j.lng != null);
+      const groups = [];
+      const NEAR_KM = 0.04; // ~40 m => "same coordinate"
+      valid.forEach(job => {
+        const g = groups.find(gr => haversineKm(gr.lat, gr.lng, job.lat, job.lng) <= NEAR_KM);
+        if (g) { g.jobs.push(job); g.lat = (g.lat * (g.jobs.length - 1) + job.lat) / g.jobs.length; g.lng = (g.lng * (g.jobs.length - 1) + job.lng) / g.jobs.length; }
+        else groups.push({ lat: job.lat, lng: job.lng, jobs: [job] });
+      });
+
+      const placemarks = [];
+      groups.forEach(group => {
+        const n = group.jobs.length;
+        group.jobs.forEach((job, i) => {
+          let lat = job.lat, lng = job.lng;
+          if (n > 1) {
+            // spiral/ring around the centroid so each marker is separable & clickable
+            const R = 0.0009 + 0.00012 * (n - 2);            // ~100 m+, grows with crowd
+            const ang = (2 * Math.PI * i) / n - Math.PI / 2;
+            lat = group.lat + R * Math.sin(ang);
+            lng = group.lng + R * Math.cos(ang) / Math.cos(group.lat * Math.PI / 180);
+          }
+          const pm = new ymaps.Placemark(
+            [lat, lng],
+            { payText: escapeHtml(job.pay), selClass: "", balloonContent: popHtml(job), jobId: job.id },
+            {
+              iconLayout: PinLayout,
+              iconShape: { type: "Rectangle", coordinates: [[-52, -50], [52, -2]] },
+              balloonOffset: [0, -46],
+              balloonPanelMaxMapArea: 0,        // never fall back to the bottom panel
+              hideIconOnBalloonOpen: false
+            }
+          );
+          pm.events.add("click", () => selectPin(pm));
+          pm.events.add("balloonclose", () => { if (selectedPm === pm) clearSel(); });
+          pmById[job.id] = pm;
+          placemarks.push(pm);
+        });
+      });
+
+      clusterer.add(placemarks);
+      map.geoObjects.add(clusterer);
+
+      if (placemarks.length) {
+        const b = clusterer.getBounds();
+        if (b) map.setBounds(b, { checkZoomRange: true, zoomMargin: 60 });
+      }
+      setTimeout(() => { try { map.container.fitToViewport(); } catch (e) {} }, 200);
+
+      // job-count chip
+      const chip = document.getElementById("mapCountChip");
+      if (chip) chip.textContent = `${T_ON_MAP} ${JOBS_MAP.length} ${T_JOBS_WORD}`;
+
+      wireControls();
+    });
+
+    function clearSel() {
+      if (selectedPm) { selectedPm.properties.set("selClass", ""); selectedPm = null; }
+    }
+    function selectPin(pm) {
+      if (selectedPm && selectedPm !== pm) selectedPm.properties.set("selClass", "");
+      selectedPm = pm;
+      pm.properties.set("selClass", "wh-pin--sel");
+      try { pm.balloon.open(); } catch (e) {}
+    }
+
+    function wireControls() {
+      const zin = document.getElementById("mapZoomIn");
+      const zout = document.getElementById("mapZoomOut");
+      const loc = document.getElementById("mapLocateBtn");
+      if (zin) zin.addEventListener("click", () => map.setZoom(map.getZoom() + 1, { duration: 200 }));
+      if (zout) zout.addEventListener("click", () => map.setZoom(map.getZoom() - 1, { duration: 200 }));
+      if (loc) loc.addEventListener("click", () => locateMe());
+    }
+
+    function locateMe() {
+      if (!navigator.geolocation) return;
+      navigator.geolocation.getCurrentPosition(
+        (pos) => { if (map) map.setCenter([pos.coords.latitude, pos.coords.longitude], 13, { duration: 300 }); },
+        () => {},
+        { enableHighAccuracy: true, timeout: 10000 }
+      );
+    }
+
+    // ---- "Yaqin ishlar" (nearest job) button in the search row ----
+    document.addEventListener("DOMContentLoaded", () => {
+      const btn = document.getElementById("nearMeBtn");
+      const info = document.getElementById("nearMeInfo");
+      if (!btn) return;
+      btn.addEventListener("click", () => {
+        if (!navigator.geolocation) {
+          info.style.display = "block"; info.textContent = "❌ Geolocation is not supported"; return;
+        }
+        btn.disabled = true; const oldText = btn.textContent; btn.textContent = "📍 ...";
+        info.style.display = "block"; info.textContent = "📍 Locating...";
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            const uLat = pos.coords.latitude, uLng = pos.coords.longitude;
+            const withDist = JOBS_MAP.filter(j => j.lat != null && j.lng != null)
+              .map(j => ({ ...j, distKm: haversineKm(uLat, uLng, j.lat, j.lng) }))
+              .sort((a, b) => a.distKm - b.distKm);
+            if (!withDist.length) { info.textContent = "⚠️ No jobs with coordinates"; btn.disabled = false; btn.textContent = oldText; return; }
+            const nearest = withDist[0];
+            info.innerHTML = `✅ ${escapeHtml(T_NEAR)}: <b>${escapeHtml(nearest.title)}</b> — <b>${nearest.distKm.toFixed(1)} km</b>`;
+            if (map) map.setCenter([uLat, uLng], 12, { duration: 300 });
+            const pm = pmById[nearest.id];
+            if (pm) selectPin(pm);
+            btn.disabled = false; btn.textContent = oldText;
+          },
+          (err) => { info.textContent = "❌ Location error: " + err.message; btn.disabled = false; btn.textContent = oldText; },
+          { enableHighAccuracy: true, timeout: 10000 }
+        );
+      });
+    });
+
+    /* ===== Expand / collapse the SAME map into a full-screen overlay ===== */
+    (function () {
+      function resizeMapSoon() {
+        setTimeout(() => { try { if (map) map.container.fitToViewport(); } catch (e) {} }, 80);
+        setTimeout(() => { try { if (map) map.container.fitToViewport(); } catch (e) {} }, 340);
+      }
+      function setMapFullscreen(open) {
+        const box = document.getElementById("mapBox");
+        if (!box) return;
+        box.classList.toggle("is-fs", open);
+        document.body.classList.toggle("wh-noscroll", open);
+        resizeMapSoon();
+      }
+      document.addEventListener("DOMContentLoaded", () => {
+        const expandBtn = document.getElementById("mapExpandBtn");
+        const closeBtn = document.getElementById("mapCloseBtn");
+        if (expandBtn) expandBtn.addEventListener("click", () => setMapFullscreen(true));
+        if (closeBtn) closeBtn.addEventListener("click", () => setMapFullscreen(false));
+        document.addEventListener("keydown", (e) => {
+          const box = document.getElementById("mapBox");
+          if (e.key === "Escape" && box && box.classList.contains("is-fs")) setMapFullscreen(false);
+        });
+      });
+    })();
+  </script>
+
+  <!-- ============ FOOTER (navy, real links where routes exist) ============ -->
+  <footer class="wh-ft-bar">
+    <div class="wh-ft">
+      <div class="wh-ft-brand">
+        <div class="wh-ft-l">
+          <span class="wh-mark"><img src="{% static 'img/In_task.png' %}" alt="InTask"></span>
+          <span class="wh-name">InTask</span>
+        </div>
+        <p>{% trans "Tekshirilgan ustalar va ishlar bir joyda. Toshkent va butun O‘zbekiston bo‘ylab ish toping yoki ishchi yollang." %}</p>
+        <div class="wh-ft-soc">
+          <a href="#" aria-label="Telegram"><svg viewBox="0 0 24 24" fill="none" stroke="#CBD5E1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/></svg></a>
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="#CBD5E1" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+          <a href="tel:+998901112233" aria-label="Phone"><svg viewBox="0 0 24 24" fill="none" stroke="#CBD5E1" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7l.6 3a2 2 0 0 1-.6 1.9L7.8 9.8a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 1.9-.6l3 .6a2 2 0 0 1 1.7 2z"/></svg></a>
+        </div>
+      </div>
+
+      <div class="wh-ft-col">
+        <h4>{% trans "Kompaniya" %}</h4>
+        <a href="{% url 'accounts:landing' %}">{% trans "Bosh sahifa" %}</a>
+        <a href="#">{% trans "Biz haqimizda" %}</a>
+        <a href="{% url 'accounts:choose_role' 'worker' %}">{% trans "Mutaxassis bo‘lish" %}</a>
+        <a href="{% url 'accounts:choose_role' 'employer' %}">{% trans "Ish e’lon qilish" %}</a>
+      </div>
+
+      <div class="wh-ft-col">
+        <h4>{% trans "Yordam" %}</h4>
+        <a href="#">{% trans "Yordam markazi" %}</a>
+        <a href="#">{% trans "Tez-tez so‘raladigan savollar" %}</a>
+        <a href="#">{% trans "Maxfiylik siyosati" %}</a>
+        <a href="#">{% trans "Foydalanish shartlari" %}</a>
+      </div>
+
+      <div class="wh-ft-col">
+        <h4>{% trans "Aloqa" %}</h4>
+        <a href="mailto:info@intask.uz">info@intask.uz</a>
+        <a href="tel:+998901112233">+998 90 111 22 33</a>
+        <a href="#">{% trans "Toshkent, O‘zbekiston" %}</a>
+      </div>
     </div>
-  </main>
+
+    <div class="wh-ft-bot">
+      <span>© 2026 InTask LLC. {% trans "Barcha huquqlar himoyalangan." %}</span>
+      <span>{% trans "Made in Tashkent" %} 🇺🇿</span>
+    </div>
+  </footer>
+
 </div>
 {% endblock %}

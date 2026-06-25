@@ -6,6 +6,7 @@ from django.utils.safestring import mark_safe
 from django.http import HttpResponseBadRequest, HttpResponseForbidden
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -17,6 +18,7 @@ from rest_framework.response import Response
 from apps.accounts.models import User, WorkerProfile
 from apps.accounts.auth.otp import verify_otp, normalize_phone
 from apps.jobs.models import Job
+from apps.jobs.utils import format_pay
 
 
 ALLOWED_ROLES = {"worker", "employer"}
@@ -125,18 +127,8 @@ def _first_photo_url(job: Job):
 
 
 def _pay_display(job: Job) -> str:
-    try:
-        if job.pay_min is not None and job.pay_max is not None:
-            return f"{job.pay_min:g}–{job.pay_max:g} {job.pay_currency}"
-        if job.pay_min is not None:
-            return f"{job.pay_min:g}+ {job.pay_currency}"
-        if job.pay_max is not None:
-            return f"≤ {job.pay_max:g} {job.pay_currency}"
-        if getattr(job, "pay_text", None):
-            return job.pay_text or ""
-    except Exception:
-        pass
-    return ""
+    # Single source of truth lives in apps.jobs.utils.format_pay.
+    return format_pay(job.pay_min, job.pay_max, job.pay_currency, getattr(job, "pay_text", ""))
 
 
 def get_display_name(user) -> str:
@@ -213,7 +205,8 @@ def worker_home(request):
                     "lat": j["lat"],
                     "lng": j["lng"],
                     "region_label": j["region_label"],
-                    "job_type": j["type_label"],
+                    "type": j["type"],            # raw key (hourly/daily) for the badge style
+                    "job_type": j["type_label"],  # display label for the badge text
                     "detail_url": j["detail_url"],  # ✅ map uses this
                 }
             )
@@ -228,6 +221,7 @@ def worker_home(request):
             "selected_regions": selected_regions,
             "selected_region_labels": selected_region_labels,
             "selected_types": selected_types,
+            "job_type_choices": Job.JobType.choices,  # drive the "Ish turi" filter from the model
             "q": q,
             "jobs_map": mark_safe(json.dumps(jobs_map)),
         },
@@ -297,8 +291,9 @@ def otp_verify_web(request):
     code = (request.POST.get("code") or "").strip()
     next_url = request.POST.get("next") or "/"
 
-    if not verify_otp(phone, code):
-        return render(request, "otp.html", {"error": "Invalid or expired code", "next": next_url})
+    ok, err = verify_otp(phone, code)
+    if not ok:
+        return render(request, "otp.html", {"error": err or "Invalid or expired code", "next": next_url})
 
     role = request.session.get("user_role") or "worker"
 
@@ -371,12 +366,43 @@ def after_otp_redirect(request):
 
     next_url = request.GET.get("next") or "/"
 
-    if request.user.role == "worker":
+    # Fix 1: only honor local, same-host paths; external targets fall back to "/".
+    if not url_has_allowed_host_and_scheme(
+            next_url, allowed_hosts={request.get_host()},
+            require_https=request.is_secure()):
+        next_url = "/"
+
+    # Resolve the account's real role. Change 1 persists a first-time role at
+    # verify, so request.user.role normally already reflects it; fall back to the
+    # session value as a safety net, and to /role/ if we still have nothing.
+    # An authenticated user is NEVER sent to the public landing ("/") from here.
+    role = getattr(request.user, "role", None) or ""
+    if not role:
+        session_role = request.session.get("user_role")
+        if session_role:
+            role = session_role
+        else:
+            return redirect("accounts:role_select")
+
+    if role == "worker":
         profile, _ = WorkerProfile.objects.get_or_create(user=request.user)
         if not profile.is_completed:
             return redirect("accounts:worker_register")
+        # Honor a valid local path the worker may see; otherwise their own
+        # dashboard. Never the landing ("/") and never the employer area.
+        if next_url in ("", "/") or next_url.startswith("/employer/"):
+            return redirect("accounts:worker_home")
+        return redirect(next_url)
 
-    return redirect(next_url)
+    if role == "employer":
+        # Honor a valid local path the employer may see; otherwise their own
+        # dashboard. Never the landing ("/") and never the worker area.
+        if next_url in ("", "/") or next_url.startswith("/worker/"):
+            return redirect("accounts:employer_home")
+        return redirect(next_url)
+
+    # Unknown / unexpected role value → role select (never "/").
+    return redirect("accounts:role_select")
 
 
 def logout_view(request):

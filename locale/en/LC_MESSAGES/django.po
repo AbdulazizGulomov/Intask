@@ -1326,8 +1326,8 @@ msgid "Tasdiqlash"
 msgstr "Confirm"
 
 #: .\templates\otp.html:112
-msgid "Kodni hech kimga bermang · Kod 5 daqiqa amal qiladi"
-msgstr "Don't share the code with anyone · The code is valid for 5 minutes"
+msgid "Kodni hech kimga bermang · Kod 2 daqiqa amal qiladi"
+msgstr "Don't share the code with anyone · The code is valid for 2 minutes"
 
 #: .\templates\profile_edit.html:7 .\templates\profile_edit.html:523
 msgid "Edit Profile"
@@ -1680,3 +1680,162 @@ msgstr "Please select an image file"
 #: .\templates\worker_register.html:620
 msgid "Fayl hajmi 5MB dan oshmasligi kerak"
 msgstr "File size must not exceed 5 MB"
+
+msgid "Kengaytirish"
+msgstr "Expand"
+
+msgid "Yopish"
+msgstr "Close"
+
+msgid "Xaritada"
+msgstr "On the map"
+
+msgid "ta ish"
+msgstr "jobs"
+
+msgid "Joylashuvim"
+msgstr "My location"
+
+msgid "Kattalashtirish"
+msgstr "Zoom in"
+
+msgid "Kichiklashtirish"
+msgstr "Zoom out"
+
+msgid "Hourly"
+msgstr "Hourly"
+
+msgid "Daily"
+msgstr "Daily"
+
+msgid "Ishlar"
+msgstr "Jobs"
+
+msgid "Profil"
+msgstr "Profile"
+
+msgid "Ish beruvchi"
+msgstr "Employer"
+
+msgid "Bo‘limlar"
+msgstr "Sections"
+
+msgid "E’lonlarim"
+msgstr "My listings"
+
+msgid "Nomzodlar"
+msgstr "Candidates"
+
+msgid "Ishchilar bazasi"
+msgstr "Workers base"
+
+msgid "Xabarlar"
+msgstr "Messages"
+
+msgid "Sozlamalar"
+msgstr "Settings"
+
+msgid "E’lon yaratish"
+msgstr "Create listing"
+
+msgid "Toshkent"
+msgstr "Tashkent"
+
+msgid "Oxirgi 7 kun"
+msgstr "Last 7 days"
+
+msgid "Filtr"
+msgstr "Filter"
+
+msgid "NoFaol"
+msgstr "Inactive"
+
+msgid "Ko‘rildi"
+msgstr "Viewed"
+
+msgid "Tanlangan"
+msgstr "Selected"
+
+msgid "Ko‘rish"
+msgstr "View"
+
+msgid "Nomzodlar oqimi"
+msgstr "Candidate pipeline"
+
+msgid "Suhbat"
+msgstr "Interview"
+
+msgid "Taklif"
+msgstr "Offer"
+
+msgid "Ishga oldim"
+msgstr "Hired"
+
+msgid "Tezkor amallar"
+msgstr "Quick actions"
+
+msgid "Shablonlardan tanlash"
+msgstr "Choose from templates"
+
+msgid "Top ishchilar"
+msgstr "Top workers"
+
+msgid "Tavsiya etilgan ishchilar"
+msgstr "Recommended workers"
+
+msgid "Taklif yuborish"
+msgstr "Send invite"
+
+msgid "Narxlar"
+msgstr "Pricing"
+
+msgid "Maxfiylik"
+msgstr "Privacy"
+
+msgid "Shartlar"
+msgstr "Terms"
+
+msgid "Barcha huquqlar himoyalangan"
+msgstr "All rights reserved"
+
+msgid "Made in Tashkent"
+msgstr "Made in Tashkent"
+
+msgid "Bildirishnomalar"
+msgstr "Notifications"
+
+msgid "Kasb, ism yoki hudud bo‘yicha qidiring..."
+msgstr "Search by profession, name or region..."
+
+msgid "1 bosqichda e’lon"
+msgstr "One-step listing"
+
+msgid "Hozircha e’lon yo‘q"
+msgstr "No listings yet"
+
+msgid "“E’lon yaratish” tugmasini bosing"
+msgstr "Click “Create listing”"
+
+msgid "Yordam markazi"
+msgstr "Help center"
+
+msgid "Toshkent, O‘zbekiston"
+msgstr "Tashkent, Uzbekistan"
+
+msgid "Ishchi yollang yoki ish toping — tez, ishonchli, butun O‘zbekiston bo‘ylab."
+msgstr "Hire workers or find a job — fast and reliable across Uzbekistan."
+
+msgid "Tahrirlash"
+msgstr "Edit"
+
+msgid "Saqlash"
+msgstr "Save"
+
+msgid "Bekor qilish"
+msgstr "Cancel"
+
+msgid "E’lonni tahrirlash"
+msgstr "Edit listing"
+
+msgid "Amallar"
+msgstr "Actions"

@@ -1,72 +1,191 @@
+{% extends "base_site.html" %}
 {% load i18n %}
-<!doctype html>
-<html lang="">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>{% trans "Create Job" %}</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
 
-<div class="container py-4" style="max-width: 720px;">
-  <h3 class="mb-3">{% trans "Create Job" %}</h3>
+{% block title %}{% trans "Create Job" %}{% endblock %}
+
+{% block extra_css %}
+<style>
+  .cj-page { max-width: 760px; }
+
+  /* Page title with accent bar */
+  .cj-heading {
+    display: flex; align-items: center; gap: 14px;
+    color: var(--it-navy); font-weight: 700; font-size: 1.85rem;
+    margin: 4px 0 22px;
+  }
+  .cj-heading::before {
+    content: ""; width: 4px; align-self: stretch; min-height: 1.4em;
+    border-radius: 4px; background: var(--it-primary);
+  }
+
+  /* Form card */
+  .cj-card {
+    background: var(--it-card);
+    border: 1px solid var(--it-border);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(15, 23, 42, .06);
+    padding: 28px;
+  }
+
+  /* Labels + hints */
+  .cj-card .form-label {
+    font-weight: 600; color: var(--it-label);
+    font-size: .9rem; margin-bottom: 6px;
+  }
+  .cj-card .form-text { color: var(--it-muted); font-size: .8rem; }
+
+  /* Inputs / selects / textarea */
+  .cj-card .form-control,
+  .cj-card .form-select {
+    border: 1px solid #D7DEE8;
+    border-radius: 10px;
+    padding: 11px 14px;
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .cj-card .form-control:focus,
+  .cj-card .form-select:focus {
+    border-color: var(--it-primary);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, .15);
+    outline: none;
+  }
+
+  /* Readonly Lat/Lng — look disabled but still POST */
+  .cj-card input[readonly] {
+    background: #F1F5F9;
+    color: #94A3B8;
+    cursor: not-allowed;
+  }
+  .cj-card input[readonly]:focus { box-shadow: none; border-color: #D7DEE8; }
+
+  /* Pay block grouped into one subtle panel */
+  .cj-pay-panel {
+    background: #F8FAFC;
+    border: 1px solid var(--it-border);
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 4px;
+  }
+
+  /* Buttons */
+  .cj-card .btn-success {            /* Save = dominant filled primary */
+    background: linear-gradient(135deg, #4F46E5, #4338CA);
+    border: none; color: #fff;
+    font-weight: 600; font-size: 1rem;
+    padding: 12px 32px; border-radius: 10px;
+    box-shadow: 0 4px 14px rgba(79, 70, 229, .35);
+    cursor: pointer;
+    transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease;
+  }
+  .cj-card .btn-success:hover {
+    background: var(--it-primary-600);
+    box-shadow: 0 6px 20px rgba(79, 70, 229, .45);
+    transform: translateY(-1px);
+  }
+  .cj-card .btn-success:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(79, 70, 229, .3);
+  }
+  #addPhotoBtn, #getLocationBtn {    /* outline indigo */
+    background: transparent; border: 1px solid var(--it-primary);
+    color: var(--it-primary); border-radius: 10px; font-weight: 600;
+    transition: background-color .15s ease, color .15s ease;
+  }
+  #addPhotoBtn:hover, #getLocationBtn:hover {
+    background: rgba(79, 70, 229, .08); color: var(--it-primary-600);
+    border-color: var(--it-primary);
+  }
+  .cj-card .cj-back {                 /* Back = polished neutral, secondary to Save */
+    display: inline-block; text-decoration: none; text-align: center; line-height: 1.5;
+    background: #fff; border: 1px solid var(--it-border); color: #475569;
+    font-weight: 500; border-radius: 10px; padding: 12px 28px; cursor: pointer;
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;
+  }
+  .cj-card .cj-back:hover { text-decoration: none; }
+  .cj-card .cj-back:hover { background: #F1F5F9; border-color: #CBD5E1; color: var(--it-navy); }
+  .cj-card .cj-back:active { background: #E7ECF3; border-color: #CBD5E1; color: var(--it-navy); }
+  .cj-card .cj-back:focus,
+  .cj-card .cj-back:focus-visible {
+    outline: none; border-color: #CBD5E1;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, .12);
+  }
+
+  .cj-alert { border-radius: 12px; }
+
+  @media (max-width: 575px) {
+    .cj-card { padding: 18px; }
+    .cj-heading { font-size: 1.5rem; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="cj-page container py-4">
+  <h1 class="cj-heading">{% trans "Create Job" %}</h1>
 
   {% if error %}
-    <div class="alert alert-danger">{{ error }}</div>
+    <div class="alert alert-danger cj-alert">{{ error }}</div>
   {% endif %}
 
-  <form method="post" enctype="multipart/form-data" class="card p-3 shadow-sm">
+  <form method="post" enctype="multipart/form-data" class="cj-card">
     {% csrf_token %}
 
     <!-- TITLE -->
     <div class="mb-3">
-      <label class="form-label">{% trans "Title" %}</label>
-      <input name="title" class="form-control" required>
+      <label class="form-label" for="title">{% trans "Title" %}</label>
+      <input id="title" name="title" class="form-control" required>
     </div>
 
-    <!-- ✅ PHOTOS (4) -->
+    <!-- ✅ PHOTOS (progressive reveal: only photo1 shown on load) -->
     <div class="mb-3">
       <label class="form-label">{% trans "Job photos" %}</label>
 
-      <div class="row g-3">
+      <div class="row g-3" id="photoSlots">
 
-        <!-- PHOTO 1 -->
-        <div class="col-md-6">
+        <!-- PHOTO 1 (always visible) -->
+        <div class="col-md-6 photo-slot" id="photoSlot1">
           <input type="file" name="photo1" id="photo1" class="form-control" accept="image/*">
-          <img id="preview1" class="img-fluid mt-2 rounded border" style="display:none; max-height:220px; object-fit:cover;">
+          <img id="preview1" alt="" class="img-fluid mt-2 rounded border" style="display:none; max-height:220px; object-fit:cover;">
         </div>
 
         <!-- PHOTO 2 -->
-        <div class="col-md-6">
+        <div class="col-md-6 photo-slot" id="photoSlot2" hidden>
           <input type="file" name="photo2" id="photo2" class="form-control" accept="image/*">
-          <img id="preview2" class="img-fluid mt-2 rounded border" style="display:none; max-height:220px; object-fit:cover;">
+          <img id="preview2" alt="" class="img-fluid mt-2 rounded border" style="display:none; max-height:220px; object-fit:cover;">
+          <button type="button" class="btn btn-sm btn-link text-danger px-0 remove-photo" data-slot="2">✕ {% trans "Remove" %}</button>
         </div>
 
         <!-- PHOTO 3 -->
-        <div class="col-md-6">
+        <div class="col-md-6 photo-slot" id="photoSlot3" hidden>
           <input type="file" name="photo3" id="photo3" class="form-control" accept="image/*">
-          <img id="preview3" class="img-fluid mt-2 rounded border" style="display:none; max-height:220px; object-fit:cover;">
+          <img id="preview3" alt="" class="img-fluid mt-2 rounded border" style="display:none; max-height:220px; object-fit:cover;">
+          <button type="button" class="btn btn-sm btn-link text-danger px-0 remove-photo" data-slot="3">✕ {% trans "Remove" %}</button>
         </div>
 
         <!-- PHOTO 4 -->
-        <div class="col-md-6">
+        <div class="col-md-6 photo-slot" id="photoSlot4" hidden>
           <input type="file" name="photo4" id="photo4" class="form-control" accept="image/*">
-          <img id="preview4" class="img-fluid mt-2 rounded border" style="display:none; max-height:220px; object-fit:cover;">
+          <img id="preview4" alt="" class="img-fluid mt-2 rounded border" style="display:none; max-height:220px; object-fit:cover;">
+          <button type="button" class="btn btn-sm btn-link text-danger px-0 remove-photo" data-slot="4">✕ {% trans "Remove" %}</button>
         </div>
 
       </div>
 
+      <div class="mt-2">
+        <button type="button" id="addPhotoBtn" class="btn btn-sm btn-outline-secondary">
+          ➕ {% trans "Add another photo" %}
+        </button>
+      </div>
+
       <div class="form-text mt-2">
-        {% trans "You can upload up to 4 photos. Each selected photo will preview immediately." %}
+        {% trans "Add 1 to 4 photos (max 5 MB each). Each selected photo will preview immediately." %}
       </div>
     </div>
 
     <!-- REGION + TYPE -->
     <div class="row g-3">
       <div class="col-md-6">
-        <label class="form-label">{% trans "Region" %}</label>
-        <select name="region" class="form-select" required>
+        <label class="form-label" for="region">{% trans "Region" %}</label>
+        <select id="region" name="region" class="form-select" required>
           <option value="">--</option>
           {% for k,v in regions %}
             <option value="{{ k }}">{{ v }}</option>
@@ -75,8 +194,8 @@
       </div>
 
       <div class="col-md-6">
-        <label class="form-label">{% trans "Job type" %}</label>
-        <select name="job_type" class="form-select" required>
+        <label class="form-label" for="job_type">{% trans "Job type" %}</label>
+        <select id="job_type" name="job_type" class="form-select" required>
           <option value="">--</option>
           {% for k,v in job_types %}
             <option value="{{ k }}">{{ v }}</option>
@@ -85,11 +204,12 @@
       </div>
     </div>
 
-    <!-- ✅ PAY: currency + min/max -->
-    <div class="row g-3 mt-3">
+    <!-- ✅ PAY: currency + min/max + pay text grouped into one panel -->
+    <div class="cj-pay-panel mt-3">
+      <div class="row g-3">
       <div class="col-md-4">
-        <label class="form-label">{% trans "Currency" %}</label>
-        <select name="pay_currency" class="form-select">
+        <label class="form-label" for="pay_currency">{% trans "Currency" %}</label>
+        <select name="pay_currency" id="pay_currency" class="form-select">
           {% for k,v in currencies %}
             <option value="{{ k }}">{{ v }}</option>
           {% endfor %}
@@ -97,44 +217,54 @@
       </div>
 
       <div class="col-md-4">
-        <label class="form-label">{% trans "Pay min" %}</label>
-        <input name="pay_min" type="number" step="0.01" class="form-control" placeholder="6000000">
+        <label class="form-label" for="pay_min_display">{% trans "Pay min" %}</label>
+        <input id="pay_min_display" type="text" inputmode="numeric" class="form-control" placeholder="6 000 000" autocomplete="off">
+        <input type="hidden" name="pay_min" id="pay_min_raw">
+        <div class="form-text" id="payMinHint"></div>
       </div>
+
+
+
+
 
       <div class="col-md-4">
-        <label class="form-label">{% trans "Pay max" %}</label>
-        <input name="pay_max" type="number" step="0.01" class="form-control" placeholder="8000000">
+        <label class="form-label" for="pay_max_display">{% trans "Pay max" %}</label>
+        <input id="pay_max_display" type="text" inputmode="numeric" class="form-control" placeholder="8 000 000" autocomplete="off">
+        <input type="hidden" name="pay_max" id="pay_max_raw">
+        <div class="form-text" id="payMaxHint"></div>
       </div>
     </div>
 
-    <!-- optional text -->
-    <div class="mt-2">
-      <label class="form-label">{% trans "Pay text (optional)" %}</label>
-      <input name="pay_text" class="form-control" placeholder="6–8 mln so‘m (optional)">
-      <div class="form-text">{% trans "Optional: for human-friendly text." %}</div>
+      <!-- optional text -->
+      <div class="mt-3">
+        <label class="form-label" for="pay_text">{% trans "Pay text (optional)" %}</label>
+        <input id="pay_text" name="pay_text" class="form-control" placeholder="{% trans '6–8 mln so‘m (optional)' %}">
+        <div class="form-text">{% trans "Optional: for human-friendly text." %}</div>
+      </div>
     </div>
+    <!-- /cj-pay-panel -->
 
     <!-- DESCRIPTION -->
     <div class="mb-3 mt-3">
-      <label class="form-label">{% trans "Description" %}</label>
-      <textarea name="description" class="form-control" rows="4"></textarea>
+      <label class="form-label" for="description">{% trans "Description" %}</label>
+      <textarea id="description" name="description" class="form-control" rows="4"></textarea>
     </div>
 
     <!-- CONTACT + LOCATION -->
     <div class="row g-3">
       <div class="col-md-6">
-        <label class="form-label">{% trans "Contact phone" %}</label>
-        <input name="contact_phone" class="form-control" placeholder="+998901234567">
+        <label class="form-label" for="contact_phone">{% trans "Contact phone" %}</label>
+        <input id="contact_phone" name="contact_phone" class="form-control" placeholder="+998901234567">
       </div>
 
       <div class="col-md-3">
-        <label class="form-label">{% trans "Lat" %}</label>
-        <input id="lat" name="lat" class="form-control" placeholder="41.2995">
+        <label class="form-label" for="lat">{% trans "Lat" %}</label>
+        <input id="lat" name="lat" class="form-control" placeholder="41.2995" readonly>
       </div>
 
       <div class="col-md-3">
-        <label class="form-label">{% trans "Lng" %}</label>
-        <input id="lng" name="lng" class="form-control" placeholder="69.2401">
+        <label class="form-label" for="lng">{% trans "Lng" %}</label>
+        <input id="lng" name="lng" class="form-control" placeholder="69.2401" readonly>
       </div>
     </div>
 
@@ -149,15 +279,17 @@
     <!-- BUTTONS -->
     <div class="d-flex gap-2 mt-3">
       <button class="btn btn-success" type="submit">{% trans "Save" %}</button>
-      <a class="btn btn-outline-secondary" href="{% url 'accounts:employer_home' %}">
+      <a class="cj-back" href="{% url 'accounts:employer_home' %}">
         {% trans "Back" %}
       </a>
     </div>
   </form>
 </div>
+{% endblock %}
 
+{% block extra_js %}
 <script>
-  // ✅ Photo preview helper
+  // ✅ Photo preview helper (unchanged behavior)
   function bindPreview(inputId, imgId) {
     const input = document.getElementById(inputId);
     const img = document.getElementById(imgId);
@@ -193,6 +325,52 @@
   bindPreview("photo3", "preview3");
   bindPreview("photo4", "preview4");
 
+  // ✅ Progressive photo slots: reveal one at a time; Remove only on top-most extra slot
+  (function () {
+    const addBtn = document.getElementById("addPhotoBtn");
+    const slots = [1, 2, 3, 4].map((n) => document.getElementById("photoSlot" + n));
+
+    function visibleMax() {
+      let max = 1;
+      for (let n = 1; n <= 4; n++) {
+        if (!slots[n - 1].hidden) max = n;
+      }
+      return max;
+    }
+
+    function update() {
+      const max = visibleMax();
+      document.querySelectorAll(".remove-photo").forEach((btn) => {
+        const n = Number(btn.dataset.slot);
+        btn.style.display = (n === max && max >= 2) ? "" : "none";
+      });
+      addBtn.style.display = max < 4 ? "" : "none";
+    }
+
+    addBtn.addEventListener("click", () => {
+      const max = visibleMax();
+      if (max < 4) slots[max].hidden = false; // reveal the next slot (max+1)
+      update();
+    });
+
+    document.querySelectorAll(".remove-photo").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const n = Number(btn.dataset.slot);
+        const input = document.getElementById("photo" + n);
+        const img = document.getElementById("preview" + n);
+        if (input) input.value = "";
+        if (img) {
+          img.src = "";
+          img.style.display = "none";
+        }
+        slots[n - 1].hidden = true;
+        update();
+      });
+    });
+
+    update();
+  })();
+
   // ✅ Location button
   const btn = document.getElementById("getLocationBtn");
   const latInput = document.getElementById("lat");
@@ -222,7 +400,84 @@
       { enableHighAccuracy: true, timeout: 10000 }
     );
   });
-</script>
 
-</body>
-</html>
+  // ✅ Grouped pay digits + currency-aware hint (display-only; raw value submitted)
+  {% trans "so'm" as sum_label %}
+  (function () {
+    const SUM = "{{ sum_label|escapejs }}";
+    const cur = document.getElementById("pay_currency");
+    const fields = [
+      { disp: "pay_min_display", raw: "pay_min_raw", hint: "payMinHint" },
+      { disp: "pay_max_display", raw: "pay_max_raw", hint: "payMaxHint" },
+    ];
+
+    function sanitize(s) {
+      s = (s || "").replace(/[^\d.]/g, "");
+      const i = s.indexOf(".");
+      if (i !== -1) {
+        const intPart = s.slice(0, i);
+        const decPart = s.slice(i + 1).replace(/\./g, "").slice(0, 2);
+        s = intPart + "." + decPart;
+      }
+      return s;
+    }
+
+    function group(raw) {
+      if (raw === "" || raw === ".") return raw;
+      let [intPart, decPart] = raw.split(".");
+      intPart = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+      return decPart !== undefined ? intPart + "." + decPart : intPart;
+    }
+
+    function hintText(raw) {
+      if (!raw || isNaN(Number(raw))) return "";
+      const n = Number(raw);
+      if (cur && cur.value === "USD") return "$" + n.toLocaleString("en-US");
+      return n.toLocaleString("en-US").replace(/,/g, " ") + " " + SUM;
+    }
+
+    function refreshHints() {
+      fields.forEach((f) => {
+        const raw = document.getElementById(f.raw).value;
+        document.getElementById(f.hint).textContent = hintText(raw);
+      });
+    }
+
+    fields.forEach((f) => {
+      const disp = document.getElementById(f.disp);
+      const raw = document.getElementById(f.raw);
+      const hintEl = document.getElementById(f.hint);
+
+      disp.addEventListener("input", () => {
+        // significant chars (digit/dot) left of caret, to restore position after regrouping
+        const left = disp.value.slice(0, disp.selectionStart).replace(/[^\d.]/g, "").length;
+        const clean = sanitize(disp.value);
+        raw.value = clean;
+        disp.value = group(clean);
+
+        let seen = 0, idx = 0;
+        while (idx < disp.value.length && seen < left) {
+          if (/[\d.]/.test(disp.value[idx])) seen++;
+          idx++;
+        }
+        disp.setSelectionRange(idx, idx);
+
+        hintEl.textContent = hintText(clean);
+      });
+    });
+
+    if (cur) cur.addEventListener("change", refreshHints);
+
+    // init (handles any pre-filled display values)
+    fields.forEach((f) => {
+      const disp = document.getElementById(f.disp);
+      const raw = document.getElementById(f.raw);
+      if (disp.value) {
+        raw.value = sanitize(disp.value);
+        disp.value = group(raw.value);
+      }
+    });
+    refreshHints();
+  })();
+</script>
+{% endblock %}

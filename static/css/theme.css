@@ -1,6 +1,22 @@
 /* static/css/theme.css */
 :root {
     /* LIGHT MODE (Default) */
+    /* Brand palette (canonical — also used in the React operator dashboard) */
+    --navy: #1A2B4A;
+    --teal: #2A8A8A;
+    --gold: #C9A961;
+    --coral: #D85A30;
+
+    /* InTask UI tokens (indigo accent + soft surfaces) */
+    --it-primary: #4F46E5;        /* indigo-blue, matches the logo/accent */
+    --it-primary-600: #4338CA;
+    --it-navy: #0B1729;           /* brand deep navy, for headings */
+    --it-bg: #F1F5F9;             /* page background — NOT pure white */
+    --it-card: #FFFFFF;
+    --it-border: #E2E8F0;
+    --it-label: #334155;
+    --it-muted: #64748B;
+
     --bg-base: #ffffff;
     --bg-surface: #ffffff;
     --bg-soft: #f8fafc;

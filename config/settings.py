@@ -4,13 +4,40 @@ import os
 
 from dotenv import load_dotenv
 
+from django.core.exceptions import ImproperlyConfigured
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / ".env")
 
-SECRET_KEY = 'django-insecure-5_)z6uk-85byjur@t2%pqaeu+v^)6+22-u3vfqzav4km*8_qgw'
-DEBUG = True
+# Env-driven; defaults to False so production is safe unless DJANGO_DEBUG=1 is set.
+# Computed first so the security config below can branch on it.
+DEBUG = os.getenv("DJANGO_DEBUG", "0") == "1"
 
-ALLOWED_HOSTS = ["*"]
+# SECRET_KEY: required in production. A clearly-labelled dev-only fallback is used
+# under DEBUG; in production an unset key fails fast rather than running insecure.
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
+if not SECRET_KEY:
+    if DEBUG:
+        SECRET_KEY = "django-insecure-dev-only-not-for-production"
+    else:
+        raise ImproperlyConfigured("DJANGO_SECRET_KEY must be set when DEBUG is off.")
+
+# ALLOWED_HOSTS from env (comma-separated). Local dev defaults to loopback only;
+# production must supply DJANGO_ALLOWED_HOSTS (no wildcard).
+ALLOWED_HOSTS = [h.strip() for h in os.getenv("DJANGO_ALLOWED_HOSTS", "").split(",") if h.strip()]
+if not ALLOWED_HOSTS and DEBUG:
+    ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+
+# Secure transport — production only (must not break local DEBUG over HTTP).
+if not DEBUG:
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    # App runs behind nginx, which terminates TLS and sets X-Forwarded-Proto.
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    # SECURE_SSL_REDIRECT intentionally left off: nginx already forces HTTPS, so
+    # redirecting here would risk a loop behind the proxy.
 
 # =====================
 # Internationalization
@@ -123,7 +150,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-LOGIN_URL = "/auth/otp/"
+LOGIN_URL = "/otp/"
 
 # =====================
 # Cache / OTP
@@ -141,6 +168,17 @@ OTP_TTL_SECONDS = 120
 FAKE_OTP_ENABLED = False
 OTP_DEBUG_RETURN_CODE = False
 ESKIZ_REAL_SMS = True
+
+# DEBUG-ONLY fixed test numbers → deterministic OTP code, no SMS. These are
+# obviously-fake reserved numbers (still pass the +998+9-digit validator). The
+# bypass in send_otp() is gated on settings.DEBUG, so this is INERT in production
+# (when DEBUG=False those numbers get the normal real OTP path). Seed the
+# "returning" users with: manage.py seed_test_users
+OTP_TEST_NUMBERS = {
+    "+998900000001": "123456",   # returning worker (complete profile → /worker/)
+    "+998900000002": "123456",   # returning employer (→ /employer/)
+    "+998900000003": "123456",   # fresh — first-time register (intentionally unseeded → /role/)
+}
 
 # Eskiz SMS settings from .env
 ESKIZ_EMAIL = os.getenv("ESKIZ_EMAIL", "")

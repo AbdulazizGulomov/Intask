@@ -2254,3 +2254,37 @@ button {
     grid-template-columns: 1fr;
   }
 }
+
+/* ===== Accessibility: visible keyboard focus ===== */
+/* Default visible focus ring for keyboard users (mouse clicks stay clean). */
+:focus-visible {
+  outline: 2px solid var(--it-primary);
+  outline-offset: 2px;
+}
+/* Re-assert the ring on inputs that clear the default outline above
+   (.srch input and .c-inp-grp fields use `outline: none`). */
+.srch input:focus-visible,
+.c-inp-grp input:focus-visible,
+.c-inp-grp select:focus-visible,
+.c-inp-grp textarea:focus-visible {
+  outline: 2px solid var(--it-primary);
+  outline-offset: 2px;
+}
+
+/* ===== Accessibility: respect reduced-motion (disables AOS reveal + transitions) ===== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* Neutralize AOS so content is shown in its final state with no motion. */
+  [data-aos] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

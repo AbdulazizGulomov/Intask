@@ -1,0 +1,68 @@
+{% extends "base_site.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "E’lonni tahrirlash" %} · InTask{% endblock %}
+
+{% block extra_css %}
+<style>
+  .ed-wrap { max-width: 720px; margin: 0 auto; padding: 28px 16px 56px; overflow-x: hidden; }
+  .ed-card * { max-width: 100%; }
+  .ed-card a { word-break: break-all; }
+  .ed-card input[type="file"] { max-width: 100%; }
+  .ed-h {
+    display: flex; align-items: center; gap: 12px;
+    color: var(--it-navy); font-weight: 800; font-size: 1.6rem; margin: 0 0 20px;
+  }
+  .ed-h::before {
+    content: ""; width: 4px; align-self: stretch; min-height: 1.2em;
+    border-radius: 4px; background: var(--it-primary);
+  }
+  .ed-card {
+    background: var(--it-card); border: 1px solid var(--it-border); border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(15, 23, 42, .06); padding: 26px;
+  }
+  /* each form.as_div field block */
+  .ed-card form > div, .ed-card > div { margin-bottom: 15px; }
+  .ed-card label { display: block; font-weight: 600; color: var(--it-label); font-size: .9rem; margin-bottom: 6px; }
+  .ed-card input, .ed-card select, .ed-card textarea {
+    width: 100%; border: 1px solid #D7DEE8; border-radius: 10px; padding: 11px 14px;
+    font: inherit; color: var(--it-navy); background: #fff;
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .ed-card input[type="checkbox"] { width: auto; }
+  .ed-card input:focus, .ed-card select:focus, .ed-card textarea:focus {
+    border-color: var(--it-primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, .15); outline: none;
+  }
+  .ed-card .helptext { color: var(--it-muted); font-size: .8rem; display: block; margin-top: 4px; }
+  .ed-card ul.errorlist { color: #b91c1c; font-size: .82rem; list-style: none; padding: 0; margin: 4px 0 0; }
+  .ed-actions { display: flex; gap: 10px; margin-top: 22px; }
+  .ed-save {
+    background: var(--it-primary); color: #fff; border: none; font-weight: 700;
+    padding: 12px 24px; border-radius: 10px; cursor: pointer; font: inherit; font-weight: 700;
+  }
+  .ed-save:hover { background: var(--it-primary-600); }
+  .ed-cancel {
+    border: 1px solid var(--it-border); color: var(--it-label); background: #fff;
+    font-weight: 700; padding: 12px 24px; border-radius: 10px; text-decoration: none;
+    display: inline-flex; align-items: center;
+  }
+  .ed-cancel:hover { border-color: var(--it-primary); color: var(--it-primary-600); }
+  .ed-cancel:focus-visible, .ed-save:focus-visible { outline: 2px solid var(--it-primary); outline-offset: 2px; }
+  @media (max-width: 560px) { .ed-actions { flex-direction: column; } .ed-save, .ed-cancel { width: 100%; justify-content: center; text-align: center; } }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="ed-wrap">
+  <h1 class="ed-h">{% trans "E’lonni tahrirlash" %}</h1>
+
+  <form class="ed-card" method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    {{ form.as_div }}
+    <div class="ed-actions">
+      <button type="submit" class="ed-save">{% trans "Saqlash" %}</button>
+      <a class="ed-cancel" href="{% url 'accounts:employer_home' %}">{% trans "Bekor qilish" %}</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 22:50+0500\n"
+"POT-Creation-Date: 2026-06-23 17:38+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -193,6 +193,35 @@ msgstr ""
 msgid "Professions"
 msgstr ""
 
+#: .\apps\jobs\utils.py:28 .\apps\jobs\utils.py:43
+#: .\templates\employer_job_create.html:287
+msgid "so'm"
+msgstr "so'm"
+
+#: .\apps\jobs\views.py:102
+msgid "Title, region, and job type are required."
+msgstr "Sarlavha, hudud va ish turi majburiy."
+
+#: .\apps\jobs\views.py:107
+msgid "Please add at least 1 photo."
+msgstr "Iltimos, kamida 1 ta rasm qo'shing."
+
+#: .\apps\jobs\views.py:111
+msgid "You can upload at most 4 photos."
+msgstr "Ko'pi bilan 4 ta rasm yuklashingiz mumkin."
+
+#: .\apps\jobs\views.py:116
+msgid "Each photo must be under 5 MB."
+msgstr "Har bir rasm 5 MB dan kichik bo'lishi kerak."
+
+#: .\apps\jobs\views.py:123
+msgid "Pay min/max must be numbers."
+msgstr "Eng kam/eng ko'p to'lov raqam bo'lishi kerak."
+
+#: .\apps\jobs\views.py:127
+msgid "Pay min cannot be greater than pay max."
+msgstr "Eng kam to'lov eng ko'p to'lovdan katta bo'lishi mumkin emas."
+
 #: .\apps\orders\admin.py:17 .\apps\orders\models.py:172
 msgid "Status change"
 msgstr ""
@@ -282,21 +311,21 @@ msgstr ""
 msgid "Job application"
 msgstr ""
 
-#: .\apps\orders\models.py:54 .\templates\employer_job_create.html:24
+#: .\apps\orders\models.py:54 .\templates\employer_job_create.html:19
 msgid "Title"
-msgstr ""
+msgstr "Sarlavha"
 
-#: .\apps\orders\models.py:55 .\templates\employer_job_create.html:119
+#: .\apps\orders\models.py:55 .\templates\employer_job_create.html:131
 msgid "Description"
-msgstr ""
+msgstr "Tavsif"
 
 #: .\apps\orders\models.py:63
 msgid "Agreed price"
 msgstr ""
 
-#: .\apps\orders\models.py:68 .\templates\employer_job_create.html:91
+#: .\apps\orders\models.py:68 .\templates\employer_job_create.html:95
 msgid "Currency"
-msgstr ""
+msgstr "Valyuta"
 
 #: .\apps\orders\models.py:75
 msgid "Scheduled at"
@@ -354,12 +383,34 @@ msgstr ""
 msgid "Note"
 msgstr ""
 
-#: .\templates\base.html:129
+#: .\templates\base.html:129 .\templates\base_site.html:134
 msgid "Chiqish"
 msgstr ""
 
 #: .\templates\base.html:137
 msgid "RO‘YXATDAN O‘TISH"
+msgstr ""
+
+#: .\templates\base_site.html:103 .\templates\landing.html:34
+#: .\templates\landing_new.html:92
+msgid "Tekshirilgan ustalar"
+msgstr ""
+
+#: .\templates\base_site.html:136 .\templates\landing.html:89
+msgid "Kirish"
+msgstr ""
+
+#: .\templates\base_site.html:153
+msgid "Bosh sahifa"
+msgstr ""
+
+#: .\templates\base_site.html:154 .\templates\landing.html:65
+#: .\templates\landing.html:588
+msgid "Usta bo'lish"
+msgstr ""
+
+#: .\templates\base_site.html:155 .\templates\landing.html:597
+msgid "Yordam"
 msgstr ""
 
 #: .\templates\employer_home_backup.html:8
@@ -412,10 +463,10 @@ msgstr ""
 #: .\templates\employer_home_backup.html:279
 #: .\templates\employer_home_backup.html:376
 #: .\templates\employer_home_backup.html:408
-#: .\templates\employer_job_create.html:7
-#: .\templates\employer_job_create.html:13
+#: .\templates\employer_job_create.html:4
+#: .\templates\employer_job_create.html:8
 msgid "Create Job"
-msgstr ""
+msgstr "Ish e'lon qilish"
 
 #: .\templates\employer_home_backup.html:82
 msgid "Close"
@@ -595,62 +646,79 @@ msgstr ""
 msgid "Send Offer"
 msgstr ""
 
-#: .\templates\employer_job_create.html:30
+#: .\templates\employer_job_create.html:25
 msgid "Job photos"
-msgstr ""
+msgstr "Ish rasmlari"
 
-#: .\templates\employer_job_create.html:61
+#: .\templates\employer_job_create.html:39
+#: .\templates\employer_job_create.html:46
+#: .\templates\employer_job_create.html:53
+msgid "Remove"
+msgstr "Olib tashlash"
+
+#: .\templates\employer_job_create.html:60
+msgid "Add another photo"
+msgstr "Yana rasm qo'shish"
+
+#: .\templates\employer_job_create.html:65
 msgid ""
-"You can upload up to 4 photos. Each selected photo will preview immediately."
+"Add 1 to 4 photos (max 5 MB each). Each selected photo will preview "
+"immediately."
 msgstr ""
+"1 tadan 4 tagacha rasm qo'shing (har biri eng ko'pi 5 MB). Tanlangan har bir"
+" rasm darhol ko'rsatiladi."
 
-#: .\templates\employer_job_create.html:68
+#: .\templates\employer_job_create.html:72
 msgid "Region"
-msgstr ""
+msgstr "Hudud"
 
-#: .\templates\employer_job_create.html:78
+#: .\templates\employer_job_create.html:82
 msgid "Job type"
-msgstr ""
+msgstr "Ish turi"
 
-#: .\templates\employer_job_create.html:100
+#: .\templates\employer_job_create.html:104
 msgid "Pay min"
-msgstr ""
+msgstr "Eng kam to'lov"
 
-#: .\templates\employer_job_create.html:105
+#: .\templates\employer_job_create.html:115
 msgid "Pay max"
-msgstr ""
+msgstr "Eng ko'p to'lov"
 
-#: .\templates\employer_job_create.html:112
+#: .\templates\employer_job_create.html:124
 msgid "Pay text (optional)"
-msgstr ""
+msgstr "To'lov matni (ixtiyoriy)"
 
-#: .\templates\employer_job_create.html:114
-msgid "Optional: for human-friendly text."
-msgstr ""
+#: .\templates\employer_job_create.html:125
+msgid "6–8 mln so‘m (optional)"
+msgstr "6–8 mln so‘m (ixtiyoriy)"
 
 #: .\templates\employer_job_create.html:126
+msgid "Optional: for human-friendly text."
+msgstr "Ixtiyoriy: qulay matn uchun."
+
+#: .\templates\employer_job_create.html:138
 msgid "Contact phone"
-msgstr ""
+msgstr "Aloqa telefoni"
 
-#: .\templates\employer_job_create.html:131
+#: .\templates\employer_job_create.html:143
 msgid "Lat"
-msgstr ""
+msgstr "Kenglik"
 
-#: .\templates\employer_job_create.html:136
+#: .\templates\employer_job_create.html:148
 msgid "Lng"
-msgstr ""
+msgstr "Uzunlik"
 
-#: .\templates\employer_job_create.html:144
+#: .\templates\employer_job_create.html:156
 msgid "Use my current location"
-msgstr ""
+msgstr "Joriy joylashuvimdan foydalanish"
 
-#: .\templates\employer_job_create.html:151
+#: .\templates\employer_job_create.html:163
 msgid "Save"
-msgstr ""
+msgstr "Saqlash"
 
-#: .\templates\employer_job_create.html:153 .\templates\profile_edit.html:528
+#: .\templates\employer_job_create.html:165 .\templates\profile_edit.html:528
 msgid "Back"
-msgstr ""
+msgstr "Orqaga"
 
 #: .\templates\landing.html:9
 msgid "Uy xizmatlari eshigingizgacha"
@@ -660,10 +728,6 @@ msgstr ""
 msgid ""
 "InTask orqali yaqin atrofdagi tekshirilgan ustalarni tez toping. Elektrik, "
 "santexnik, taʼmir, mebel yigʻish va boshqa xizmatlar."
-msgstr ""
-
-#: .\templates\landing.html:34 .\templates\landing_new.html:92
-msgid "Tekshirilgan ustalar"
 msgstr ""
 
 #: .\templates\landing.html:44 .\templates\landing.html:500
@@ -676,14 +740,6 @@ msgstr ""
 
 #: .\templates\landing.html:57
 msgid "Qidiring: Konditsioner tozalash"
-msgstr ""
-
-#: .\templates\landing.html:65 .\templates\landing.html:588
-msgid "Usta bo'lish"
-msgstr ""
-
-#: .\templates\landing.html:89
-msgid "Kirish"
 msgstr ""
 
 #: .\templates\landing.html:90
@@ -851,8 +907,7 @@ msgstr ""
 
 #: .\templates\landing.html:301
 msgid ""
-"InTask'da buyurtmalar oling, mijozlar bilan ishlang va daromadingizni "
-"oshiring. Ro'yxatdan\n"
+"InTask'da buyurtmalar oling, mijozlar bilan ishlang va daromadingizni oshiring. Ro'yxatdan\n"
 "          o'tish bepul."
 msgstr ""
 
@@ -872,7 +927,7 @@ msgstr ""
 msgid "Hoziroq ariza berish"
 msgstr ""
 
-#: .\templates\landing.html:366
+#: .\templates\landing.html:357 .\templates\landing.html:366
 msgid "Elektrik usta"
 msgstr ""
 
@@ -958,8 +1013,8 @@ msgstr ""
 
 #: .\templates\landing.html:532
 msgid ""
-"O'zbekistondagi №1 tekshirilgan ustalar platformasi. Har qanday uy ishi — 15 "
-"daqiqada."
+"O'zbekistondagi №1 tekshirilgan ustalar platformasi. Har qanday uy ishi — 15"
+" daqiqada."
 msgstr ""
 
 #: .\templates\landing.html:563 .\templates\landing_new.html:36
@@ -1004,10 +1059,6 @@ msgstr ""
 
 #: .\templates\landing.html:592
 msgid "Usta yordami"
-msgstr ""
-
-#: .\templates\landing.html:597
-msgid "Yordam"
 msgstr ""
 
 #: .\templates\landing.html:599
@@ -1234,8 +1285,8 @@ msgstr ""
 
 #: .\templates\landing_new.html:82
 msgid ""
-"Sun’iy intellekt 15 daqiqa ichida sizga eng yaxshi va ishonchli ustani topib "
-"beradi."
+"Sun’iy intellekt 15 daqiqa ichida sizga eng yaxshi va ishonchli ustani topib"
+" beradi."
 msgstr ""
 
 #: .\templates\landing_new.html:86
@@ -1287,7 +1338,7 @@ msgid "Tasdiqlash"
 msgstr ""
 
 #: .\templates\otp.html:112
-msgid "Kodni hech kimga bermang · Kod 5 daqiqa amal qiladi"
+msgid "Kodni hech kimga bermang · Kod 2 daqiqa amal qiladi"
 msgstr ""
 
 #: .\templates\profile_edit.html:7 .\templates\profile_edit.html:523
@@ -1627,3 +1678,15 @@ msgstr ""
 #: .\templates\worker_register.html:620
 msgid "Fayl hajmi 5MB dan oshmasligi kerak"
 msgstr ""
+
+msgid "Hourly"
+msgstr "Soatlik"
+
+msgid "Daily"
+msgstr "Kunlik"
+
+msgid "Ishlar"
+msgstr "Ishlar"
+
+msgid "Profil"
+msgstr "Profil"

@@ -1,120 +1,133 @@
-{% extends "base.html" %}
+{% extends "base_site.html" %}
 {% load i18n %}
 
-{% block content %}
+{% block title %}{% trans "Kirish" %} · InTask{% endblock %}
 
+{# Hide the header "Kirish" action on the login page itself #}
+{% block header_actions %}{% endblock %}
+
+{% block extra_css %}
 <style>
-.otp-wrapper{
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-}
+  .otp-wrap { display: flex; justify-content: center; padding: 48px 16px; }
 
-.otp-card{
-    width:100%;
-    max-width:500px;
-    background:white;
-    border-radius:20px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.08);
-    padding:30px;
-}
+  .otp-card {
+    width: 100%; max-width: 460px;
+    background: var(--it-card);
+    border: 1px solid var(--it-border);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(15, 23, 42, .06);
+    padding: 32px;
+  }
 
-.otp-title{
-    font-size:24px;
-    font-weight:700;
-}
+  .otp-badge {
+    width: 48px; height: 48px; border-radius: 12px;
+    display: grid; place-items: center; font-size: 22px;
+    background: rgba(79, 70, 229, .10); color: var(--it-primary);
+    margin-bottom: 16px;
+  }
 
-.otp-sub{
-    color:#6c757d;
-    font-size:14px;
-}
+  .otp-title { color: var(--it-navy); font-weight: 700; font-size: 1.5rem; margin: 0 0 4px; }
+  .otp-sub { color: var(--it-muted); font-size: .9rem; margin-bottom: 22px; }
 
-.phone-input{
-    height:55px;
-    font-size:18px;
-}
+  .otp-card .form-label { font-weight: 600; color: var(--it-label); font-size: .9rem; margin-bottom: 6px; }
 
-.code-input{
-    height:55px;
-    font-size:18px;
-    letter-spacing:8px;
-    text-align:center;
-}
+  .otp-card .form-control,
+  .otp-card .input-group-text { border: 1px solid #D7DEE8; }
+  .otp-card .input-group-text {
+    background: #F8FAFC; color: var(--it-label); font-weight: 600;
+    border-right: none; border-radius: 10px 0 0 10px;
+  }
+  .otp-card .input-group .form-control { border-left: none; border-radius: 0 10px 10px 0; }
+  .otp-card .form-control {
+    border-radius: 10px; padding: 12px 14px;
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .otp-card .form-control:focus,
+  .otp-card .input-group:focus-within .input-group-text {
+    border-color: var(--it-primary);
+  }
+  .otp-card .form-control:focus {
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, .15); outline: none;
+  }
 
-.btn-otp{
-    height:55px;
-    font-size:18px;
-    border-radius:10px;
-}
+  .phone-input { font-size: 1.05rem; }
+  .code-input { font-size: 1.4rem; letter-spacing: 10px; text-align: center; font-weight: 700; }
 
-#codeBlock{
-    display:none;
-}
+  /* Dominant primary action buttons */
+  .otp-card .btn-otp {
+    width: 100%; border: none; color: #fff; font-weight: 600; font-size: 1rem;
+    padding: 13px; border-radius: 10px;
+    background: linear-gradient(135deg, #4F46E5, #4338CA);
+    box-shadow: 0 4px 14px rgba(79, 70, 229, .35); cursor: pointer;
+    transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease;
+  }
+  .otp-card .btn-otp:hover {
+    background: var(--it-primary-600);
+    box-shadow: 0 6px 20px rgba(79, 70, 229, .45); transform: translateY(-1px);
+  }
+  .otp-card .btn-otp:active { transform: translateY(0); box-shadow: 0 2px 8px rgba(79, 70, 229, .3); }
+
+  .otp-note { color: var(--it-muted); font-size: .8rem; text-align: center; margin-top: 20px; }
+  .otp-card .alert { border-radius: 10px; }
+
+  #codeBlock { display: none; }
 </style>
+{% endblock %}
 
-<div class="otp-wrapper">
-    <div class="otp-card">
+{% block content %}
+<div class="otp-wrap">
+  <div class="otp-card">
 
-        <div class="mb-3 text-muted">
-            🔒 {% trans "Xavfsiz kirish" %}
-        </div>
+    <div class="otp-badge">🔒</div>
 
-        <h4 class="otp-title mb-1">
-            {% trans "Telefon raqamingizni kiriting" %}
-        </h4>
+    <h1 class="otp-title">{% trans "Telefon raqamingizni kiriting" %}</h1>
+    <p class="otp-sub">{% trans "Tasdiqlash kodi SMS orqali yuboriladi" %}</p>
 
-        <p class="otp-sub mb-4">
-            {% trans "Tasdiqlash kodi SMS orqali yuboriladi" %}
-        </p>
+    <div id="msg" class="alert alert-warning d-none"></div>
 
-        <div id="msg" class="alert alert-warning d-none"></div>
-
-        <label class="form-label small">
-            {% trans "Telefon raqami" %}
-        </label>
-
-        <div class="input-group mb-3">
-            <span class="input-group-text">+998</span>
-            <input
-                id="phone"
-                type="tel"
-                class="form-control phone-input"
-                placeholder="90 123 45 67"
-            >
-        </div>
-
-        <button id="sendBtn" class="btn btn-primary btn-otp w-100 mb-3" type="button">
-            {% trans "Kodni yuborish" %}
-        </button>
-
-        <div id="codeBlock">
-            <label class="form-label small">
-                {% trans "Tasdiqlash kodi" %}
-            </label>
-
-            <input
-                id="code"
-                class="form-control code-input mb-3"
-                maxlength="6"
-                placeholder="000000"
-            >
-
-            <button id="verifyBtn" class="btn btn-success btn-otp w-100" type="button">
-                {% trans "Tasdiqlash" %}
-            </button>
-        </div>
-
-        <input type="hidden" id="nextUrl" value="{{ request.GET.next|default:'/' }}">
-
-        <p class="text-center text-muted small mt-4">
-            {% trans "Kodni hech kimga bermang · Kod 5 daqiqa amal qiladi" %}
-        </p>
-
+    <label class="form-label" for="phone">{% trans "Telefon raqami" %}</label>
+    <div class="input-group mb-3">
+      <span class="input-group-text">+998</span>
+      <input
+        id="phone"
+        type="tel"
+        class="form-control phone-input"
+        placeholder="90 123 45 67"
+      >
     </div>
-</div>
 
+    <button id="sendBtn" class="btn-otp" type="button">
+      {% trans "Kodni yuborish" %}
+    </button>
+
+    <div id="codeBlock">
+      <label class="form-label mt-3" for="code">
+        {% trans "Tasdiqlash kodi" %}
+      </label>
+
+      <input
+        id="code"
+        class="form-control code-input mb-3"
+        maxlength="6"
+        placeholder="000000"
+      >
+
+      <button id="verifyBtn" class="btn-otp" type="button">
+        {% trans "Tasdiqlash" %}
+      </button>
+    </div>
+
+    <input type="hidden" id="nextUrl" value="{{ request.GET.next|default:'/' }}">
+
+    <p class="otp-note">
+      {% trans "Kodni hech kimga bermang · Kod 2 daqiqa amal qiladi" %}
+    </p>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
 <script>
 function showMsg(text, type="warning"){
     const el = document.getElementById("msg");
@@ -196,5 +209,4 @@ document.getElementById("verifyBtn").onclick = async () => {
     }
 };
 </script>
-
 {% endblock %}

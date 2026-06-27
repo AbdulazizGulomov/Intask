@@ -22,6 +22,15 @@ class Job(models.Model):
 
     title = models.CharField(max_length=255)
 
+    profession = models.ForeignKey(
+        "jobs.Profession",
+        on_delete=models.SET_NULL,
+        related_name="jobs",
+        null=True,
+        blank=True,
+        verbose_name=_("Profession"),
+    )
+
     region = models.CharField(
         max_length=50,
         help_text=_("Region key, e.g. buxoro, toshkent_city"),

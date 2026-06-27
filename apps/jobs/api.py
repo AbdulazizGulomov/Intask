@@ -5,20 +5,26 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
 from django.shortcuts import get_object_or_404
-from apps.jobs.models import Job, JobApplication
+from apps.jobs.models import Job, JobApplication, Profession
 
 
 class JobListSerializer(serializers.ModelSerializer):
     cover = serializers.SerializerMethodField()
     pay = serializers.SerializerMethodField()
+    profession = serializers.SerializerMethodField()
 
     class Meta:
         model = Job
         fields = [
-            "id", "title", "region", "job_type",
+            "id", "title", "region", "job_type", "profession",
             "pay_currency", "pay_min", "pay_max", "pay_text", "pay",
-            "cover", "created_at",
+            "cover", "lat", "lng", "created_at",
         ]
+
+    def get_profession(self, obj):
+        if obj.profession_id:
+            return {"id": obj.profession_id, "name": obj.profession.name}
+        return None
 
     def get_cover(self, obj):
         request = self.context.get("request")
@@ -41,8 +47,10 @@ class JobDetailSerializer(JobListSerializer):
     photos = serializers.SerializerMethodField()
 
     class Meta(JobListSerializer.Meta):
+        # lat/lng now come from JobListSerializer.Meta.fields (added for the list);
+        # only the detail-only fields are appended here.
         fields = JobListSerializer.Meta.fields + [
-            "description", "contact_phone", "lat", "lng", "photos",
+            "description", "contact_phone", "photos",
         ]
 
     def get_photos(self, obj):
@@ -68,23 +76,30 @@ class JobListAPIView(generics.ListAPIView):
     pagination_class = JobsPagination
 
     def get_queryset(self):
-        qs = Job.objects.filter(is_active=True).order_by("-created_at")
+        qs = (
+            Job.objects.filter(is_active=True)
+            .select_related("profession")
+            .order_by("-created_at")
+        )
         region = self.request.query_params.get("region")
         job_type = self.request.query_params.get("job_type")
         search = self.request.query_params.get("search")
+        profession = self.request.query_params.get("profession")
         if region:
             qs = qs.filter(region=region)
         if job_type:
             qs = qs.filter(job_type=job_type)
         if search:
             qs = qs.filter(title__icontains=search)
+        if profession:
+            qs = qs.filter(profession_id=profession)
         return qs
 
 
 class JobDetailAPIView(generics.RetrieveAPIView):
     serializer_class = JobDetailSerializer
     permission_classes = [AllowAny]
-    queryset = Job.objects.filter(is_active=True)
+    queryset = Job.objects.filter(is_active=True).select_related("profession")
 
 
 class JobApplyAPIView(APIView):
@@ -110,3 +125,16 @@ class JobApplyAPIView(APIView):
             },
             status=status.HTTP_201_CREATED if created else status.HTTP_200_OK,
         )
+
+
+class ProfessionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profession
+        fields = ["id", "name"]
+
+
+class ProfessionListAPIView(generics.ListAPIView):
+    serializer_class = ProfessionSerializer
+    permission_classes = [AllowAny]
+    pagination_class = None
+    queryset = Profession.objects.all().order_by("id")

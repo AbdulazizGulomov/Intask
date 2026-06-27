@@ -6,7 +6,7 @@ from django.http import HttpResponseForbidden
 from django.utils.translation import gettext as _
 
 from apps.accounts.views import require_role, UZ_REGIONS
-from .models import Job
+from .models import Job, Profession
 from .forms import JobForm
 from .utils import format_pay
 
@@ -70,12 +70,19 @@ def employer_job_create(request):
         "regions": UZ_REGIONS,
         "job_types": Job.JobType.choices,
         "currencies": currencies,
+        "professions": Profession.objects.all().order_by("name"),
     }
 
     if request.method == "POST":
         title = (request.POST.get("title") or "").strip()
         region = (request.POST.get("region") or "").strip()
         job_type = (request.POST.get("job_type") or "").strip()
+
+        # Profession is optional; keep only a valid existing id, else leave unset.
+        profession_raw = (request.POST.get("profession") or "").strip()
+        profession_id = None
+        if profession_raw.isdigit() and Profession.objects.filter(id=profession_raw).exists():
+            profession_id = int(profession_raw)
 
         pay_currency = (request.POST.get("pay_currency") or "UZS").strip()
         # Coerce unknown currencies to the safe default (no error).
@@ -142,6 +149,7 @@ def employer_job_create(request):
         Job.objects.create(
             employer=request.user,
             title=title,
+            profession_id=profession_id,
             region=region,
             job_type=job_type,
             pay_currency=pay_currency,

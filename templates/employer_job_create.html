@@ -135,6 +135,17 @@
       <input id="title" name="title" class="form-control" required>
     </div>
 
+    <!-- PROFESSION (Kasb) -->
+    <div class="mb-3">
+      <label class="form-label" for="profession">{% trans "Kasb" %}</label>
+      <select id="profession" name="profession" class="form-select">
+        <option value="">{% trans "Kasbni tanlang" %}</option>
+        {% for p in professions %}
+          <option value="{{ p.id }}">{{ p.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
     <!-- ✅ PHOTOS (progressive reveal: only photo1 shown on load) -->
     <div class="mb-3">
       <label class="form-label">{% trans "Job photos" %}</label>

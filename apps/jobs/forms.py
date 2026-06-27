@@ -10,6 +10,8 @@ class JobForm(forms.ModelForm):
         fields = [
             "title",
 
+            "profession",
+
             # 4 PHOTOS
             "photo1",
             "photo2",

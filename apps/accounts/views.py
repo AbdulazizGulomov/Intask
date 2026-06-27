@@ -17,7 +17,7 @@ from rest_framework.response import Response
 
 from apps.accounts.models import User, WorkerProfile
 from apps.accounts.auth.otp import verify_otp, normalize_phone
-from apps.jobs.models import Job
+from apps.jobs.models import Job, Profession
 from apps.jobs.utils import format_pay
 
 
@@ -101,7 +101,6 @@ def me(request):
             "id": u.id,
             "phone": getattr(u, "phone", None),
             "role": getattr(u, "role", None),
-            "session_role": request.session.get("user_role"),
             "is_staff": u.is_staff,
         }
     )
@@ -152,10 +151,15 @@ def get_display_name(user) -> str:
 def worker_home(request):
     selected_regions = request.GET.getlist("region")
     selected_types = request.GET.getlist("type")
+    selected_professions = request.GET.getlist("profession")
     q = (request.GET.get("q") or "").strip()
 
     region_label_map = dict(UZ_REGIONS)
     regions = [{"value": k, "label": v, "checked": k in selected_regions} for k, v in UZ_REGIONS]
+    professions = [
+        {"value": str(p.id), "label": p.name, "checked": str(p.id) in selected_professions}
+        for p in Profession.objects.all().order_by("name")
+    ]
 
     qs = Job.objects.filter(is_active=True)
 
@@ -163,6 +167,8 @@ def worker_home(request):
         qs = qs.filter(region__in=selected_regions)
     if selected_types:
         qs = qs.filter(job_type__in=selected_types)
+    if selected_professions:
+        qs = qs.filter(profession_id__in=selected_professions)
     if q:
         qs = qs.filter(Q(title__icontains=q) | Q(region__icontains=q))
 
@@ -217,10 +223,12 @@ def worker_home(request):
         {
             "display_name": get_display_name(request.user),
             "regions": regions,
+            "professions": professions,
             "jobs": filtered_jobs,
             "selected_regions": selected_regions,
             "selected_region_labels": selected_region_labels,
             "selected_types": selected_types,
+            "selected_professions": selected_professions,
             "job_type_choices": Job.JobType.choices,  # drive the "Ish turi" filter from the model
             "q": q,
             "jobs_map": mark_safe(json.dumps(jobs_map)),

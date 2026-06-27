@@ -82,11 +82,21 @@ class Job(models.Model):
 
 
 class Profession(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100, unique=True)  # Uzbek default
+    name_ru = models.CharField(max_length=128, blank=True, default="")
+    name_en = models.CharField(max_length=128, blank=True, default="")
 
     class Meta:
         verbose_name = _("Profession")
         verbose_name_plural = _("Professions")
+
+    def display_name(self, lang):
+        """Localized name for the active language, falling back to Uzbek."""
+        return (
+            self.name_ru if (lang == "ru" and self.name_ru)
+            else self.name_en if (lang == "en" and self.name_en)
+            else self.name
+        )
 
     def __str__(self):
         return self.name

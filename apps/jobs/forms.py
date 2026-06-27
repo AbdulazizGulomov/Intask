@@ -1,10 +1,21 @@
 # apps/jobs/forms.py
 
 from django import forms
+from django.utils.translation import get_language
+
 from .models import Job
 
 
 class JobForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Show each profession option in the active language (fallback: Uzbek).
+        if "profession" in self.fields:
+            lang = get_language()
+            self.fields["profession"].label_from_instance = (
+                lambda obj: obj.display_name(lang)
+            )
+
     class Meta:
         model = Job
         fields = [

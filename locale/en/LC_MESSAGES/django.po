@@ -1473,6 +1473,12 @@ msgstr "Job type"
 msgid "Ish turini tanlang"
 msgstr "Select job type"
 
+msgid "Kasb"
+msgstr "Profession"
+
+msgid "Kasbni tanlang"
+msgstr "Choose profession"
+
 #: .\templates\worker_home.html:58
 msgid "Qo‘llash"
 msgstr "Apply"
@@ -1839,3 +1845,6 @@ msgstr "Edit listing"
 
 msgid "Amallar"
 msgstr "Actions"
+
+msgid "Bosh sahifa"
+msgstr "Home"

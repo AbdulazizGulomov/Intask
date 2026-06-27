@@ -10,6 +10,7 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.utils.translation import get_language
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -156,8 +157,9 @@ def worker_home(request):
 
     region_label_map = dict(UZ_REGIONS)
     regions = [{"value": k, "label": v, "checked": k in selected_regions} for k, v in UZ_REGIONS]
+    lang = get_language()
     professions = [
-        {"value": str(p.id), "label": p.name, "checked": str(p.id) in selected_professions}
+        {"value": str(p.id), "label": p.display_name(lang), "checked": str(p.id) in selected_professions}
         for p in Profession.objects.all().order_by("name")
     ]
 

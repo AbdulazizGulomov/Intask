@@ -23,7 +23,13 @@ class JobListSerializer(serializers.ModelSerializer):
 
     def get_profession(self, obj):
         if obj.profession_id:
-            return {"id": obj.profession_id, "name": obj.profession.name}
+            p = obj.profession
+            return {
+                "id": p.id,
+                "name": p.name,          # Uzbek default
+                "name_ru": p.name_ru,
+                "name_en": p.name_en,
+            }
         return None
 
     def get_cover(self, obj):
@@ -130,7 +136,7 @@ class JobApplyAPIView(APIView):
 class ProfessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profession
-        fields = ["id", "name"]
+        fields = ["id", "name", "name_ru", "name_en"]
 
 
 class ProfessionListAPIView(generics.ListAPIView):

@@ -3,7 +3,7 @@ from decimal import Decimal, InvalidOperation
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, get_language
 
 from apps.accounts.views import require_role, UZ_REGIONS
 from .models import Job, Profession
@@ -66,11 +66,15 @@ def employer_job_create(request):
         else [("UZS", "UZS"), ("USD", "USD")]
     )
 
+    lang = get_language()
     base_ctx = {
         "regions": UZ_REGIONS,
         "job_types": Job.JobType.choices,
         "currencies": currencies,
-        "professions": Profession.objects.all().order_by("name"),
+        "professions": [
+            {"id": p.id, "name": p.display_name(lang)}
+            for p in Profession.objects.all().order_by("name")
+        ],
     }
 
     if request.method == "POST":

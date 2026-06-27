@@ -402,7 +402,7 @@ msgstr "Вход"
 
 #: .\templates\base_site.html:153
 msgid "Bosh sahifa"
-msgstr ""
+msgstr "На главную"
 
 #: .\templates\base_site.html:154 .\templates\landing.html:65
 #: .\templates\landing.html:588
@@ -1504,6 +1504,12 @@ msgstr "Тип работы"
 #: .\templates\worker_home.html:39
 msgid "Ish turini tanlang"
 msgstr "Выберите тип работы"
+
+msgid "Kasb"
+msgstr "Профессия"
+
+msgid "Kasbni tanlang"
+msgstr "Выберите профессию"
 
 #: .\templates\worker_home.html:58
 msgid "Qo‘llash"

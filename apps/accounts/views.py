@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.utils.translation import get_language
 
+from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -93,18 +94,115 @@ def choose_role(request, role):
     return redirect(f"{reverse('accounts:otp')}?next={next_url}")
 
 
-@api_view(["GET"])
+def _profession_payload(prof):
+    if not prof:
+        return None
+    return {
+        "id": prof.id,
+        "name": prof.name,
+        "name_ru": prof.name_ru,
+        "name_en": prof.name_en,
+    }
+
+
+def _me_payload(request):
+    """Serialize the user + their WorkerProfile (existing fields only).
+
+    Safe when the user has no WorkerProfile yet — those fields come back as
+    null/empty rather than raising.
+    """
+    u = request.user
+    wp = getattr(u, "worker_profile", None)
+
+    photo_url = None
+    if wp is not None and getattr(wp, "photo", None):
+        try:
+            photo_url = request.build_absolute_uri(wp.photo.url)
+        except Exception:
+            photo_url = None
+
+    return {
+        "id": u.id,
+        "phone": getattr(u, "phone", None),
+        "role": getattr(u, "role", None),
+        "is_staff": u.is_staff,
+        "first_name": getattr(wp, "first_name", "") or "",
+        "last_name": getattr(wp, "last_name", "") or "",
+        "full_name": getattr(wp, "full_name", "") or "",
+        "gender": getattr(wp, "gender", None),
+        "age": getattr(wp, "age", None),
+        "profession": _profession_payload(getattr(wp, "profession", None)),
+        "photo": photo_url,
+    }
+
+
+@api_view(["GET", "PATCH"])
 @permission_classes([IsAuthenticated])
 def me(request):
-    u = request.user
-    return Response(
-        {
-            "id": u.id,
-            "phone": getattr(u, "phone", None),
-            "role": getattr(u, "role", None),
-            "is_staff": u.is_staff,
-        }
-    )
+    if request.method == "PATCH":
+        # Create the profile on first edit if it doesn't exist yet.
+        wp, _ = WorkerProfile.objects.get_or_create(user=request.user)
+        data = request.data
+
+        if "first_name" in data:
+            wp.first_name = (data.get("first_name") or "").strip()
+        if "last_name" in data:
+            wp.last_name = (data.get("last_name") or "").strip()
+
+        if "gender" in data:
+            gender = data.get("gender")
+            if gender in (None, ""):
+                wp.gender = None
+            elif gender in WorkerProfile.Gender.values:
+                wp.gender = gender
+            else:
+                return Response(
+                    {"gender": f"Invalid gender. Allowed: {list(WorkerProfile.Gender.values)}."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+        if "age" in data:
+            age = data.get("age")
+            if age in (None, ""):
+                wp.age = None
+            else:
+                try:
+                    age_int = int(age)
+                    if age_int < 0:
+                        raise ValueError
+                    wp.age = age_int
+                except (TypeError, ValueError):
+                    return Response(
+                        {"age": "Age must be a non-negative integer."},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+
+        if "profession" in data:
+            prof_id = data.get("profession")
+            if prof_id in (None, ""):
+                wp.profession = None
+            else:
+                try:
+                    wp.profession = Profession.objects.get(pk=prof_id)
+                except Profession.DoesNotExist:
+                    return Response(
+                        {"profession": "Invalid profession id."},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+                except (TypeError, ValueError):
+                    return Response(
+                        {"profession": "profession must be a numeric id."},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+
+        # Keep the derived full_name in sync when either name changed.
+        if "first_name" in data or "last_name" in data:
+            wp.full_name = f"{wp.first_name} {wp.last_name}".strip()
+
+        wp.save()
+        return Response(_me_payload(request))
+
+    return Response(_me_payload(request))
 
 
 def require_login_for_apply(request):

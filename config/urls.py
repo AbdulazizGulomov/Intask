@@ -11,11 +11,14 @@ from apps.jobs.api import (
     JobApplyAPIView,
     ProfessionListAPIView,
 )
+from apps.accounts.views import me as me_view
 
 urlpatterns = [
     path("api/dashboard/", include("apps.accounts.dashboard.urls")),  # operator dashboard API
     path("", include("apps.accounts.urls")),  # accounts pages
     path("jobs/", include(("apps.jobs.urls", "jobs"), namespace="jobs")),  # ✅ register jobs namespace
+
+    path("api/me/", me_view, name="api_me"),  # GET + PATCH worker profile
 
     path("api/jobs/", JobListAPIView.as_view(), name="api_job_list"),
     path("api/jobs/<int:pk>/", JobDetailAPIView.as_view(), name="api_job_detail"),

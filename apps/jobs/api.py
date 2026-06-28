@@ -1,9 +1,13 @@
 # apps/jobs/api.py
+from decimal import Decimal, InvalidOperation
+
 from rest_framework import serializers, generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from apps.jobs.models import Job, JobApplication, Profession
 
@@ -148,6 +152,122 @@ class JobApplyAPIView(APIView):
                 "already_applied": not created,
             },
             status=status.HTTP_201_CREATED if created else status.HTTP_200_OK,
+        )
+
+
+class JobCreateAPIView(APIView):
+    """Employer creates a job from the mobile app.
+
+    Mirrors the field semantics of the web `employer_job_create` view, but
+    photos are optional here (the web form requires 1-4). Any authenticated
+    user may post for now — see report note on the role check.
+    """
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+
+    @staticmethod
+    def _to_decimal(v):
+        if v in (None, ""):
+            return None
+        return Decimal(str(v).replace(",", "."))
+
+    @staticmethod
+    def _to_float(v):
+        if v in (None, ""):
+            return None
+        try:
+            return float(str(v).replace(",", "."))
+        except (TypeError, ValueError):
+            return None
+
+    def post(self, request):
+        data = request.data
+
+        title = (str(data.get("title") or "")).strip()
+        region = (str(data.get("region") or "")).strip()
+        job_type = (str(data.get("job_type") or "")).strip()
+
+        # Required fields.
+        errors = {}
+        if not title:
+            errors["title"] = "This field is required."
+        if not region:
+            errors["region"] = "This field is required."
+        if not job_type:
+            errors["job_type"] = "This field is required."
+        if errors:
+            return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+
+        # Profession is optional; keep only a valid existing id, else leave unset
+        # (same lenient behavior as the web view).
+        profession_id = None
+        prof_raw = data.get("profession")
+        if prof_raw not in (None, ""):
+            prof_str = str(prof_raw).strip()
+            if prof_str.isdigit() and Profession.objects.filter(id=prof_str).exists():
+                profession_id = int(prof_str)
+
+        # Currency: default UZS, coerce unknown to the safe default (no error).
+        pay_currency = (str(data.get("pay_currency") or "UZS")).strip()
+        if pay_currency not in {c[0] for c in Job.Currency.choices}:
+            pay_currency = Job.Currency.UZS
+
+        try:
+            pay_min = self._to_decimal(data.get("pay_min"))
+            pay_max = self._to_decimal(data.get("pay_max"))
+        except (InvalidOperation, ValueError):
+            return Response(
+                {"pay": "Pay min/max must be numbers."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        if pay_min is not None and pay_max is not None and pay_min > pay_max:
+            return Response(
+                {"pay": "Pay min cannot be greater than pay max."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        job = Job.objects.create(
+            employer=request.user,
+            title=title,
+            profession_id=profession_id,
+            region=region,
+            job_type=job_type,
+            pay_currency=pay_currency,
+            pay_min=pay_min,
+            pay_max=pay_max,
+            pay_text=(str(data.get("pay_text") or "")).strip(),
+            description=(str(data.get("description") or "")).strip(),
+            contact_phone=(str(data.get("contact_phone") or "")).strip(),
+            lat=self._to_float(data.get("lat")),
+            lng=self._to_float(data.get("lng")),
+            photo1=request.FILES.get("photo1"),
+            is_active=True,
+        )
+
+        serializer = JobDetailSerializer(job, context={"request": request})
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class EmployerJobSerializer(JobListSerializer):
+    """Consumer job shape + employer-only fields (is_active, applicant_count)."""
+    applicant_count = serializers.IntegerField(read_only=True)
+
+    class Meta(JobListSerializer.Meta):
+        fields = JobListSerializer.Meta.fields + ["is_active", "applicant_count"]
+
+
+class MyJobsAPIView(generics.ListAPIView):
+    """Jobs the current user posted, newest first, with applicant counts."""
+    serializer_class = EmployerJobSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = None
+
+    def get_queryset(self):
+        return (
+            Job.objects.filter(employer=self.request.user)
+            .select_related("profession")
+            .annotate(applicant_count=Count("applications"))
+            .order_by("-created_at")
         )
 
 

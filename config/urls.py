@@ -9,6 +9,8 @@ from apps.jobs.api import (
     JobListAPIView,
     JobDetailAPIView,
     JobApplyAPIView,
+    JobCreateAPIView,
+    MyJobsAPIView,
     MyApplicationsAPIView,
     ProfessionListAPIView,
 )
@@ -22,9 +24,11 @@ urlpatterns = [
     path("api/me/", me_view, name="api_me"),  # GET + PATCH worker profile
 
     path("api/jobs/", JobListAPIView.as_view(), name="api_job_list"),
+    path("api/jobs/create/", JobCreateAPIView.as_view(), name="api_job_create"),
     path("api/jobs/<int:pk>/", JobDetailAPIView.as_view(), name="api_job_detail"),
     path("api/jobs/<int:pk>/apply/", JobApplyAPIView.as_view(), name="api_job_apply"),
 
+    path("api/my-jobs/", MyJobsAPIView.as_view(), name="api_my_jobs"),
     path("api/my-applications/", MyApplicationsAPIView.as_view(), name="api_my_applications"),
 
     path("api/professions/", ProfessionListAPIView.as_view(), name="api_professions"),

@@ -240,7 +240,11 @@ class JobCreateAPIView(APIView):
             contact_phone=(str(data.get("contact_phone") or "")).strip(),
             lat=self._to_float(data.get("lat")),
             lng=self._to_float(data.get("lng")),
+            # Up to 4 photos, each optional individually (the app requires >=1).
             photo1=request.FILES.get("photo1"),
+            photo2=request.FILES.get("photo2"),
+            photo3=request.FILES.get("photo3"),
+            photo4=request.FILES.get("photo4"),
             is_active=True,
         )
 

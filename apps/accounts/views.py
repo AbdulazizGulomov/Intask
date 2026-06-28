@@ -122,10 +122,17 @@ def _me_payload(request):
         except Exception:
             photo_url = None
 
+    role = getattr(u, "role", None)
+    # Derived dual-mode capabilities (computed, never stored):
+    #  - can_work: worker/employer roles, or anyone who has a WorkerProfile.
+    #  - can_hire: the can_hire flag, or an employer by default role.
+    can_work = role in ("worker", "employer") or wp is not None
+    can_hire = bool(getattr(u, "can_hire", False)) or role == "employer"
+
     return {
         "id": u.id,
         "phone": getattr(u, "phone", None),
-        "role": getattr(u, "role", None),
+        "role": role,
         "is_staff": u.is_staff,
         "first_name": getattr(wp, "first_name", "") or "",
         "last_name": getattr(wp, "last_name", "") or "",
@@ -134,6 +141,8 @@ def _me_payload(request):
         "age": getattr(wp, "age", None),
         "profession": _profession_payload(getattr(wp, "profession", None)),
         "photo": photo_url,
+        "can_work": can_work,
+        "can_hire": can_hire,
     }
 
 
@@ -209,6 +218,22 @@ def me(request):
         return Response(_me_payload(request))
 
     return Response(_me_payload(request))
+
+
+@api_view(["POST", "PATCH"])
+@permission_classes([IsAuthenticated])
+def become_employer(request):
+    """Enable hiring for the current user (dual-mode "Start hiring" action).
+
+    Idempotent: flips can_hire on and returns the updated capabilities.
+    """
+    u = request.user
+    if not u.can_hire:
+        u.can_hire = True
+        u.save(update_fields=["can_hire"])
+
+    payload = _me_payload(request)
+    return Response({"can_work": payload["can_work"], "can_hire": payload["can_hire"]})
 
 
 def require_login_for_apply(request):

@@ -57,6 +57,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     role = models.CharField(max_length=20, choices=Role.choices, default=Role.WORKER)
 
+    # Capability flag for dual-mode: a user can post jobs (hire) regardless of
+    # their default `role`. `role` stays the landing/default mode.
+    can_hire = models.BooleanField(default=False)
+
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 

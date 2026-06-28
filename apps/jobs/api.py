@@ -136,7 +136,14 @@ class JobApplyAPIView(APIView):
     def post(self, request, pk):
         job = get_object_or_404(Job, pk=pk, is_active=True)
         user = request.user
-        if getattr(user, "role", None) and user.role != "worker":
+        # Capability-based gate (dual-mode): allow anyone who can work — worker/
+        # employer role, or anyone with a WorkerProfile. Only pure non-worker
+        # roles (operator/admin) are blocked.
+        can_work = (
+            getattr(user, "role", None) in ("worker", "employer")
+            or hasattr(user, "worker_profile")
+        )
+        if not can_work:
             return Response(
                 {"detail": "Only workers can apply to jobs."},
                 status=status.HTTP_403_FORBIDDEN,

@@ -14,7 +14,7 @@ from apps.jobs.api import (
     MyApplicationsAPIView,
     ProfessionListAPIView,
 )
-from apps.accounts.views import me as me_view
+from apps.accounts.views import me as me_view, become_employer as become_employer_view
 
 urlpatterns = [
     path("api/dashboard/", include("apps.accounts.dashboard.urls")),  # operator dashboard API
@@ -22,6 +22,7 @@ urlpatterns = [
     path("jobs/", include(("apps.jobs.urls", "jobs"), namespace="jobs")),  # ✅ register jobs namespace
 
     path("api/me/", me_view, name="api_me"),  # GET + PATCH worker profile
+    path("api/me/become-employer/", become_employer_view, name="api_become_employer"),
 
     path("api/jobs/", JobListAPIView.as_view(), name="api_job_list"),
     path("api/jobs/create/", JobCreateAPIView.as_view(), name="api_job_create"),

@@ -13,7 +13,8 @@ from django.db.models import Q
 from django.utils.translation import get_language
 
 from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, parser_classes
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -138,6 +139,7 @@ def _me_payload(request):
 
 @api_view(["GET", "PATCH"])
 @permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser, JSONParser])
 def me(request):
     if request.method == "PATCH":
         # Create the profile on first edit if it doesn't exist yet.
@@ -194,6 +196,10 @@ def me(request):
                         {"profession": "profession must be a numeric id."},
                         status=status.HTTP_400_BAD_REQUEST,
                     )
+
+        # Photo upload (multipart/form-data with a "photo" file field).
+        if "photo" in request.FILES:
+            wp.photo = request.FILES["photo"]
 
         # Keep the derived full_name in sync when either name changed.
         if "first_name" in data or "last_name" in data:

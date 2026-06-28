@@ -9,6 +9,7 @@ from apps.jobs.api import (
     JobListAPIView,
     JobDetailAPIView,
     JobApplyAPIView,
+    MyApplicationsAPIView,
     ProfessionListAPIView,
 )
 from apps.accounts.views import me as me_view
@@ -23,6 +24,8 @@ urlpatterns = [
     path("api/jobs/", JobListAPIView.as_view(), name="api_job_list"),
     path("api/jobs/<int:pk>/", JobDetailAPIView.as_view(), name="api_job_detail"),
     path("api/jobs/<int:pk>/apply/", JobApplyAPIView.as_view(), name="api_job_apply"),
+
+    path("api/my-applications/", MyApplicationsAPIView.as_view(), name="api_my_applications"),
 
     path("api/professions/", ProfessionListAPIView.as_view(), name="api_professions"),
 

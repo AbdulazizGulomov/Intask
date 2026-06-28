@@ -151,6 +151,30 @@ class JobApplyAPIView(APIView):
         )
 
 
+class MyApplicationSerializer(serializers.ModelSerializer):
+    # Reuse the consumer job shape (id, title, region, job_type, pay, profession, ...).
+    job = JobListSerializer(read_only=True)
+    applied_at = serializers.DateTimeField(source="created_at", read_only=True)
+
+    class Meta:
+        model = JobApplication
+        fields = ["id", "status", "applied_at", "job"]
+
+
+class MyApplicationsAPIView(generics.ListAPIView):
+    """Jobs the current user has applied to, newest first."""
+    serializer_class = MyApplicationSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = None
+
+    def get_queryset(self):
+        return (
+            JobApplication.objects.filter(worker=self.request.user)
+            .select_related("job", "job__profession")
+            .order_by("-created_at")
+        )
+
+
 class ProfessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profession

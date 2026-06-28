@@ -21,7 +21,8 @@ class JobListSerializer(serializers.ModelSerializer):
         fields = [
             "id", "title", "region", "job_type", "profession",
             "pay_currency", "pay_min", "pay_max", "pay_text", "pay",
-            "cover", "lat", "lng", "created_at", "contact_visible",
+            "cover", "lat", "lng", "created_at",
+            "contact_phone", "contact_visible",
         ]
 
     def _is_authenticated(self):

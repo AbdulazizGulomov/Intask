@@ -12,14 +12,31 @@ class JobListSerializer(serializers.ModelSerializer):
     cover = serializers.SerializerMethodField()
     pay = serializers.SerializerMethodField()
     profession = serializers.SerializerMethodField()
+    # Privacy gating: contact details are hidden from logged-out users.
+    contact_phone = serializers.SerializerMethodField()
+    contact_visible = serializers.SerializerMethodField()
 
     class Meta:
         model = Job
         fields = [
             "id", "title", "region", "job_type", "profession",
             "pay_currency", "pay_min", "pay_max", "pay_text", "pay",
-            "cover", "lat", "lng", "created_at",
+            "cover", "lat", "lng", "created_at", "contact_visible",
         ]
+
+    def _is_authenticated(self):
+        request = self.context.get("request")
+        return bool(request and request.user and request.user.is_authenticated)
+
+    def get_contact_phone(self, obj):
+        # Only logged-in users see the contact phone.
+        if self._is_authenticated():
+            return obj.contact_phone
+        return None
+
+    def get_contact_visible(self, obj):
+        # Lets the app decide whether to show a "login to see contact" prompt.
+        return self._is_authenticated()
 
     def get_profession(self, obj):
         if obj.profession_id:

@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.utils.translation import gettext as _, get_language
 
-from apps.accounts.views import require_role, UZ_REGIONS
+from apps.accounts.views import require_capability, UZ_REGIONS
 from .models import Job, Profession
 from .forms import JobForm
 from .utils import format_pay
@@ -13,10 +13,11 @@ from .utils import format_pay
 
 @login_required
 def worker_job_detail(request, job_id: int):
+    # Viewing a listing is NOT role-gated: the job list is AllowAny, so anyone
+    # browsing (including a worker currently in employer mode) can open a job.
+    # `role` is only a UI mode flag now, not a capability — the sole check that
+    # belongs here is that the job exists and is active.
     preview = request.GET.get("preview") == "1"
-
-    if request.user.role != "worker" and not preview:
-        return HttpResponseForbidden("Access denied")
 
     job = get_object_or_404(Job, id=job_id, is_active=True)
 
@@ -52,7 +53,7 @@ def job_detail(request, pk: int):
 
 
 @login_required
-@require_role("employer")
+@require_capability("can_hire")
 def employer_job_create(request):
     def to_decimal(v: str):
         if not v:
@@ -177,13 +178,14 @@ def employer_job_create(request):
 
 
 @login_required
-@require_role("employer")
+@require_capability("can_hire")
 def employer_job_edit(request, pk: int):
     """Edit an existing listing. Owner-only; reuses the JobForm (same fields).
 
     Leaving a photo input empty keeps the current photo; lat/lng/photos are not
-    wiped. Mirrors the project's permission pattern (login_required + require_role
-    + HttpResponseForbidden for non-owners).
+    wiped. Permission is two layered checks: can_hire (may manage jobs at all) +
+    the owner check below (may manage THIS job). The owner check is the real
+    security boundary and is intentionally unchanged.
     """
     job = get_object_or_404(Job, pk=pk)
 

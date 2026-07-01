@@ -69,6 +69,63 @@ def require_role(*allowed_roles):
     return decorator
 
 
+def user_can_work(user):
+    """Whether the user may act as a worker (browse / apply to jobs).
+
+    Single source of truth for the `can_work` capability also surfaced by
+    _me_payload: a worker/employer role, or anyone who already has a
+    WorkerProfile. `role` is only a UI mode flag, so a dual-capability user
+    keeps this even while in employer mode.
+    """
+    role = getattr(user, "role", None)
+    return role in ("worker", "employer") or getattr(user, "worker_profile", None) is not None
+
+
+def user_can_hire(user):
+    """Whether the user may post / manage jobs (hire).
+
+    Single source of truth for the `can_hire` capability also surfaced by
+    _me_payload: the stored can_hire flag, or an employer by default role.
+    """
+    role = getattr(user, "role", None)
+    return bool(getattr(user, "can_hire", False)) or role == "employer"
+
+
+_CAPABILITIES = {
+    "can_work": user_can_work,
+    "can_hire": user_can_hire,
+}
+
+
+def require_capability(*capabilities):
+    """Gate a view on dual-mode capabilities (can_work / can_hire) instead of
+    the raw role string.
+
+    Unlike require_role, this does NOT lock a dual-capability user out of the
+    "wrong" UI mode: a worker who switched to employer mode still satisfies
+    can_work, and an employer-capable worker still satisfies can_hire. A user
+    passes if they hold ANY of the requested capabilities. On failure it keeps
+    require_role's response style (403 "Access denied"), so users who genuinely
+    lack the capability see the same behavior as before.
+    """
+    checks = [_CAPABILITIES[c] for c in capabilities]  # KeyError = fail fast at import
+
+    def decorator(view_func):
+        @wraps(view_func)
+        def _wrapped(request, *args, **kwargs):
+            user = request.user
+            if not (user.is_authenticated and any(check(user) for check in checks)):
+                return HttpResponseForbidden("Access denied")
+
+            # Keep session role synced like require_role, to avoid mode loops.
+            role = getattr(user, "role", None) or request.session.get("user_role")
+            if role:
+                request.session["user_role"] = role
+            return view_func(request, *args, **kwargs)
+        return _wrapped
+    return decorator
+
+
 def landing(request):
     return render(request, "landing.html")
 
@@ -123,11 +180,10 @@ def _me_payload(request):
             photo_url = None
 
     role = getattr(u, "role", None)
-    # Derived dual-mode capabilities (computed, never stored):
-    #  - can_work: worker/employer roles, or anyone who has a WorkerProfile.
-    #  - can_hire: the can_hire flag, or an employer by default role.
-    can_work = role in ("worker", "employer") or wp is not None
-    can_hire = bool(getattr(u, "can_hire", False)) or role == "employer"
+    # Derived dual-mode capabilities (computed, never stored). Same derivation
+    # used by the require_capability decorator — see user_can_work/user_can_hire.
+    can_work = user_can_work(u)
+    can_hire = user_can_hire(u)
 
     return {
         "id": u.id,
@@ -277,7 +333,7 @@ def get_display_name(user) -> str:
 
 
 @login_required
-@require_role("worker")
+@require_capability("can_work")
 def worker_home(request):
     selected_regions = request.GET.getlist("region")
     selected_types = request.GET.getlist("type")
@@ -368,7 +424,7 @@ def worker_home(request):
 
 
 @login_required
-@require_role("employer")
+@require_capability("can_hire")
 def employer_home(request):
     jobs = Job.objects.filter(employer=request.user).order_by("-created_at")
     region_label_map = dict(UZ_REGIONS)
@@ -399,7 +455,7 @@ def employer_home(request):
 
 
 @login_required
-@require_role("employer")
+@require_capability("can_hire")
 def workers_base(request):
     selected = set(request.GET.getlist("cat"))
     categories = [

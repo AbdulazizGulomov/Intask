@@ -123,6 +123,8 @@ TEMPLATES = [
                 "django.template.context_processors.i18n",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "apps.accounts.context_processors.nav_user",
+                "apps.accounts.context_processors.support_contact",
             ],
         },
     },
@@ -151,6 +153,19 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LOGIN_URL = "/otp/"
+
+# After a successful OTP login/registration, land the user back on the public
+# home page (/) rather than the role-selection screen. Views honor a safe local
+# ?next= first and fall back to this.
+LOGIN_REDIRECT_URL = "/"
+
+# =====================
+# Site / contact
+# =====================
+# Single source of truth for the public support phone. Exposed to every template
+# by apps.accounts.context_processors.support_contact as `support_phone` (display)
+# and `support_phone_href` (tel: digits), so the number can't drift between pages.
+SUPPORT_PHONE = "+998 71 200 00 00"
 
 # =====================
 # Cache / OTP

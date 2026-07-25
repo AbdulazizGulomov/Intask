@@ -24,11 +24,18 @@
 
     <!-- Top bar -->
     <header class="topbar">
-      <div class="brand">
-        <div class="brand-badge">
-          <img src="{% static 'img/In_task.png' %}" alt="InTask logo">
-        </div>
-        <div class="brand-name">Intask</div>
+      <div class="topbar-left">
+        <a class="brand" href="{% url 'accounts:landing' %}">
+          <div class="brand-badge">
+            <img src="{% static 'img/In_task.png' %}" alt="InTask logo">
+          </div>
+          <div class="brand-name">InTask</div>
+        </a>
+
+        <a class="back-home" href="{% url 'accounts:landing' %}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          <span>{% trans "Bosh sahifa" %}</span>
+        </a>
       </div>
 
       <div class="topbar-right">
@@ -38,7 +45,7 @@
           <form action="{% url 'set_language' %}" method="post" class="d-inline m-0">
             {% csrf_token %}
             <input type="hidden" name="next" value="{{ request.path }}">
-            <button type="submit" name="language" value="uz" class="lang btn btn-link p-0 m-0">UZB</button>
+            <button type="submit" name="language" value="uz" class="lang btn btn-link p-0 m-0">UZ</button>
           </form>
 
           <span class="sep">|</span>
@@ -46,7 +53,7 @@
           <form action="{% url 'set_language' %}" method="post" class="d-inline m-0">
             {% csrf_token %}
             <input type="hidden" name="next" value="{{ request.path }}">
-            <button type="submit" name="language" value="ru" class="lang btn btn-link p-0 m-0">RUS</button>
+            <button type="submit" name="language" value="ru" class="lang btn btn-link p-0 m-0">RU</button>
           </form>
 
           <span class="sep">|</span>
@@ -54,7 +61,7 @@
           <form action="{% url 'set_language' %}" method="post" class="d-inline m-0">
             {% csrf_token %}
             <input type="hidden" name="next" value="{{ request.path }}">
-            <button type="submit" name="language" value="en" class="lang btn btn-link p-0 m-0">ENG</button>
+            <button type="submit" name="language" value="en" class="lang btn btn-link p-0 m-0">EN</button>
           </form>
 
         </div>

@@ -1877,3 +1877,15 @@ msgstr "Редактировать объявление"
 
 msgid "Amallar"
 msgstr "Действия"
+
+msgid "Ishchi"
+msgstr "Работник"
+
+msgid "Boshqaruv paneli"
+msgstr "Панель управления"
+
+msgid "Buyurtmalarim"
+msgstr "Мои заказы"
+
+msgid "Rejimni almashtirish"
+msgstr "Сменить режим"

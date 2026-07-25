@@ -10,6 +10,7 @@ from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from apps.jobs.models import Job, JobApplication, Profession
+from apps.jobs.utils import format_pay, pay_period_warning
 
 
 class JobListSerializer(serializers.ModelSerializer):
@@ -64,11 +65,9 @@ class JobListSerializer(serializers.ModelSerializer):
         return None
 
     def get_pay(self, obj):
-        if obj.pay_min and obj.pay_max:
-            return f"{obj.pay_min:,.0f}–{obj.pay_max:,.0f} {obj.pay_currency}"
-        if obj.pay_min:
-            return f"{obj.pay_min:,.0f} {obj.pay_currency}"
-        return obj.pay_text or ""
+        # Single source of truth — same formatter the web views use, so web and
+        # mobile render an identical string (incl. the pay_text override).
+        return format_pay(obj.pay_min, obj.pay_max, obj.pay_currency, getattr(obj, "pay_text", ""))
 
 
 class JobDetailSerializer(JobListSerializer):
@@ -256,7 +255,14 @@ class JobCreateAPIView(APIView):
         )
 
         serializer = JobDetailSerializer(job, context={"request": request})
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        data = dict(serializer.data)
+        # Non-blocking nudge: the job IS created (201). If the amount looks
+        # implausible for the period, surface a warning the client can show —
+        # never a 400, so legitimate edge cases still go through.
+        warning = pay_period_warning(pay_min, pay_max, job_type, pay_currency)
+        if warning:
+            data["warnings"] = [warning]
+        return Response(data, status=status.HTTP_201_CREATED)
 
 
 class EmployerJobSerializer(JobListSerializer):

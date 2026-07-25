@@ -44,3 +44,51 @@ def format_pay(pay_min, pay_max, currency="UZS", pay_text=""):
 
     single = pay_min if pay_min is not None else pay_max
     return _one(single, currency)  # "" when both are None — no "None so'm"
+
+
+# Plausibility ceilings per period, in so'm. Above these an amount is far more
+# likely a mismatched period (e.g. a monthly salary tagged "Hourly") than a real
+# rate. Tunable; UZS-only because the numbers are so'm-scaled.
+PAY_WARN_CEILING_UZS = {
+    "hourly": Decimal("500000"),
+    "daily": Decimal("5000000"),
+}
+
+
+def pay_period_warning(pay_min, pay_max, job_type, currency="UZS"):
+    """A soft "did you mean a different period?" nudge, or "" when the amount is
+    plausible. NEVER raises and NEVER blocks — callers surface the string as a
+    warning, not an error.
+
+    Only so'm amounts are judged (USD amounts are left alone, since the ceilings
+    are so'm-scaled). The larger of pay_min/pay_max is compared to the ceiling
+    for the selected period.
+    """
+    if (currency or "UZS") != "UZS":
+        return ""
+
+    period = (job_type or "").strip().lower()
+    ceiling = PAY_WARN_CEILING_UZS.get(period)
+    if ceiling is None:  # no ceiling defined for this period (e.g. blank) → no nudge
+        return ""
+
+    amounts = []
+    for a in (pay_min, pay_max):
+        if a is None:
+            continue
+        try:
+            amounts.append(Decimal(str(a)))
+        except (InvalidOperation, TypeError, ValueError):
+            continue
+    if not amounts:
+        return ""
+
+    top = max(amounts)
+    if top <= ceiling:
+        return ""
+
+    period_label = {"hourly": _("hourly"), "daily": _("daily")}.get(period, period)
+    return _(
+        "%(amount)s so'm looks high for an %(period)s rate — did you mean a "
+        "different pay period?"
+    ) % {"amount": _grouped(top, " "), "period": period_label}

@@ -2,6 +2,7 @@
 import json
 from functools import wraps
 
+from django.conf import settings
 from django.utils.safestring import mark_safe
 from django.http import HttpResponseBadRequest, HttpResponseForbidden
 from django.shortcuts import render, redirect
@@ -505,15 +506,20 @@ def otp_verify_web(request):
     login(request, user)
     request.session["user_role"] = user.role
 
+    # Land back on the home page (/) by default, honoring only a safe, same-host
+    # ?next=. Requirement: login never dumps the user on role-select/login.
+    if not url_has_allowed_host_and_scheme(
+        next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()
+    ):
+        next_url = settings.LOGIN_REDIRECT_URL
+
     if user.role == "worker":
         profile, _ = WorkerProfile.objects.get_or_create(user=user)
         if not profile.is_completed:
-            return redirect("accounts:worker_register")
+            # First-time worker: finish the profile, then continue to `next`.
+            return redirect(f"{reverse('accounts:worker_register')}?next={next_url}")
 
-    return redirect(
-        next_url
-        or (reverse("accounts:worker_home") if user.role == "worker" else reverse("accounts:employer_home"))
-    )
+    return redirect(next_url)
 
 
 @login_required
@@ -521,8 +527,16 @@ def otp_verify_web(request):
 def worker_register(request):
     profile, _ = WorkerProfile.objects.get_or_create(user=request.user)
 
+    # After registration, continue to a safe, same-host ?next= (carried through
+    # the form), else the home page (/). Never back to role-select/login.
+    next_url = request.POST.get("next") or request.GET.get("next") or settings.LOGIN_REDIRECT_URL
+    if not url_has_allowed_host_and_scheme(
+        next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()
+    ):
+        next_url = settings.LOGIN_REDIRECT_URL
+
     if profile.is_completed:
-        return redirect("accounts:worker_home")
+        return redirect(next_url)
 
     if request.method == "POST":
         first_name = (request.POST.get("first_name") or "").strip()
@@ -530,13 +544,14 @@ def worker_register(request):
         age_raw = (request.POST.get("age") or "").strip()
         gender = (request.POST.get("gender") or "").strip()
 
+        ctx = {"profile": profile, "next": next_url}
         if not first_name or not last_name or not age_raw or not gender:
-            return render(request, "worker_register.html", {"error": "All fields are required", "profile": profile})
+            return render(request, "worker_register.html", {**ctx, "error": "All fields are required"})
 
         try:
             age = int(age_raw)
         except ValueError:
-            return render(request, "worker_register.html", {"error": "Age must be a number", "profile": profile})
+            return render(request, "worker_register.html", {**ctx, "error": "Age must be a number"})
 
         profile.first_name = first_name
         profile.last_name = last_name
@@ -550,54 +565,41 @@ def worker_register(request):
         profile.is_completed = True
         profile.save()
 
-        return redirect("accounts:worker_home")
+        return redirect(next_url)
 
-    return render(request, "worker_register.html", {"profile": profile})
+    return render(request, "worker_register.html", {"profile": profile, "next": next_url})
 
 
 def after_otp_redirect(request):
+    """Post-login gate hit by the OTP web flow (templates/otp.html → the API
+    verify view returns this URL).
+
+    Requirement: after a successful login/registration the user lands on the
+    public home page (/), which now renders their logged-in header — NOT the
+    role-selection screen or a forced role dashboard. We still honor a safe,
+    same-host ?next= (e.g. a deep link the user was trying to reach) and still
+    make a first-time worker finish their profile before continuing.
+    """
     if not request.user.is_authenticated:
         return redirect("accounts:role_select")
 
-    next_url = request.GET.get("next") or "/"
+    next_url = request.GET.get("next") or settings.LOGIN_REDIRECT_URL
 
-    # Fix 1: only honor local, same-host paths; external targets fall back to "/".
+    # Only honor local, same-host paths; external targets fall back to home.
     if not url_has_allowed_host_and_scheme(
             next_url, allowed_hosts={request.get_host()},
             require_https=request.is_secure()):
-        next_url = "/"
+        next_url = settings.LOGIN_REDIRECT_URL
 
-    # Resolve the account's real role. Change 1 persists a first-time role at
-    # verify, so request.user.role normally already reflects it; fall back to the
-    # session value as a safety net, and to /role/ if we still have nothing.
-    # An authenticated user is NEVER sent to the public landing ("/") from here.
-    role = getattr(request.user, "role", None) or ""
-    if not role:
-        session_role = request.session.get("user_role")
-        if session_role:
-            role = session_role
-        else:
-            return redirect("accounts:role_select")
-
+    # First-time worker: finish the profile first, then continue to `next`.
+    role = getattr(request.user, "role", None) or request.session.get("user_role") or ""
     if role == "worker":
         profile, _ = WorkerProfile.objects.get_or_create(user=request.user)
         if not profile.is_completed:
-            return redirect("accounts:worker_register")
-        # Honor a valid local path the worker may see; otherwise their own
-        # dashboard. Never the landing ("/") and never the employer area.
-        if next_url in ("", "/") or next_url.startswith("/employer/"):
-            return redirect("accounts:worker_home")
-        return redirect(next_url)
+            return redirect(f"{reverse('accounts:worker_register')}?next={next_url}")
 
-    if role == "employer":
-        # Honor a valid local path the employer may see; otherwise their own
-        # dashboard. Never the landing ("/") and never the worker area.
-        if next_url in ("", "/") or next_url.startswith("/worker/"):
-            return redirect("accounts:employer_home")
-        return redirect(next_url)
-
-    # Unknown / unexpected role value → role select (never "/").
-    return redirect("accounts:role_select")
+    # Everyone lands on their intended page, defaulting to the home page (/).
+    return redirect(next_url)
 
 
 def logout_view(request):

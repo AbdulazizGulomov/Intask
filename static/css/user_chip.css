@@ -1,0 +1,75 @@
+/* Shared logged-in user chip — mirrors the worker page header chip
+   (.wh-user / .wh-av / .wh-who / .wh-logout in static/css/worker_home.css).
+   Self-contained so it renders identically on the public landing, which
+   does not load worker_home.css or sit inside the .wh-root token scope. */
+.wh-user { display: flex; align-items: center; gap: 11px; flex: none; }
+.wh-user-link {
+  display: flex; align-items: center; gap: 11px;
+  text-decoration: none; color: inherit;
+}
+.wh-av {
+  width: 38px; height: 38px; border-radius: 50%; background: #EEF2FF; color: #4338CA;
+  font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; overflow: hidden;
+}
+.wh-av-img img { width: 100%; height: 100%; object-fit: cover; }
+.wh-who { line-height: 1.25; }
+.wh-who b { font-size: 13.5px; font-weight: 700; color: #0F172A; display: block; }
+.wh-who span { font-size: 12px; color: #94A3B8; }
+.wh-logout {
+  border: 1px solid #E8EDF3; background: #FFFFFF; color: #64748B;
+  font-family: inherit; font-size: 13px; font-weight: 600; padding: 8px 15px; border-radius: 9px; cursor: pointer;
+  text-decoration: none; white-space: nowrap;
+}
+.wh-logout:hover { border-color: #CBD5E1; color: #0F172A; }
+
+/* The trigger is a <button> now (opens the dropdown) — strip native chrome. */
+button.wh-user-link {
+  border: 0; background: transparent; cursor: pointer; font-family: inherit; padding: 4px 6px;
+  border-radius: 10px;
+}
+button.wh-user-link:hover { background: #F1F5F9; }
+
+/* Active-mode role badge under the name. */
+.wh-role-badge {
+  display: inline-block; margin-top: 2px;
+  font-size: 11px; font-weight: 700; line-height: 1;
+  padding: 3px 8px; border-radius: 999px; letter-spacing: .2px;
+}
+.wh-role-badge.is-worker   { background: #EEF2FF; color: #4338CA; }
+.wh-role-badge.is-employer { background: #ECFDF5; color: #047857; }
+
+/* Caret rotates when the menu is open. */
+.wh-caret { width: 16px; height: 16px; color: #94A3B8; transition: transform .18s ease; flex: none; }
+.wh-user.open .wh-caret { transform: rotate(180deg); }
+
+/* Dropdown -------------------------------------------------------------- */
+.wh-user { position: relative; }
+.wh-menu {
+  position: absolute; top: calc(100% + 8px); right: 0; z-index: 60;
+  min-width: 232px; padding: 6px;
+  background: #FFFFFF; border: 1px solid #E8EDF3; border-radius: 14px;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, .14);
+}
+.wh-menu[hidden] { display: none; }
+.wh-menu-head { padding: 8px 10px 10px; border-bottom: 1px solid #F1F5F9; margin-bottom: 4px; }
+.wh-menu-head b { display: block; font-size: 13.5px; font-weight: 700; color: #0F172A; }
+.wh-menu-head span { font-size: 12px; color: #94A3B8; }
+.wh-menu-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 10px; border-radius: 9px;
+  font-size: 13.5px; font-weight: 600; color: #334155; text-decoration: none; white-space: nowrap;
+}
+.wh-menu-item svg { width: 17px; height: 17px; color: #94A3B8; flex: none; }
+.wh-menu-item:hover { background: #F1F5F9; color: #0F172A; }
+.wh-menu-item:hover svg { color: #4338CA; }
+.wh-menu-sep { height: 1px; background: #F1F5F9; margin: 4px 6px; }
+.wh-menu-logout { color: #DC2626; }
+.wh-menu-logout svg { color: #F87171; }
+.wh-menu-logout:hover { background: #FEF2F2; color: #B91C1C; }
+.wh-menu-logout:hover svg { color: #DC2626; }
+
+/* Keep the chip from overflowing the header on small screens:
+   drop the name/role block, leave avatar + caret (menu still opens). */
+@media (max-width: 640px) {
+  .wh-who { display: none; }
+}

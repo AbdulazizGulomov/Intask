@@ -4,17 +4,35 @@ from django import forms
 from django.utils.translation import get_language
 
 from .models import Job
+from .utils import pay_period_warning
 
 
 class JobForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # Soft, non-blocking notices (e.g. implausible pay/period). Populated in
+        # clean(); the template renders them but they never fail validation.
+        self.warnings = []
         # Show each profession option in the active language (fallback: Uzbek).
         if "profession" in self.fields:
             lang = get_language()
             self.fields["profession"].label_from_instance = (
                 lambda obj: obj.display_name(lang)
             )
+
+    def clean(self):
+        cleaned = super().clean()
+        # Nudge only — appended to self.warnings, never raised as a ValidationError,
+        # so the user can always still save.
+        warning = pay_period_warning(
+            cleaned.get("pay_min"),
+            cleaned.get("pay_max"),
+            cleaned.get("job_type"),
+            cleaned.get("pay_currency"),
+        )
+        if warning:
+            self.warnings.append(warning)
+        return cleaned
 
     class Meta:
         model = Job

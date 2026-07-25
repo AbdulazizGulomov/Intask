@@ -1,0 +1,116 @@
+{% load i18n %}
+{% comment %}
+  Shared logged-in user chip for the public header.
+
+  Renders nothing unless the request user is authenticated (nav_user is None).
+  nav_user is built by apps.accounts.context_processors.nav_user and carries the
+  active-mode role, avatar, and whether the "Switch mode" action applies.
+
+  NOTE ON LINKS: the app currently has one page per mode (worker_home /
+  employer_home). Until dedicated "Orders" and "Profile" pages exist, those
+  dropdown items resolve to the user's role dashboard — swap the hrefs when the
+  real pages land.
+{% endcomment %}
+{% if nav_user %}
+  {% if nav_user.is_worker %}
+    {% url 'accounts:worker_home' as dash_url %}
+    {% url 'accounts:choose_role' 'employer' as switch_url %}
+  {% else %}
+    {% url 'accounts:employer_home' as dash_url %}
+    {% url 'accounts:choose_role' 'worker' as switch_url %}
+  {% endif %}
+
+  <div class="wh-user" data-user-menu>
+    <button type="button" class="wh-user-link" data-user-trigger aria-haspopup="true" aria-expanded="false">
+      {% if nav_user.avatar_url %}
+        <span class="wh-av wh-av-img"><img src="{{ nav_user.avatar_url }}" alt=""></span>
+      {% else %}
+        <span class="wh-av">{{ nav_user.initial }}</span>
+      {% endif %}
+      <span class="wh-who">
+        <b>{{ nav_user.display_name }}</b>
+        <span class="wh-role-badge {% if nav_user.is_worker %}is-worker{% else %}is-employer{% endif %}">
+          {% if nav_user.is_worker %}{% trans "Ishchi" %}{% else %}{% trans "Ish beruvchi" %}{% endif %}
+        </span>
+      </span>
+      <svg class="wh-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </button>
+
+    <div class="wh-menu" data-user-dropdown hidden role="menu">
+      <div class="wh-menu-head">
+        <b>{{ nav_user.display_name }}</b>
+        <span>{{ nav_user.phone }}</span>
+      </div>
+
+      <a class="wh-menu-item" role="menuitem" href="{{ dash_url }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="3" width="7" height="9" rx="1"></rect>
+          <rect x="14" y="3" width="7" height="5" rx="1"></rect>
+          <rect x="14" y="12" width="7" height="9" rx="1"></rect>
+          <rect x="3" y="16" width="7" height="5" rx="1"></rect>
+        </svg>
+        {% trans "Boshqaruv paneli" %}
+      </a>
+
+      <a class="wh-menu-item" role="menuitem" href="{{ dash_url }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"></path>
+          <rect x="9" y="3" width="6" height="4" rx="1"></rect>
+          <path d="M9 12h6M9 16h4"></path>
+        </svg>
+        {% trans "Buyurtmalarim" %}
+      </a>
+
+      <a class="wh-menu-item" role="menuitem" href="{{ dash_url }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="12" cy="8" r="4"></circle>
+          <path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"></path>
+        </svg>
+        {% trans "Profil" %}
+      </a>
+
+      {% if nav_user.can_switch %}
+        <a class="wh-menu-item" role="menuitem" href="{{ switch_url }}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" aria-hidden="true">
+            <path d="M8 3 4 7l4 4"></path>
+            <path d="M4 7h16"></path>
+            <path d="m16 21 4-4-4-4"></path>
+            <path d="M20 17H4"></path>
+          </svg>
+          {% trans "Rejimni almashtirish" %}
+        </a>
+      {% endif %}
+
+      <div class="wh-menu-sep"></div>
+
+      <a class="wh-menu-item wh-menu-logout" role="menuitem" href="{% url 'accounts:logout' %}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+        {% trans "Chiqish" %}
+      </a>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var root = document.currentScript.closest('[data-user-menu]');
+      if (!root || root.dataset.bound) return;
+      root.dataset.bound = '1';
+      var trigger = root.querySelector('[data-user-trigger]');
+      var menu = root.querySelector('[data-user-dropdown]');
+      function close() { menu.hidden = true; trigger.setAttribute('aria-expanded', 'false'); root.classList.remove('open'); }
+      function open() { menu.hidden = false; trigger.setAttribute('aria-expanded', 'true'); root.classList.add('open'); }
+      trigger.addEventListener('click', function (e) { e.stopPropagation(); if (menu.hidden) { open(); } else { close(); } });
+      document.addEventListener('click', function (e) { if (!root.contains(e.target)) close(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+    })();
+  </script>
+{% endif %}

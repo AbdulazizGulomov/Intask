@@ -43,6 +43,7 @@
 
     <form method="post" enctype="multipart/form-data" novalidate class="registration-form">
       {% csrf_token %}
+      <input type="hidden" name="next" value="{{ next }}">
 
       <!-- Premium Photo Upload Section -->
       <div class="photo-upload-section">

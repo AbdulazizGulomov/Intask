@@ -39,10 +39,34 @@ a{ text-decoration:none; color:inherit; }
   padding: 8px 10px 14px;
 }
 
+.topbar-left{
+  display:flex;
+  align-items:center;
+  gap:18px;
+}
+
+/* Quiet secondary "back to home" link — understated, must not rival the role cards */
+.back-home{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  color:#64748B;
+  font-size:13.5px;
+  font-weight:600;
+  text-decoration:none;
+  line-height:1;
+  padding:4px 2px;
+  transition:color .15s ease;
+}
+.back-home svg{ width:15px; height:15px; flex:none; }
+.back-home:hover{ color:#334155; text-decoration:underline; }
+
 .brand{
   display:flex;
   align-items:center;
   gap:12px;
+  text-decoration:none;
+  color:inherit;
 }
 
 /* LOGO BADGE */
@@ -237,4 +261,6 @@ a{ text-decoration:none; color:inherit; }
   }
   .brand-name{ font-size:20px; }
   .brand-badge{ width:38px; height:38px; }
+  .topbar-left{ gap:12px; }
+  .back-home{ font-size:13px; }
 }

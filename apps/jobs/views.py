@@ -1,5 +1,6 @@
 from decimal import Decimal, InvalidOperation
 
+from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
@@ -197,6 +198,10 @@ def employer_job_edit(request, pk: int):
         form = JobForm(request.POST, request.FILES, instance=job)
         if form.is_valid():
             form.save()
+            # Non-blocking: the edit IS saved. Any soft warnings ride along to
+            # the destination as messages so the nudge isn't lost on redirect.
+            for w in form.warnings:
+                messages.warning(request, w)
             return redirect("accounts:employer_home")
     else:
         form = JobForm(instance=job)

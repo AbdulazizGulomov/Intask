@@ -17,6 +17,7 @@
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=1">
   <link rel="stylesheet" href="{% static 'css/landing.css' %}?v=7">
+  <link rel="stylesheet" href="{% static 'css/user_chip.css' %}?v=2">
 </head>
 
 <body>
@@ -86,8 +87,12 @@
         </form>
       </div>
 
-      <a href="{% url 'accounts:otp' %}" class="btn-login">{% trans "Kirish" %}</a>
-      <a href="{% url 'accounts:role_select' %}" class="btn-signup">{% trans "Ro'yxatdan o'tish" %}</a>
+      {% if request.user.is_authenticated %}
+        {% include "partials/_user_chip.html" %}
+      {% else %}
+        <a href="{% url 'accounts:otp' %}" class="btn-login">{% trans "Kirish" %}</a>
+        <a href="{% url 'accounts:role_select' %}" class="btn-signup">{% trans "Ro'yxatdan o'tish" %}</a>
+      {% endif %}
 
     </div>
   </header>
@@ -484,7 +489,7 @@
               <div class="c-icon">📞</div>
               <div class="c-tx">
                 <small>{% trans "Telefon" %}</small>
-                <span>+998 71 200 00 00</span>
+                <span><a href="tel:{{ support_phone_href }}">{{ support_phone }}</a></span>
               </div>
             </div>
             <div class="c-item">
@@ -599,7 +604,7 @@
             <li><a href="#">{% trans "Savol-javob" %}</a></li>
             <li><a href="#">{% trans "Aloqa" %}</a></li>
             <li><a href="#">{% trans "Xavfsizlik" %}</a></li>
-            <li><a href="tel:+998711234567">+998 71 123 45 67</a></li>
+            <li><a href="tel:{{ support_phone_href }}">{{ support_phone }}</a></li>
             <li><a href="mailto:info@intask.uz">info@intask.uz</a></li>
           </ul>
         </div>

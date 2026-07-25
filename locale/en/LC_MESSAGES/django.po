@@ -1848,3 +1848,15 @@ msgstr "Actions"
 
 msgid "Bosh sahifa"
 msgstr "Home"
+
+msgid "Ishchi"
+msgstr "Worker"
+
+msgid "Boshqaruv paneli"
+msgstr "Dashboard"
+
+msgid "Buyurtmalarim"
+msgstr "My orders"
+
+msgid "Rejimni almashtirish"
+msgstr "Switch mode"

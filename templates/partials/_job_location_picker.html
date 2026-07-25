@@ -1,10 +1,14 @@
 {% load i18n static l10n %}
 {% comment %}
-  Reusable employer job-location picker (Yandex Maps 2.1, centre-pin pattern).
+  Reusable employer job-location picker (Yandex Maps 2.1, centre-pin pattern with
+  an explicit confirm step — Yandex Taxi style).
 
   Included by employer_job_create.html and employer_job_edit.html. The including
   view must provide `yandex_maps_api_key`; optionally `loc_lat`, `loc_lng`,
-  `loc_address` to prefill (edit flow centres on the saved point).
+  `loc_address` to prefill (edit opens directly in the CONFIRMED state).
+
+  Commit model: panning only PREVIEWS (muted strip). Nothing is written to the
+  address field or the hidden lat/lng until the user presses "Tasdiqlash".
 
   POST contract: hidden `lat`/`lng` (6 dp) + `address` (text). All three are
   plain named inputs, so they submit whether or not the map/JS is present.
@@ -13,16 +17,34 @@
      data-initial-lat="{{ loc_lat|unlocalize }}"
      data-initial-lng="{{ loc_lng|unlocalize }}">
 
-  <label class="form-label" for="jlpAddress">
+  <span class="form-label d-block">
     {% trans "Ish joyi — manzilni yozing yoki xaritada belgilang" %}
-  </label>
+  </span>
 
-  <!-- Address input: doubles as search (SuggestView) and reverse-geocode readback.
-       Real form field → POSTs as `address`. -->
-  <input id="jlpAddress" name="address" type="text" class="form-control mb-2"
-         value="{{ loc_address|default:'' }}" autocomplete="off"
-         placeholder="{% trans 'Manzilni yozing, masalan: Chilonzor 19' %}"
-         data-jlp-address>
+  <!-- CONFIRMED location block (above the map). Shown only once confirmed and is
+       the single location-status indicator. -->
+  <div class="jlp-confirmed" data-jlp-confirmed hidden>
+    <svg class="jlp-confirmed-pin" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12 2C7.9 2 4.5 5.3 4.5 9.4c0 5.3 6.6 11.9 7 12.3.3.3.7.3 1 0 .4-.4 7-7 7-12.3C19.5 5.3 16.1 2 12 2zm0 10.2a2.8 2.8 0 1 1 0-5.6 2.8 2.8 0 0 1 0 5.6z"/>
+    </svg>
+    <span class="jlp-confirmed-body">
+      <span class="jlp-confirmed-lbl">{% trans "Tasdiqlangan joylashuv" %}</span>
+      <span class="jlp-confirmed-addr" data-jlp-confirmed-addr></span>
+    </span>
+    <svg class="jlp-confirmed-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M20 6 9 17l-5-5"/>
+    </svg>
+    <button type="button" class="jlp-change" data-jlp-change>{% trans "O'zgartirish" %}</button>
+  </div>
+
+  <!-- Search box (address input). Hidden while confirmed. Real form field → POSTs
+       as `address`; only written on confirm. -->
+  <div class="jlp-search" data-jlp-search>
+    <input id="jlpAddress" name="address" type="text" class="form-control mb-2"
+           value="{{ loc_address|default:'' }}" autocomplete="off"
+           placeholder="{% trans 'Manzilni yozing, masalan: Chilonzor 19' %}"
+           data-jlp-address>
+  </div>
 
   <div class="jlp-map-wrap">
     <div id="jlpMap" class="jlp-map" data-jlp-map></div>
@@ -33,6 +55,22 @@
       </svg>
     </div>
     <span class="jlp-pin-shadow" aria-hidden="true"></span>
+  </div>
+
+  <!-- Live PREVIEW strip (beneath the map). Provisional/muted; never committed. -->
+  <div class="jlp-preview" data-jlp-preview hidden>
+    <span class="jlp-preview-lbl">{% trans "Taxminiy manzil" %}:</span>
+    <span class="jlp-preview-addr" data-jlp-preview-addr></span>
+  </div>
+
+  <!-- CONFIRM button (beneath the map). Disabled until a preview address exists. -->
+  <button type="button" class="btn jlp-confirm-btn w-100 mt-2" data-jlp-confirm disabled>
+    {% trans "Tasdiqlash" %}
+  </button>
+
+  <!-- Inline warning shown if the user submits without confirming a location. -->
+  <div class="jlp-warn" data-jlp-warn hidden role="alert">
+    {% trans "Joylashuv tasdiqlanmagan — e'lon xaritadagi joylashuvsiz saqlanadi." %}
   </div>
 
   <div class="jlp-hint">
@@ -46,7 +84,7 @@
     <div id="jlpMsg" class="small text-muted mt-2" data-jlp-msg></div>
   </div>
 
-  <!-- Canonical submitted coordinates (map-fed). Names/format unchanged. -->
+  <!-- Canonical submitted coordinates (map-fed on confirm). Names/format unchanged. -->
   <input type="hidden" id="jlpLat" name="lat" value="{{ loc_lat|unlocalize }}" data-jlp-lat>
   <input type="hidden" id="jlpLng" name="lng" value="{{ loc_lng|unlocalize }}" data-jlp-lng>
 
@@ -89,7 +127,6 @@
     width: 34px; height: 40px; display: block; color: #E11D48;
     filter: drop-shadow(0 2px 2px rgba(0, 0, 0, .28));
   }
-  /* Ground shadow stays at the centre point, fades in while the pin is lifted. */
   .jlp-pin-shadow {
     position: absolute; left: 50%; top: 50%;
     transform: translate(-50%, -50%);
@@ -103,6 +140,44 @@
 
   .jlp-hint { color: var(--it-muted, #64748B); font-size: .8rem; margin-top: 6px; }
 
+  /* Provisional preview — muted, clearly not yet committed. */
+  .jlp-preview {
+    margin-top: 10px; font-size: .88rem; color: #94A3B8;
+    background: #F8FAFC; border: 1px dashed #CBD5E1; border-radius: 10px; padding: 9px 12px;
+  }
+  .jlp-preview-lbl { font-weight: 600; color: #64748B; }
+  .jlp-preview-addr { font-style: italic; }
+
+  /* Confirm button — filled, primary affordance for committing the location. */
+  .jlp-confirm-btn {
+    background: var(--it-primary, #4F46E5); color: #fff; border: none; font-weight: 700;
+  }
+  .jlp-confirm-btn:hover:not(:disabled) { background: var(--it-primary-600, #4338CA); color: #fff; }
+  .jlp-confirm-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+  /* Confirmed-location block — normal text, green check, change link. */
+  .jlp-confirmed {
+    display: flex; align-items: center; gap: 10px;
+    background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 12px;
+    padding: 10px 14px; margin-bottom: 10px;
+  }
+  .jlp-confirmed-pin { width: 20px; height: 20px; color: #E11D48; flex: none; }
+  .jlp-confirmed-body { display: flex; flex-direction: column; line-height: 1.25; min-width: 0; }
+  .jlp-confirmed-lbl { font-size: .72rem; font-weight: 700; color: #047857; text-transform: uppercase; letter-spacing: .3px; }
+  .jlp-confirmed-addr { font-size: .92rem; color: #0F172A; word-break: break-word; }
+  .jlp-confirmed-check { width: 20px; height: 20px; color: #059669; flex: none; margin-left: auto; }
+  .jlp-change {
+    flex: none; background: transparent; border: none; padding: 4px 6px; cursor: pointer;
+    color: #047857; font-weight: 700; font-size: .85rem; font-family: inherit; text-decoration: underline;
+  }
+  .jlp-change:hover { color: #065F46; }
+
+  /* Unconfirmed-submit warning. */
+  .jlp-warn {
+    margin-top: 10px; color: #92400E; background: #FFFBEB; border: 1px solid #FDE68A;
+    border-radius: 10px; padding: 9px 12px; font-size: .85rem;
+  }
+
   .jlp-fallback { margin-top: 12px; }
   .jlp-fallback-note {
     color: #92400E; background: #FFFBEB; border: 1px solid #FDE68A;
@@ -114,7 +189,6 @@
   window.JLP_I18N = {
     noGeo: "{% trans 'Geolokatsiya bu brauzerda qo‘llab-quvvatlanmaydi.' %}",
     locating: "{% trans 'Joylashuv aniqlanmoqda...' %}",
-    located: "{% trans 'Joylashuv qo‘shildi.' %}",
     denied: "{% trans 'Joylashuvga ruxsat berilmadi. Manzilni yozing yoki xaritadan tanlang.' %}",
     notFound: "{% trans 'Manzil topilmadi.' %}",
     searchErr: "{% trans 'Qidiruvda xatolik.' %}"
@@ -124,4 +198,4 @@
      flips a global flag so the coordinate fallback can be revealed. -->
 <script src="https://api-maps.yandex.ru/2.1/?lang=uz_UZ{% if yandex_maps_api_key %}&amp;apikey={{ yandex_maps_api_key|urlencode }}{% endif %}"
         onerror="window.__ymapsFailed = true;"></script>
-<script src="{% static 'js/job_location_picker.js' %}?v=1"></script>
+<script src="{% static 'js/job_location_picker.js' %}?v=2"></script>

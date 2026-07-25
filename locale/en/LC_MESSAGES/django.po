@@ -1860,3 +1860,15 @@ msgstr "My orders"
 
 msgid "Rejimni almashtirish"
 msgstr "Switch mode"
+
+msgid "O'zgartirish"
+msgstr "Change"
+
+msgid "Taxminiy manzil"
+msgstr "Approximate address"
+
+msgid "Tasdiqlangan joylashuv"
+msgstr "Confirmed location"
+
+msgid "Joylashuv tasdiqlanmagan — e'lon xaritadagi joylashuvsiz saqlanadi."
+msgstr "Location not confirmed — the listing will be saved without a map position."

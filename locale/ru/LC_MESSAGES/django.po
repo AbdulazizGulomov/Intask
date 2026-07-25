@@ -1889,3 +1889,15 @@ msgstr "Мои заказы"
 
 msgid "Rejimni almashtirish"
 msgstr "Сменить режим"
+
+msgid "O'zgartirish"
+msgstr "Изменить"
+
+msgid "Taxminiy manzil"
+msgstr "Примерный адрес"
+
+msgid "Tasdiqlangan joylashuv"
+msgstr "Подтверждённое местоположение"
+
+msgid "Joylashuv tasdiqlanmagan — e'lon xaritadagi joylashuvsiz saqlanadi."
+msgstr "Местоположение не подтверждено — объявление будет сохранено без позиции на карте."

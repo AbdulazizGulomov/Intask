@@ -1690,3 +1690,15 @@ msgstr "Ishlar"
 
 msgid "Profil"
 msgstr "Profil"
+
+msgid "O'zgartirish"
+msgstr "O'zgartirish"
+
+msgid "Taxminiy manzil"
+msgstr "Taxminiy manzil"
+
+msgid "Tasdiqlangan joylashuv"
+msgstr "Tasdiqlangan joylashuv"
+
+msgid "Joylashuv tasdiqlanmagan — e'lon xaritadagi joylashuvsiz saqlanadi."
+msgstr "Joylashuv tasdiqlanmagan — e'lon xaritadagi joylashuvsiz saqlanadi."

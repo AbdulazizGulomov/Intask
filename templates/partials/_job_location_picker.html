@@ -1,0 +1,127 @@
+{% load i18n static l10n %}
+{% comment %}
+  Reusable employer job-location picker (Yandex Maps 2.1, centre-pin pattern).
+
+  Included by employer_job_create.html and employer_job_edit.html. The including
+  view must provide `yandex_maps_api_key`; optionally `loc_lat`, `loc_lng`,
+  `loc_address` to prefill (edit flow centres on the saved point).
+
+  POST contract: hidden `lat`/`lng` (6 dp) + `address` (text). All three are
+  plain named inputs, so they submit whether or not the map/JS is present.
+{% endcomment %}
+<div class="jlp" data-job-location
+     data-initial-lat="{{ loc_lat|unlocalize }}"
+     data-initial-lng="{{ loc_lng|unlocalize }}">
+
+  <label class="form-label" for="jlpAddress">
+    {% trans "Ish joyi — manzilni yozing yoki xaritada belgilang" %}
+  </label>
+
+  <!-- Address input: doubles as search (SuggestView) and reverse-geocode readback.
+       Real form field → POSTs as `address`. -->
+  <input id="jlpAddress" name="address" type="text" class="form-control mb-2"
+         value="{{ loc_address|default:'' }}" autocomplete="off"
+         placeholder="{% trans 'Manzilni yozing, masalan: Chilonzor 19' %}"
+         data-jlp-address>
+
+  <div class="jlp-map-wrap">
+    <div id="jlpMap" class="jlp-map" data-jlp-map></div>
+    <!-- Centre pin: plain HTML/CSS, pointer-events:none, tip at exact centre. -->
+    <div class="jlp-pin" data-jlp-pin aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C7.9 2 4.5 5.3 4.5 9.4c0 5.3 6.6 11.9 7 12.3.3.3.7.3 1 0 .4-.4 7-7 7-12.3C19.5 5.3 16.1 2 12 2zm0 10.2a2.8 2.8 0 1 1 0-5.6 2.8 2.8 0 0 1 0 5.6z"/>
+      </svg>
+    </div>
+    <span class="jlp-pin-shadow" aria-hidden="true"></span>
+  </div>
+
+  <div class="jlp-hint">
+    {% trans "Xaritani suring — belgi markazda turadi, uning uchi tanlangan nuqtani ko‘rsatadi." %}
+  </div>
+
+  <div class="mt-2">
+    <button type="button" id="jlpGeoBtn" class="btn btn-outline-primary w-100" data-jlp-geo>
+      📍 {% trans "Joriy joylashuvimdan foydalanish" %}
+    </button>
+    <div id="jlpMsg" class="small text-muted mt-2" data-jlp-msg></div>
+  </div>
+
+  <!-- Canonical submitted coordinates (map-fed). Names/format unchanged. -->
+  <input type="hidden" id="jlpLat" name="lat" value="{{ loc_lat|unlocalize }}" data-jlp-lat>
+  <input type="hidden" id="jlpLng" name="lng" value="{{ loc_lng|unlocalize }}" data-jlp-lng>
+
+  <!-- Fallback: revealed only if the Yandex script fails to load. Visible,
+       editable number inputs (no name) mirrored into #jlpLat / #jlpLng. -->
+  <div class="jlp-fallback" data-jlp-fallback hidden>
+    <div class="jlp-fallback-note">
+      {% trans "Xarita yuklanmadi. Koordinatalarni qo‘lda kiriting." %}
+    </div>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label" for="jlpLatFb">{% trans "Lat" %}</label>
+        <input id="jlpLatFb" type="number" step="any" class="form-control" placeholder="41.2995" data-jlp-lat-fb>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="jlpLngFb">{% trans "Lng" %}</label>
+        <input id="jlpLngFb" type="number" step="any" class="form-control" placeholder="69.2401" data-jlp-lng-fb>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .jlp-map-wrap { position: relative; }
+  .jlp-map {
+    width: 100%; height: 380px;
+    border: 1px solid #D7DEE8; border-radius: 12px; overflow: hidden; background: #EEF2F7;
+  }
+  @media (max-width: 575px) { .jlp-map { height: 260px; } }
+
+  /* Centre pin — tip sits on the exact map centre; never intercepts gestures. */
+  .jlp-pin {
+    position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -100%);
+    pointer-events: none; z-index: 6;
+    transition: transform .15s ease;
+    will-change: transform;
+  }
+  .jlp-pin svg {
+    width: 34px; height: 40px; display: block; color: #E11D48;
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, .28));
+  }
+  /* Ground shadow stays at the centre point, fades in while the pin is lifted. */
+  .jlp-pin-shadow {
+    position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    width: 7px; height: 4px; border-radius: 50%;
+    background: rgba(0, 0, 0, .3);
+    pointer-events: none; z-index: 5; opacity: 0;
+    transition: opacity .15s ease, width .15s ease;
+  }
+  .jlp-map-wrap.jlp-lift .jlp-pin { transform: translate(-50%, -100%) translateY(-8px); }
+  .jlp-map-wrap.jlp-lift .jlp-pin-shadow { opacity: 1; width: 15px; }
+
+  .jlp-hint { color: var(--it-muted, #64748B); font-size: .8rem; margin-top: 6px; }
+
+  .jlp-fallback { margin-top: 12px; }
+  .jlp-fallback-note {
+    color: #92400E; background: #FFFBEB; border: 1px solid #FDE68A;
+    border-radius: 10px; padding: 8px 12px; font-size: .82rem; margin-bottom: 10px;
+  }
+</style>
+
+<script>
+  window.JLP_I18N = {
+    noGeo: "{% trans 'Geolokatsiya bu brauzerda qo‘llab-quvvatlanmaydi.' %}",
+    locating: "{% trans 'Joylashuv aniqlanmoqda...' %}",
+    located: "{% trans 'Joylashuv qo‘shildi.' %}",
+    denied: "{% trans 'Joylashuvga ruxsat berilmadi. Manzilni yozing yoki xaritadan tanlang.' %}",
+    notFound: "{% trans 'Manzil topilmadi.' %}",
+    searchErr: "{% trans 'Qidiruvda xatolik.' %}"
+  };
+</script>
+<!-- Yandex Maps JS API 2.1 (uz_UZ). apikey added only when configured; onerror
+     flips a global flag so the coordinate fallback can be revealed. -->
+<script src="https://api-maps.yandex.ru/2.1/?lang=uz_UZ{% if yandex_maps_api_key %}&amp;apikey={{ yandex_maps_api_key|urlencode }}{% endif %}"
+        onerror="window.__ymapsFailed = true;"></script>
+<script src="{% static 'js/job_location_picker.js' %}?v=1"></script>

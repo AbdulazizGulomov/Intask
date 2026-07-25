@@ -60,6 +60,7 @@ class JobForm(forms.ModelForm):
 
             "lat",
             "lng",
+            "address",
         ]
 
         widgets = {

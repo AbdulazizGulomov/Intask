@@ -69,7 +69,26 @@
 
   <form class="ed-card" method="post" enctype="multipart/form-data" novalidate>
     {% csrf_token %}
-    {{ form.as_div }}
+
+    {# All fields except the location trio — those are rendered by the map picker
+       partial below, whose inputs are named lat/lng/address so they bind here. #}
+    {% for field in form.visible_fields %}
+      {% if field.name != 'lat' and field.name != 'lng' and field.name != 'address' %}
+        <div>
+          {{ field.label_tag }}
+          {{ field }}
+          {% if field.help_text %}<span class="helptext">{{ field.help_text }}</span>{% endif %}
+          {{ field.errors }}
+        </div>
+      {% endif %}
+    {% endfor %}
+    {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+
+    {# Location: map opens on the job's saved lat/lng with the address prefilled. #}
+    <div>
+      {% include "partials/_job_location_picker.html" %}
+    </div>
+
     <div class="ed-actions">
       <button type="submit" class="ed-save">{% trans "Saqlash" %}</button>
       <a class="ed-cancel" href="{% url 'accounts:employer_home' %}">{% trans "Bekor qilish" %}</a>

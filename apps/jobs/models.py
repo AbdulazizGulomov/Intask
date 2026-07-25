@@ -66,6 +66,12 @@ class Job(models.Model):
 
     lat = models.FloatField(null=True, blank=True, help_text=_("Latitude for map pin"))
     lng = models.FloatField(null=True, blank=True, help_text=_("Longitude for map pin"))
+    address = models.CharField(
+        max_length=255,
+        blank=True,
+        default="",
+        help_text=_("Human-readable address from the map picker (reverse-geocoded or typed)"),
+    )
 
     is_active = models.BooleanField(default=True)
 

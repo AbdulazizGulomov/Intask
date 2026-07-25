@@ -199,7 +199,7 @@
 
               <div class="wh-job-meta">
                 <svg viewBox="0 0 24 24"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                {{ job.region_label }}
+                {% if job.address %}{{ job.address }}{% else %}{{ job.region_label }}{% endif %}
               </div>
 
               <div class="wh-job-foot">
@@ -264,7 +264,7 @@
               <span class="wh-pop-badge ${job.type === 'hourly' ? 'wh-pop-badge--hourly' : 'wh-pop-badge--daily'}">${escapeHtml(job.job_type)}</span>
             </div>
           </div>
-          <div class="wh-pop-meta">📍 ${escapeHtml(job.region_label)}</div>
+          <div class="wh-pop-meta">📍 ${escapeHtml(job.address || job.region_label)}</div>
           <div class="wh-pop-foot">
             <span class="wh-pop-pay">${escapeHtml(job.pay)}</span>
             <a class="wh-pop-btn" href="${url}">${escapeHtml(T_DETAIL)} →</a>

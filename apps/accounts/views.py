@@ -380,6 +380,7 @@ def worker_home(request):
                 "pay": _pay_display(j),
                 "lat": j.lat,
                 "lng": j.lng,
+                "address": j.address,
                 "photo_url": _first_photo_url(j),
                 "detail_url": detail_url,  # ✅ for card click
             }
@@ -399,6 +400,7 @@ def worker_home(request):
                     "lat": j["lat"],
                     "lng": j["lng"],
                     "region_label": j["region_label"],
+                    "address": j["address"],
                     "type": j["type"],            # raw key (hourly/daily) for the badge style
                     "job_type": j["type_label"],  # display label for the badge text
                     "detail_url": j["detail_url"],  # ✅ map uses this

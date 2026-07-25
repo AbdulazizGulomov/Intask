@@ -115,6 +115,7 @@ def employer_job_create(request):
         contact_phone = (request.POST.get("contact_phone") or "").strip()
         lat = (request.POST.get("lat") or "").strip()
         lng = (request.POST.get("lng") or "").strip()
+        address = (request.POST.get("address") or "").strip()
 
         # Collect only the photos actually provided, preserving slot order.
         photos = [
@@ -179,6 +180,7 @@ def employer_job_create(request):
             contact_phone=contact_phone,
             lat=to_float(lat),
             lng=to_float(lng),
+            address=address,
             photo1=slots[0],
             photo2=slots[1],
             photo3=slots[2],
@@ -219,4 +221,19 @@ def employer_job_edit(request, pk: int):
     else:
         form = JobForm(instance=job)
 
-    return render(request, "employer_job_edit.html", {"form": form, "job": job})
+    # Map picker: same key as create; prefill so the map opens on the job's saved
+    # point with the stored address, not the Tashkent default.
+    yandex_maps_api_key = getattr(settings, "YANDEX_MAPS_API_KEY", "")
+    if not yandex_maps_api_key:
+        logger.warning(
+            "YANDEX_MAPS_API_KEY is empty; job-edit map loads without an API key."
+        )
+
+    return render(request, "employer_job_edit.html", {
+        "form": form,
+        "job": job,
+        "yandex_maps_api_key": yandex_maps_api_key,
+        "loc_lat": "" if job.lat is None else job.lat,
+        "loc_lng": "" if job.lng is None else job.lng,
+        "loc_address": job.address or "",
+    })

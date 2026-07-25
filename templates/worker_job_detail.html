@@ -105,6 +105,9 @@
       <div class="meta-line mt-3">
         {# ✅ FIX: region_label comes from view, not job.region_label #}
         <div>📍 <strong class="text-dark">{{ region_label }}</strong></div>
+        {% if job.address %}
+          <div class="text-muted" style="font-size:13px;">{{ job.address }}</div>
+        {% endif %}
 
         {# ✅ FIX: pay_display comes from view, not job.pay_display / job.pay #}
         {% if pay_display %}
@@ -149,6 +152,10 @@
 
       <hr class="my-4"/>
       <h5 class="mb-2">{% trans "Lokatsiya" %}</h5>
+
+      {% if job.address %}
+        <div class="text-secondary mb-2">📍 <strong class="text-dark">{{ job.address }}</strong></div>
+      {% endif %}
 
       {% if job.lat and job.lng %}
         <div class="text-secondary mb-2">

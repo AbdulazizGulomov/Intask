@@ -1,10 +1,14 @@
+import logging
 from decimal import Decimal, InvalidOperation
 
+from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.utils.translation import gettext as _, get_language
+
+logger = logging.getLogger(__name__)
 
 from apps.accounts.views import require_capability, UZ_REGIONS
 from .models import Job, Profession
@@ -68,6 +72,14 @@ def employer_job_create(request):
         else [("UZS", "UZS"), ("USD", "USD")]
     )
 
+    # Yandex Maps key for the location picker. Empty is allowed locally — the map
+    # loads without the apikey param — but warn so a missing prod key is visible.
+    yandex_maps_api_key = getattr(settings, "YANDEX_MAPS_API_KEY", "")
+    if not yandex_maps_api_key:
+        logger.warning(
+            "YANDEX_MAPS_API_KEY is empty; job-create map loads without an API key."
+        )
+
     lang = get_language()
     base_ctx = {
         "regions": UZ_REGIONS,
@@ -77,6 +89,7 @@ def employer_job_create(request):
             {"id": p.id, "name": p.display_name(lang)}
             for p in Profession.objects.all().order_by("name")
         ],
+        "yandex_maps_api_key": yandex_maps_api_key,
     }
 
     if request.method == "POST":

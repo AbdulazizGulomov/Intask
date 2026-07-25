@@ -167,6 +167,11 @@ LOGIN_REDIRECT_URL = "/"
 # and `support_phone_href` (tel: digits), so the number can't drift between pages.
 SUPPORT_PHONE = "+998 71 200 00 00"
 
+# Yandex Maps JS API key (env-driven, never hardcoded). Empty is allowed for
+# local dev — the map still loads without the apikey param, and the view logs a
+# warning. Passed to the employer job-create template via the view context.
+YANDEX_MAPS_API_KEY = os.getenv("YANDEX_MAPS_API_KEY", "")
+
 # =====================
 # Cache / OTP
 # =====================

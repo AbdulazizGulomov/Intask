@@ -1,0 +1,23 @@
+{% load i18n %}
+{% get_current_language as CURRENT_LANG %}
+{# Segmented pill language switcher — single source of truth for landing + role. Styles: .lang in theme.css. #}
+<div class="lang">
+  <form action="{% url 'set_language' %}" method="post" style="margin:0">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ request.path }}">
+    <button type="submit" name="language" value="uz"
+      class="{% if CURRENT_LANG == 'uz' %}on{% endif %}">UZ</button>
+  </form>
+  <form action="{% url 'set_language' %}" method="post" style="margin:0">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ request.path }}">
+    <button type="submit" name="language" value="ru"
+      class="{% if CURRENT_LANG == 'ru' %}on{% endif %}">RU</button>
+  </form>
+  <form action="{% url 'set_language' %}" method="post" style="margin:0">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ request.path }}">
+    <button type="submit" name="language" value="en"
+      class="{% if CURRENT_LANG == 'en' %}on{% endif %}">EN</button>
+  </form>
+</div>

@@ -15,9 +15,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=1">
-  <link rel="stylesheet" href="{% static 'css/landing.css' %}?v=7">
+  <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=2">
+  <link rel="stylesheet" href="{% static 'css/landing.css' %}?v=8">
   <link rel="stylesheet" href="{% static 'css/user_chip.css' %}?v=2">
+  {% include "partials/_head_meta.html" %}
 </head>
 
 <body>
@@ -28,7 +29,10 @@
 
       <a href="{% url 'accounts:role_select' %}" class="logo">
         <div class="logo-box">
-          <img src="{% static 'img/In_task.png' %}" alt="InTask" style="width:28px;height:28px;border-radius:6px;">
+          <img class="brand-mark"
+               src="{% static 'img/brand/logo-mark.png' %}"
+               srcset="{% static 'img/brand/favicon-192.png' %} 192w, {% static 'img/brand/logo-mark.png' %} 512w"
+               sizes="40px" alt="InTask">
         </div>
         <div class="logo-tx">
           <span class="logo-wm">InTask</span>
@@ -66,26 +70,7 @@
         <span class="cta-label-full">{% trans "Usta bo'lish" %}</span>
       </a>
 
-      <div class="lang">
-        <form action="{% url 'set_language' %}" method="post" style="margin:0">
-          {% csrf_token %}
-          <input type="hidden" name="next" value="{{ request.path }}">
-          <button type="submit" name="language" value="uz"
-            class="{% if CURRENT_LANGUAGE == 'uz' %}on{% endif %}">UZ</button>
-        </form>
-        <form action="{% url 'set_language' %}" method="post" style="margin:0">
-          {% csrf_token %}
-          <input type="hidden" name="next" value="{{ request.path }}">
-          <button type="submit" name="language" value="ru"
-            class="{% if CURRENT_LANGUAGE == 'ru' %}on{% endif %}">RU</button>
-        </form>
-        <form action="{% url 'set_language' %}" method="post" style="margin:0">
-          {% csrf_token %}
-          <input type="hidden" name="next" value="{{ request.path }}">
-          <button type="submit" name="language" value="en"
-            class="{% if CURRENT_LANGUAGE == 'en' %}on{% endif %}">EN</button>
-        </form>
-      </div>
+      {% include "partials/lang_switcher.html" %}
 
       {% if request.user.is_authenticated %}
         {% include "partials/_user_chip.html" %}
@@ -530,7 +515,10 @@
         <div class="ftr-brand">
           <a href="{% url 'accounts:role_select' %}" class="ftr-brand-logo">
             <div class="logo-box">
-              <img src="{% static 'img/In_task.png' %}" alt="InTask" style="width:28px;height:28px;border-radius:6px;">
+              <img class="brand-mark"
+                   src="{% static 'img/brand/logo-mark.png' %}"
+                   srcset="{% static 'img/brand/favicon-192.png' %} 192w, {% static 'img/brand/logo-mark.png' %} 512w"
+                   sizes="32px" alt="InTask">
             </div>
             <span class="logo-wm">InTask</span>
           </a>

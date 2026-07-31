@@ -187,12 +187,20 @@ YANDEX_MAPS_API_KEY = os.getenv("YANDEX_MAPS_API_KEY", "")
 # =====================
 # Cache / OTP
 # =====================
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-        "LOCATION": "taskin-otp-cache",
+if os.environ.get("DB_NAME"):
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+            "LOCATION": "django_cache",
+        }
     }
-}
+else:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+            "LOCATION": "taskin-otp-cache",
+        }
+    }
 
 OTP_TTL_SECONDS = 120
 

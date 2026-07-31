@@ -1,0 +1,27 @@
+{% load static i18n %}
+{% comment %}
+InTask brand: favicons, PWA manifest, social cards.
+Shared across every <head>. Asset paths resolve via the static tag and live
+under static/img/brand/ (all-lowercase — case-safe on Ubuntu).
+{% endcomment %}
+<link rel="icon" href="{% static 'img/brand/favicon.ico' %}" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/brand/favicon-32.png' %}">
+<link rel="icon" type="image/png" sizes="192x192" href="{% static 'img/brand/favicon-192.png' %}">
+<link rel="icon" type="image/png" sizes="512x512" href="{% static 'img/brand/favicon-512.png' %}">
+<link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/brand/apple-touch-icon.png' %}">
+<link rel="manifest" href="{% static 'site.webmanifest' %}">
+<meta name="theme-color" content="#174F95">
+
+{# Open Graph #}
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="InTask">
+<meta property="og:title" content="InTask">
+<meta property="og:description" content="{% trans 'Tekshirilgan ustalar' %}">
+<meta property="og:image" content="{% static 'img/brand/og-image.png' %}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+{# Twitter #}
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="InTask">
+<meta name="twitter:image" content="{% static 'img/brand/og-image.png' %}">

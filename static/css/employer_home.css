@@ -22,8 +22,9 @@ svg{flex:none}
 /* ---------- Sidebar ---------- */
 .side{width:252px;background:var(--white);border-right:1px solid var(--line);padding:20px 16px;display:flex;flex-direction:column;gap:6px;flex:none}
 .logo{display:flex;align-items:center;gap:10px;padding:6px 8px 18px}
-.logo .mark{width:38px;height:38px;border-radius:10px;overflow:hidden;background:linear-gradient(150deg,#312E81,var(--primary));display:flex;align-items:center;justify-content:center}
-.logo .mark img{width:26px;height:26px;border-radius:6px;object-fit:cover}
+.logo .mark{width:40px;height:40px;display:flex;align-items:center;justify-content:center}
+/* Brand mark: full-colour ribbon on transparent, shown directly (no box). */
+.logo .mark img,.brand-mark{width:40px;height:40px;object-fit:contain;display:block}
 .logo .name{font-size:19px;font-weight:800;color:var(--navy);letter-spacing:-.3px}
 .nav{display:flex;flex-direction:column;gap:3px}
 .nav a{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:var(--r-sm);font-size:14.5px;font-weight:600;color:var(--muted);transition:.14s}
@@ -157,8 +158,8 @@ svg{flex:none}
 footer{background:var(--navy);color:#CBD5E1}
 .ft{max-width:1280px;margin:0 auto;padding:42px 26px 0;display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:36px}
 .ft-brand .l{display:flex;align-items:center;gap:10px;margin-bottom:13px}
-.ft-brand .mark{width:34px;height:34px;border-radius:10px;overflow:hidden;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center}
-.ft-brand .mark img{width:24px;height:24px;border-radius:6px;object-fit:cover}
+.ft-brand .mark{width:32px;height:32px;background:none;display:flex;align-items:center;justify-content:center}
+.ft-brand .mark img{width:32px;height:32px;object-fit:contain;display:block}
 .ft-brand .name{font-size:17px;font-weight:800;color:#fff}
 .ft-brand p{font-size:13px;line-height:1.65;color:#94A3B8;max-width:270px;margin:0 0 15px}
 .ft-soc{display:flex;gap:9px}
@@ -179,6 +180,7 @@ footer{background:var(--navy);color:#CBD5E1}
   .shell{flex-direction:column}
   .side{width:auto;flex-direction:row;align-items:center;gap:10px;padding:10px 14px;border-right:none;border-bottom:1px solid var(--line);overflow-x:auto}
   .logo{padding:0;flex:none}
+  .logo .mark,.logo .mark img{width:32px;height:32px}
   .nav{flex-direction:row;gap:4px;flex:1}
   .nav a{white-space:nowrap;padding:9px 11px}
   .side .cta{margin-top:0;flex:none;padding:10px 14px;white-space:nowrap}

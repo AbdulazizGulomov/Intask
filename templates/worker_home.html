@@ -12,14 +12,17 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{% static 'css/worker_home.css' %}?v=7">
+<link rel="stylesheet" href="{% static 'css/worker_home.css' %}?v=8">
 
 <div class="wh-root">
 
   <!-- ============ HEADER (real logo, real language switcher, real user) ============ -->
   <header class="wh-hdr">
     <a class="wh-brand" href="{% url 'accounts:landing' %}">
-      <span class="wh-mark"><img src="{% static 'img/In_task.png' %}" alt="InTask"></span>
+      <span class="wh-mark"><img class="brand-mark"
+            src="{% static 'img/brand/logo-mark.png' %}"
+            srcset="{% static 'img/brand/favicon-192.png' %} 192w, {% static 'img/brand/logo-mark.png' %} 512w"
+            sizes="40px" alt="InTask"></span>
       <span class="wh-name">InTask</span>
     </a>
 
@@ -451,7 +454,10 @@
     <div class="wh-ft">
       <div class="wh-ft-brand">
         <div class="wh-ft-l">
-          <span class="wh-mark"><img src="{% static 'img/In_task.png' %}" alt="InTask"></span>
+          <span class="wh-mark"><img class="brand-mark"
+                src="{% static 'img/brand/logo-mark.png' %}"
+                srcset="{% static 'img/brand/favicon-192.png' %} 192w, {% static 'img/brand/logo-mark.png' %} 512w"
+                sizes="32px" alt="InTask"></span>
           <span class="wh-name">InTask</span>
         </div>
         <p>{% trans "Tekshirilgan ustalar va ishlar bir joyda. Toshkent va butun O‘zbekiston bo‘ylab ish toping yoki ishchi yollang." %}</p>

@@ -41,11 +41,10 @@
       display: flex; align-items: center; gap: 16px;
     }
     .site-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .site-logo-box {
-      width: 36px; height: 36px; border-radius: 9px;
-      background: var(--navy); display: grid; place-items: center; overflow: hidden;
-    }
-    .site-logo-box img { width: 28px; height: 28px; border-radius: 6px; }
+    .site-logo-box { display: grid; place-items: center; }
+    /* Brand mark: full-colour ribbon on transparent, shown directly (no box). */
+    .brand-mark { width: 40px; height: 40px; display: block; }
+    .site-ftr-brand .brand-mark { width: 32px; height: 32px; }
     .site-logo-wm { font-weight: 800; font-size: 1.15rem; color: var(--navy); line-height: 1; }
     .site-logo-sub { display: block; font-size: .7rem; color: var(--teal); font-weight: 600; }
     .site-hdr-spacer { flex: 1; }
@@ -108,11 +107,14 @@
 
     @media (max-width: 640px) {
       .site-logo-sub { display: none; }
+      .brand-mark { width: 32px; height: 32px; }
       .site-hdr-in { gap: 10px; padding: 10px 14px; }
       .site-ftr-in { flex-direction: column; text-align: center; justify-content: center; }
       .site-ftr-links { justify-content: center; }
     }
   </style>
+
+  {% include "partials/_head_meta.html" %}
 
   {% block extra_css %}{% endblock %}
 </head>
@@ -122,7 +124,10 @@
     <div class="site-hdr-in">
       <a href="{% url 'accounts:role_select' %}" class="site-logo">
         <span class="site-logo-box">
-          <img src="{% static 'img/In_task.png' %}" alt="InTask">
+          <img class="brand-mark"
+               src="{% static 'img/brand/logo-mark.png' %}"
+               srcset="{% static 'img/brand/favicon-192.png' %} 192w, {% static 'img/brand/logo-mark.png' %} 512w"
+               sizes="40px" alt="InTask">
         </span>
         <span class="site-logo-tx">
           <span class="site-logo-wm">InTask</span>
@@ -164,7 +169,10 @@
   <footer class="site-ftr">
     <div class="site-ftr-in">
       <a href="{% url 'accounts:role_select' %}" class="site-ftr-brand">
-        <span class="site-logo-box"><img src="{% static 'img/In_task.png' %}" alt="InTask"></span>
+        <span class="site-logo-box"><img class="brand-mark"
+              src="{% static 'img/brand/logo-mark.png' %}"
+              srcset="{% static 'img/brand/favicon-192.png' %} 192w, {% static 'img/brand/logo-mark.png' %} 512w"
+              sizes="32px" alt="InTask"></span>
         InTask
       </a>
       <nav class="site-ftr-links">

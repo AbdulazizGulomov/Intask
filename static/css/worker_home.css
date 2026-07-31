@@ -41,11 +41,11 @@ body { background: var(--it-bg, #F6F8FB) !important; }
 }
 .wh-brand { display: flex; align-items: center; gap: 10px; }
 .wh-mark {
-  width: 38px; height: 38px; border-radius: 10px; overflow: hidden;
-  background: linear-gradient(150deg, #312E81, var(--wh-primary));
+  width: 40px; height: 40px;
   display: flex; align-items: center; justify-content: center;
 }
-.wh-mark img { width: 26px; height: 26px; border-radius: 6px; object-fit: cover; }
+/* Brand mark: full-colour ribbon on transparent, shown directly (no box). */
+.wh-mark img, .brand-mark { width: 40px; height: 40px; object-fit: contain; display: block; }
 .wh-name { font-size: 19px; font-weight: 800; color: var(--wh-navy); letter-spacing: -.3px; }
 
 /* Minimal worker nav (links to existing worker pages) */
@@ -279,7 +279,8 @@ body.wh-noscroll { overflow: hidden; }
 .wh-ft-bar { background: var(--wh-navy); color: #CBD5E1; margin-top: 10px; }
 .wh-ft { max-width: 1240px; margin: 0 auto; padding: 48px 28px 0; display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 40px; }
 .wh-ft-brand .wh-ft-l { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-.wh-ft-brand .wh-mark { background: rgba(255,255,255,.12); }
+.wh-ft-brand .wh-mark { background: none; width: 32px; height: 32px; }
+.wh-ft-brand .wh-mark img { width: 32px; height: 32px; }
 .wh-ft-brand .wh-name { color: #fff; }
 .wh-ft-brand p { font-size: 13.5px; line-height: 1.65; color: #94A3B8; max-width: 280px; margin: 0 0 16px; }
 .wh-ft-soc { display: flex; gap: 10px; }
@@ -310,6 +311,7 @@ body.wh-noscroll { overflow: hidden; }
   .wh-hdr { padding: 8px 14px; gap: 10px; }
   .wh-who { display: none; }
   .wh-hdr .wh-name { display: none; }          /* keep the logo mark, drop the wordmark to fit */
+  .wh-mark, .wh-mark img { width: 32px; height: 32px; }
   .wh-lang button { padding: 5px 9px; }
   .wh-wrap { padding: 18px 16px 30px; }
   .wh-map { height: 280px; }

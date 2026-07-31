@@ -11,7 +11,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'css/employer_home.css' %}?v=4">
+  <link rel="stylesheet" href="{% static 'css/employer_home.css' %}?v=5">
+  {% include "partials/_head_meta.html" %}
 </head>
 
 <body>
@@ -20,7 +21,10 @@
   <!-- ============ SIDEBAR (rebranded; layout kept) ============ -->
   <aside class="side">
     <a class="logo" href="{% url 'accounts:landing' %}">
-      <span class="mark"><img src="{% static 'img/In_task.png' %}" alt="InTask"></span>
+      <span class="mark"><img class="brand-mark"
+            src="{% static 'img/brand/logo-mark.png' %}"
+            srcset="{% static 'img/brand/favicon-192.png' %} 192w, {% static 'img/brand/logo-mark.png' %} 512w"
+            sizes="40px" alt="InTask"></span>
       <span class="name">InTask</span>
     </a>
 
@@ -264,7 +268,10 @@
       <div class="ft">
         <div class="ft-brand">
           <div class="l">
-            <span class="mark"><img src="{% static 'img/In_task.png' %}" alt="InTask"></span>
+            <span class="mark"><img class="brand-mark"
+                  src="{% static 'img/brand/logo-mark.png' %}"
+                  srcset="{% static 'img/brand/favicon-192.png' %} 192w, {% static 'img/brand/logo-mark.png' %} 512w"
+                  sizes="32px" alt="InTask"></span>
             <span class="name">InTask</span>
           </div>
           <p>{% trans "Ishchi yollang yoki ish toping — tez, ishonchli, butun O‘zbekiston bo‘ylab." %}</p>

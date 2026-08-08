@@ -188,11 +188,27 @@ def verify_otp(phone: str, code: str) -> tuple[bool, str]:
 
     # Google Play reviewer phone: constant-time check against the fixed code
     # from the environment. Only this branch for this one phone — the normal
-    # HMAC/cache path below is untouched for every other number.
+    # HMAC/cache path below is untouched for every other number. The reviewer
+    # shares the SAME 5-attempt lockout counter mechanics, so the fixed code
+    # cannot be brute-forced any faster than a real one; there is no cached
+    # code to clear here, and the counter expires on its own (~OTP_TTL), so
+    # a locked-out reviewer just waits it out.
     review_phone, review_code = _play_review_config()
     if review_phone and phone == review_phone:
+        attempts_key = otp_attempts_key(phone)
+
+        if (cache.get(attempts_key) or 0) >= MAX_OTP_ATTEMPTS:
+            return (False, "Too many attempts, request a new code.")
+
         if hmac.compare_digest(code.encode(), review_code.encode()):
+            cache.delete(attempts_key)
             return (True, "")
+
+        ttl = getattr(settings, "OTP_TTL_SECONDS", 120)
+        cache.add(attempts_key, 0, ttl)
+        attempts = cache.incr(attempts_key)
+        if attempts >= MAX_OTP_ATTEMPTS:
+            return (False, "Too many attempts, request a new code.")
         return (False, "Invalid or expired code")
 
     if getattr(settings, "FAKE_OTP_ENABLED", False):

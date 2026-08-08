@@ -625,8 +625,8 @@
       <div class="ftr-bot-l">
         <span>© 2026 InTask LLC</span>
         <a href="#">{% trans "Foydalanish shartlari" %}</a>
-        <a href="#">{% trans "Maxfiylik siyosati" %}</a>
-        <a href="#">Cookie</a>
+        <a href="{% url 'accounts:privacy_policy' %}">{% trans "Maxfiylik siyosati" %}</a>
+        <a href="{% url 'accounts:data_deletion' %}">{% trans "Ma'lumotlarni o'chirish" %}</a>
         <a href="#">{% trans "Ommaviy oferta" %}</a>
       </div>
     </div>

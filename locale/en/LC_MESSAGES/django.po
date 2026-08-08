@@ -1404,3 +1404,10 @@ msgstr "The file size must not exceed 5 MB"
 
 #~ msgid "Google'da ochish"
 #~ msgstr "Open in Google"
+
+# =====================
+# Privacy policy / data deletion pages (added 2026-08-08)
+# =====================
+#: .\templates\landing.html
+msgid "Ma'lumotlarni o'chirish"
+msgstr "Data deletion"

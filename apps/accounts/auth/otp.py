@@ -87,18 +87,11 @@ def send_eskiz_sms(phone: str, code: str):
     from_name = getattr(settings, "ESKIZ_FROM", "4546")
     eskiz_phone = re.sub(r"\D", "", phone)  # final Eskiz format: 998901234567
 
-    print("===== ESKIZ SMS DEBUG =====")
-    print("phone =", phone)
-    print("eskiz_phone =", eskiz_phone)
-    print("from_name =", from_name)
-    print("code =", code)
-    print("===========================")
-
     if len(eskiz_phone) != 12 or not eskiz_phone.startswith("998"):
         logger.error(f"Eskiz Send Blocked: invalid normalized phone -> {eskiz_phone}")
         return False
 
-    message = f"Intask platformasida ro'yxatdan o'tish uchun tasdiqlash kodingiz: {code}. Kod 2 daqiqa ichida amal qiladi."
+    message = f"Intask platformasida ro'yxatdan o'tish uchun tasdiqlash kodingiz: {code}. Kod 5 daqiqa ichida amal qiladi."
 
     try:
         send_url = "https://notify.eskiz.uz/api/message/sms/send"
@@ -114,11 +107,6 @@ def send_eskiz_sms(phone: str, code: str):
             },
             timeout=20,
         )
-
-        print("===== ESKIZ RESPONSE DEBUG =====")
-        print("status_code =", res.status_code)
-        print("response_text =", res.text)
-        print("================================")
 
         if res.status_code == 200:
             logger.info(f"Eskiz SMS sent to {phone}")
@@ -137,13 +125,6 @@ def send_otp(phone: str) -> str:
     phone = normalize_phone(phone)
     code = generate_otp_code()
 
-    print("===== SEND OTP DEBUG =====")
-    print("original_phone =", original_phone)
-    print("normalized_phone =", phone)
-    print("eskiz_phone =", re.sub(r'\\D', '', phone))
-    print("generated_code =", code)
-    print("==========================")
-
     if not phone:
         logger.error(f"OTP send blocked: invalid phone input -> {original_phone}")
         return code
@@ -160,13 +141,6 @@ def send_otp(phone: str) -> str:
 def verify_otp(phone: str, code: str) -> bool:
     phone = normalize_phone(phone)
     code = (code or "").strip()
-
-    print("===== VERIFY OTP CORE DEBUG =====")
-    print("normalized_phone =", phone)
-    print("input_code =", code)
-    print("cache_key =", otp_cache_key(phone))
-    print("saved_code =", cache.get(otp_cache_key(phone)))
-    print("=================================")
 
     if getattr(settings, "FAKE_OTP_ENABLED", False):
         fake_code = str(getattr(settings, "FAKE_OTP_CODE", "111111")).strip()

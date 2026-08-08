@@ -177,7 +177,7 @@ LOGIN_REDIRECT_URL = "/"
 # Single source of truth for the public support phone. Exposed to every template
 # by apps.accounts.context_processors.support_contact as `support_phone` (display)
 # and `support_phone_href` (tel: digits), so the number can't drift between pages.
-SUPPORT_PHONE = "+998 71 200 00 00"
+SUPPORT_PHONE = "+998 99 617 73 37"
 
 # Yandex Maps JS API key (env-driven, never hardcoded). Empty is allowed for
 # local dev — the map still loads without the apikey param, and the view logs a

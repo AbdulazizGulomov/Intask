@@ -1,0 +1,57 @@
+{% extends "base_site.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Delete your InTask account and data" %} — InTask{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 860px;">
+  <div class="card shadow-sm border-0 my-4">
+    <div class="card-body p-4 p-md-5">
+
+      <h1 class="h2 mb-1">{% trans "Delete your InTask account and data" %}</h1>
+      <p class="text-secondary mb-4">{% trans "Last updated: 8 August 2026" %}</p>
+
+      <p>
+        {% blocktrans trimmed %}
+        You can request deletion of your InTask account and all data associated
+        with it at any time. You do not need the app installed to make this
+        request.
+        {% endblocktrans %}
+      </p>
+
+      <h2 class="h4 mt-4">{% trans "How to request deletion" %}</h2>
+      <ol>
+        <li>
+          {% blocktrans trimmed %}
+          Send an email to <a href="mailto:support@intask.uz">support@intask.uz</a>
+          with the subject “Delete my account”.
+          {% endblocktrans %}
+        </li>
+        <li>{% trans "In the email, state the phone number you registered with (for example +998 90 123 45 67)." %}</li>
+        <li>{% trans "We will verify that you control that phone number, for example by sending a confirmation code to it." %}</li>
+        <li>{% trans "Once verified, we delete your account and associated data." %}</li>
+      </ol>
+
+      <h2 class="h4 mt-4">{% trans "What gets deleted" %}</h2>
+      <ul>
+        <li>{% trans "Your account and phone number." %}</li>
+        <li>{% trans "Your worker profile, including your name, age, gender and photo." %}</li>
+        <li>{% trans "Job postings you created, including their photos, contact phone number, address and location coordinates." %}</li>
+        <li>{% trans "Your job applications." %}</li>
+      </ul>
+
+      <p>
+        {% blocktrans trimmed %}
+        SMS verification codes are not part of your stored account data — they
+        expire automatically within 2 minutes.
+        {% endblocktrans %}
+      </p>
+
+      <p>
+        <a href="{% url 'accounts:privacy_policy' %}">{% trans "Read our full Privacy Policy" %}</a>
+      </p>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

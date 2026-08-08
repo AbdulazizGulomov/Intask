@@ -1,0 +1,10 @@
+{% load i18n %}
+<footer style="padding:18px 16px; text-align:center; font-size:13px; color:#64748b; border-top:1px solid #e7ebf0; margin-top:32px;">
+  <span>© 2026 InTask</span>
+  <span class="mx-1">·</span>
+  <a href="{% url 'accounts:privacy_policy' %}" style="color:#64748b;">{% trans "Privacy Policy" %}</a>
+  <span class="mx-1">·</span>
+  <a href="{% url 'accounts:data_deletion' %}" style="color:#64748b;">{% trans "Delete account & data" %}</a>
+  <span class="mx-1">·</span>
+  <a href="mailto:support@intask.uz" style="color:#64748b;">support@intask.uz</a>
+</footer>

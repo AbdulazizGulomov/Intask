@@ -6,12 +6,17 @@ from apps.jobs import views as job_views   # ✅ ADD THIS IMPORT
 from .auth.api_views import send_otp_view, verify_otp_view
 from .views import me
 from rest_framework_simplejwt.views import TokenRefreshView
+from django.views.generic import TemplateView
 
 app_name = "accounts"
 
 urlpatterns = [
     # Role & start
     path("", views.landing, name="landing"),
+
+    # Legal pages (must stay publicly reachable — Google Play requirement)
+    path("privacy-policy/", TemplateView.as_view(template_name="privacy_policy.html"), name="privacy_policy"),
+    path("data-deletion/", TemplateView.as_view(template_name="data_deletion.html"), name="data_deletion"),
     path("role/", views.role_select, name="role_select"),
     path("choose-role/<str:role>/", views.choose_role, name="choose_role"),
     path("after-otp/", views.after_otp_redirect, name="after_otp_redirect"),

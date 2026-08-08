@@ -1872,3 +1872,10 @@ msgstr "Confirmed location"
 
 msgid "Joylashuv tasdiqlanmagan — e'lon xaritadagi joylashuvsiz saqlanadi."
 msgstr "Location not confirmed — the listing will be saved without a map position."
+
+# =====================
+# Privacy policy / data deletion pages (added 2026-08-08)
+# =====================
+#: .\templates\landing.html
+msgid "Ma'lumotlarni o'chirish"
+msgstr "Data deletion"

@@ -1,0 +1,114 @@
+{% extends "base_site.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Privacy Policy" %} — InTask{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 860px;">
+  <div class="card shadow-sm border-0 my-4">
+    <div class="card-body p-4 p-md-5">
+
+      <h1 class="h2 mb-1">{% trans "Privacy Policy" %}</h1>
+      <p class="text-secondary mb-4">{% trans "Last updated: 8 August 2026" %}</p>
+
+      <p>
+        {% blocktrans trimmed %}
+        This Privacy Policy explains what personal data InTask collects, why we
+        collect it, who we share it with, and how you can delete it. It applies
+        to the intask.uz website and the InTask Android application
+        (package uz.intask.app).
+        {% endblocktrans %}
+      </p>
+
+      <h2 class="h4 mt-5">{% trans "1. What we collect" %}</h2>
+      <p>{% trans "Account data (all users):" %}</p>
+      <ul>
+        <li>{% trans "Phone number — used as your login identifier and to send SMS verification codes." %}</li>
+        <li>{% trans "Account role (worker or employer) and registration date." %}</li>
+      </ul>
+      <p>{% trans "Worker profile data (entered by you):" %}</p>
+      <ul>
+        <li>{% trans "First name, last name, age and gender." %}</li>
+        <li>{% trans "Profile photo, if you upload one." %}</li>
+        <li>{% trans "Your profession." %}</li>
+      </ul>
+      <p>{% trans "Job posting data (entered by employers):" %}</p>
+      <ul>
+        <li>{% trans "Job title, description, region, pay range and job photos." %}</li>
+        <li>{% trans "A contact phone number, which is displayed publicly on the job page." %}</li>
+        <li>{% trans "The job location — the address and map coordinates you choose and confirm in the map picker. If you use the “find my location” button, your device's GPS position is read to position the map, and the location you then confirm and submit — which may be your GPS position — is stored." %}</li>
+      </ul>
+      <p>{% trans "Job applications:" %}</p>
+      <ul>
+        <li>{% trans "When a worker applies to a job, we store which worker applied to which job, and the employer can see the worker's profile." %}</li>
+      </ul>
+      <p>{% trans "Verification codes:" %}</p>
+      <ul>
+        <li>{% trans "The one-time SMS code is never stored in plain text — only a cryptographic hash of it is kept on our server, for a maximum of 2 minutes, and it is deleted as soon as it is used or expires." %}</li>
+      </ul>
+      <p>
+        {% blocktrans trimmed %}
+        The “jobs near me” feature and the “my current location” button on job
+        pages may ask your browser for your location. That location is used on
+        your device to centre the map, calculate distances and build map links;
+        it is not sent to our server.
+        {% endblocktrans %}
+      </p>
+
+      <h2 class="h4 mt-5">{% trans "2. Why we collect it" %}</h2>
+      <ul>
+        <li>{% trans "To create and sign in to your account using SMS verification." %}</li>
+        <li>{% trans "To show worker profiles to employers and job postings to workers — this is the core function of the platform." %}</li>
+        <li>{% trans "To show job locations on a map." %}</li>
+        <li>{% trans "To connect workers and employers when a job application is made." %}</li>
+      </ul>
+      <p>{% trans "We do not use advertising or analytics trackers, and we do not sell your data." %}</p>
+
+      <h2 class="h4 mt-5">{% trans "3. Who we share it with" %}</h2>
+      <ul>
+        <li>{% trans "Eskiz (notify.eskiz.uz) — an SMS provider in Uzbekistan. It receives your phone number and the verification message in order to deliver the SMS code." %}</li>
+        <li>{% trans "Yandex Maps — used to display maps and to convert between addresses and map coordinates. When you use the map or the address search, Yandex receives the address text or coordinates being looked up and standard technical data such as your IP address." %}</li>
+        <li>{% trans "Content delivery services (Google Fonts, jsDelivr, unpkg, Carto map tiles) — these load fonts, scripts and map tiles, and receive standard technical request data such as your IP address." %}</li>
+      </ul>
+      <p>{% trans "Worker profile information (name, photo, profession) is visible to employers on the platform, and job postings (including the contact phone number and location) are visible to workers." %}</p>
+
+      <h2 class="h4 mt-5">{% trans "4. How long we keep it" %}</h2>
+      <p>
+        {% blocktrans trimmed %}
+        We keep your account and profile data for as long as your account
+        exists; we do not delete it automatically. Hashes of SMS verification
+        codes are kept for a maximum of 2 minutes. You can request deletion of
+        your account and data at any time, as described below.
+        {% endblocktrans %}
+      </p>
+
+      <h2 class="h4 mt-5">{% trans "5. Your rights" %}</h2>
+      <ul>
+        <li>{% trans "You can view and edit your profile information at any time from the profile page." %}</li>
+        <li>{% trans "You can request a copy of the data we hold about you." %}</li>
+        <li>{% trans "You can request deletion of your account and all associated data." %}</li>
+      </ul>
+
+      <h2 class="h4 mt-5">{% trans "6. How to delete your account and data" %}</h2>
+      <p>
+        {% blocktrans trimmed %}
+        Send an email to <a href="mailto:support@intask.uz">support@intask.uz</a>
+        stating the phone number you registered with. We will verify that you
+        control that phone number and then delete your account together with
+        your profile, uploaded photos, job postings and job applications.
+        {% endblocktrans %}
+      </p>
+      <p>
+        <a href="{% url 'accounts:data_deletion' %}">{% trans "Step-by-step deletion instructions" %}</a>
+      </p>
+
+      <h2 class="h4 mt-5">{% trans "7. Contact" %}</h2>
+      <p>
+        {% trans "For any question about this policy or your data:" %}<br>
+        <a href="mailto:support@intask.uz">support@intask.uz</a>
+      </p>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

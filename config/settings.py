@@ -226,6 +226,13 @@ ESKIZ_PASSWORD = os.getenv("ESKIZ_PASSWORD", "")
 ESKIZ_FROM = os.getenv("ESKIZ_FROM", "4546")
 ESKIZ_REAL_SMS = os.getenv("ESKIZ_REAL_SMS", "0") == "1"
 
+# Google Play review login bypass (works with DEBUG off — reviewers cannot
+# receive Eskiz SMS). ONE phone accepts a fixed OTP, no SMS is sent. Both
+# values come from the server .env ONLY — never hardcode them, the repo is
+# public. If either is unset, the bypass is disabled and login is unchanged.
+PLAY_REVIEW_PHONE = os.getenv("PLAY_REVIEW_PHONE", "")
+PLAY_REVIEW_OTP = os.getenv("PLAY_REVIEW_OTP", "")
+
 # =====================
 # DRF / JWT
 # =====================

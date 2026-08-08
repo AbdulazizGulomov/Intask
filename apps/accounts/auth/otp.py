@@ -49,6 +49,21 @@ def _hash_code(code: str) -> str:
     ).hexdigest()
 
 
+def _play_review_config() -> tuple[str, str]:
+    """Google Play reviewer bypass: (normalized_phone, fixed_code).
+
+    Play reviewers cannot receive our Eskiz SMS, so ONE phone number accepts a
+    fixed code — in production, DEBUG-independent. Both values come from the
+    server .env only (public repo — never hardcode them). Returns ("", "")
+    — bypass fully disabled — unless BOTH are set. Never log either value.
+    """
+    phone = getattr(settings, "PLAY_REVIEW_PHONE", "") or ""
+    code = str(getattr(settings, "PLAY_REVIEW_OTP", "") or "")
+    if not phone or not code:
+        return "", ""
+    return normalize_phone(phone), code
+
+
 def otp_cache_key(phone: str) -> str:
     return f"otp:{phone}"
 
@@ -135,6 +150,13 @@ def send_eskiz_sms(phone: str, code: str):
 def send_otp(phone: str) -> str:
     phone = normalize_phone(phone)
 
+    # Google Play reviewer phone: no SMS, no cache write, nothing returned that
+    # could leak (even via OTP_DEBUG_RETURN_CODE). verify_otp() checks the
+    # fixed code from the environment instead of the cache.
+    review_phone, _ = _play_review_config()
+    if review_phone and phone == review_phone:
+        return ""
+
     # DEBUG-ONLY: fixed test numbers get a deterministic code and no SMS. Gated on
     # settings.DEBUG so it FAILS CLOSED in production — when DEBUG is False the dict
     # is ignored and the number falls through to the normal real-OTP path below.
@@ -163,6 +185,15 @@ def send_otp(phone: str) -> str:
 def verify_otp(phone: str, code: str) -> tuple[bool, str]:
     phone = normalize_phone(phone)
     code = (code or "").strip()
+
+    # Google Play reviewer phone: constant-time check against the fixed code
+    # from the environment. Only this branch for this one phone — the normal
+    # HMAC/cache path below is untouched for every other number.
+    review_phone, review_code = _play_review_config()
+    if review_phone and phone == review_phone:
+        if hmac.compare_digest(code.encode(), review_code.encode()):
+            return (True, "")
+        return (False, "Invalid or expired code")
 
     if getattr(settings, "FAKE_OTP_ENABLED", False):
         fake_code = str(getattr(settings, "FAKE_OTP_CODE", "111111")).strip()

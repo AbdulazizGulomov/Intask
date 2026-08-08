@@ -2058,8 +2058,8 @@ msgid "6. How to delete your account and data"
 msgstr "6. Как удалить аккаунт и данные"
 
 #: .\templates\privacy_policy.html
-msgid "Send an email to <a href=\"mailto:support@intask.uz\">support@intask.uz</a> stating the phone number you registered with. We will verify that you control that phone number and then delete your account together with your profile, uploaded photos, job postings and job applications."
-msgstr "Отправьте письмо на <a href=\"mailto:support@intask.uz\">support@intask.uz</a>, указав номер телефона, с которым вы зарегистрировались. Мы убедимся, что этот номер принадлежит вам, и удалим ваш аккаунт вместе с профилем, загруженными фотографиями, объявлениями и откликами."
+msgid "Send an email to <a href=\"mailto:abdulaziz.gulomov91@gmail.com\">abdulaziz.gulomov91@gmail.com</a> stating the phone number you registered with. We will verify that you control that phone number and then delete your account together with your profile, uploaded photos, job postings and job applications."
+msgstr "Отправьте письмо на <a href=\"mailto:abdulaziz.gulomov91@gmail.com\">abdulaziz.gulomov91@gmail.com</a>, указав номер телефона, с которым вы зарегистрировались. Мы убедимся, что этот номер принадлежит вам, и удалим ваш аккаунт вместе с профилем, загруженными фотографиями, объявлениями и откликами."
 
 #: .\templates\privacy_policy.html
 msgid "Step-by-step deletion instructions"
@@ -2086,8 +2086,8 @@ msgid "How to request deletion"
 msgstr "Как запросить удаление"
 
 #: .\templates\data_deletion.html
-msgid "Send an email to <a href=\"mailto:support@intask.uz\">support@intask.uz</a> with the subject “Delete my account”."
-msgstr "Отправьте письмо на <a href=\"mailto:support@intask.uz\">support@intask.uz</a> с темой «Delete my account»."
+msgid "Send an email to <a href=\"mailto:abdulaziz.gulomov91@gmail.com\">abdulaziz.gulomov91@gmail.com</a> with the subject “Delete my account”."
+msgstr "Отправьте письмо на <a href=\"mailto:abdulaziz.gulomov91@gmail.com\">abdulaziz.gulomov91@gmail.com</a> с темой «Delete my account»."
 
 #: .\templates\data_deletion.html
 msgid "In the email, state the phone number you registered with (for example +998 90 123 45 67)."

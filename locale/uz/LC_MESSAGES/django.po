@@ -1859,8 +1859,8 @@ msgid "6. How to delete your account and data"
 msgstr "6. Hisobingiz va ma'lumotlaringizni qanday o'chirish mumkin"
 
 #: .\templates\privacy_policy.html
-msgid "Send an email to <a href=\"mailto:support@intask.uz\">support@intask.uz</a> stating the phone number you registered with. We will verify that you control that phone number and then delete your account together with your profile, uploaded photos, job postings and job applications."
-msgstr "Ro'yxatdan o'tgan telefon raqamingizni ko'rsatib, <a href=\"mailto:support@intask.uz\">support@intask.uz</a> manziliga xat yuboring. Biz bu telefon raqami sizniki ekanini tekshiramiz, so'ng hisobingizni profilingiz, yuklangan suratlar, e'lonlaringiz va arizalaringiz bilan birga o'chiramiz."
+msgid "Send an email to <a href=\"mailto:abdulaziz.gulomov91@gmail.com\">abdulaziz.gulomov91@gmail.com</a> stating the phone number you registered with. We will verify that you control that phone number and then delete your account together with your profile, uploaded photos, job postings and job applications."
+msgstr "Ro'yxatdan o'tgan telefon raqamingizni ko'rsatib, <a href=\"mailto:abdulaziz.gulomov91@gmail.com\">abdulaziz.gulomov91@gmail.com</a> manziliga xat yuboring. Biz bu telefon raqami sizniki ekanini tekshiramiz, so'ng hisobingizni profilingiz, yuklangan suratlar, e'lonlaringiz va arizalaringiz bilan birga o'chiramiz."
 
 #: .\templates\privacy_policy.html
 msgid "Step-by-step deletion instructions"
@@ -1887,8 +1887,8 @@ msgid "How to request deletion"
 msgstr "O'chirishni qanday so'rash mumkin"
 
 #: .\templates\data_deletion.html
-msgid "Send an email to <a href=\"mailto:support@intask.uz\">support@intask.uz</a> with the subject “Delete my account”."
-msgstr "<a href=\"mailto:support@intask.uz\">support@intask.uz</a> manziliga “Delete my account” mavzusi bilan xat yuboring."
+msgid "Send an email to <a href=\"mailto:abdulaziz.gulomov91@gmail.com\">abdulaziz.gulomov91@gmail.com</a> with the subject “Delete my account”."
+msgstr "<a href=\"mailto:abdulaziz.gulomov91@gmail.com\">abdulaziz.gulomov91@gmail.com</a> manziliga “Delete my account” mavzusi bilan xat yuboring."
 
 #: .\templates\data_deletion.html
 msgid "In the email, state the phone number you registered with (for example +998 90 123 45 67)."

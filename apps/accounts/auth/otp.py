@@ -49,19 +49,23 @@ def _hash_code(code: str) -> str:
     ).hexdigest()
 
 
-def _play_review_config() -> tuple[str, str]:
-    """Google Play reviewer bypass: (normalized_phone, fixed_code).
+def _play_review_config() -> tuple[list[str], str]:
+    """Google Play reviewer bypass: (normalized_phones, fixed_code).
 
-    Play reviewers cannot receive our Eskiz SMS, so ONE phone number accepts a
-    fixed code — in production, DEBUG-independent. Both values come from the
-    server .env only (public repo — never hardcode them). Returns ("", "")
-    — bypass fully disabled — unless BOTH are set. Never log either value.
+    Play reviewers cannot receive our Eskiz SMS, so the reviewer phone(s)
+    accept a fixed code — in production, DEBUG-independent. PLAY_REVIEW_PHONE
+    may hold several numbers (e.g. one worker + one employer reviewer); all
+    share the same code. Both values come from the server .env only (public
+    repo — never hardcode them). Returns ([], "") — bypass fully disabled —
+    unless BOTH are set. Never log any of these values.
     """
-    phone = getattr(settings, "PLAY_REVIEW_PHONE", "") or ""
+    raw = getattr(settings, "PLAY_REVIEW_PHONE", None) or []
+    if isinstance(raw, str):  # tolerate a plain single-number string
+        raw = [raw]
     code = str(getattr(settings, "PLAY_REVIEW_OTP", "") or "")
-    if not phone or not code:
-        return "", ""
-    return normalize_phone(phone), code
+    if not raw or not code:
+        return [], ""
+    return [p for p in (normalize_phone(x) for x in raw) if p], code
 
 
 def otp_cache_key(phone: str) -> str:
@@ -150,11 +154,11 @@ def send_eskiz_sms(phone: str, code: str):
 def send_otp(phone: str) -> str:
     phone = normalize_phone(phone)
 
-    # Google Play reviewer phone: no SMS, no cache write, nothing returned that
-    # could leak (even via OTP_DEBUG_RETURN_CODE). verify_otp() checks the
-    # fixed code from the environment instead of the cache.
-    review_phone, _ = _play_review_config()
-    if review_phone and phone == review_phone:
+    # Google Play reviewer phones: no SMS, no cache write, nothing returned
+    # that could leak (even via OTP_DEBUG_RETURN_CODE). verify_otp() checks
+    # the fixed code from the environment instead of the cache.
+    review_phones, _ = _play_review_config()
+    if phone in review_phones:
         return ""
 
     # DEBUG-ONLY: fixed test numbers get a deterministic code and no SMS. Gated on
@@ -186,15 +190,15 @@ def verify_otp(phone: str, code: str) -> tuple[bool, str]:
     phone = normalize_phone(phone)
     code = (code or "").strip()
 
-    # Google Play reviewer phone: constant-time check against the fixed code
-    # from the environment. Only this branch for this one phone — the normal
-    # HMAC/cache path below is untouched for every other number. The reviewer
-    # shares the SAME 5-attempt lockout counter mechanics, so the fixed code
-    # cannot be brute-forced any faster than a real one; there is no cached
-    # code to clear here, and the counter expires on its own (~OTP_TTL), so
-    # a locked-out reviewer just waits it out.
-    review_phone, review_code = _play_review_config()
-    if review_phone and phone == review_phone:
+    # Google Play reviewer phones: constant-time check against the fixed code
+    # from the environment. Only this branch for these numbers — the normal
+    # HMAC/cache path below is untouched for every other number. Reviewers
+    # share the SAME 5-attempt lockout counter mechanics (per phone), so the
+    # fixed code cannot be brute-forced any faster than a real one; there is
+    # no cached code to clear here, and the counter expires on its own
+    # (~OTP_TTL), so a locked-out reviewer just waits it out.
+    review_phones, review_code = _play_review_config()
+    if phone in review_phones:
         attempts_key = otp_attempts_key(phone)
 
         if (cache.get(attempts_key) or 0) >= MAX_OTP_ATTEMPTS:

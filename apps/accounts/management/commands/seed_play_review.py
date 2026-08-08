@@ -5,13 +5,16 @@ the reviewer branch in apps/accounts/auth/otp.py. Unlike seed_test_users this
 IS allowed in production — that is where the Play review happens.
 
 Creates idempotently:
-  * the reviewer user (role=worker, never staff) with a COMPLETE worker
-    profile, so login lands on /worker/ instead of the register form;
-  * one demo employer (reserved-fake number +998900000004) with three active
-    jobs carrying Tashkent coordinates, so the reviewer does not see an empty
-    map/list.
+  * the worker reviewer (first PLAY_REVIEW_PHONE entry; role=worker, never
+    staff) with a COMPLETE worker profile, so login lands on /worker/
+    instead of the register form;
+  * an employer reviewer account (reserved-fake number +998900000004;
+    role=employer, never staff) with three active jobs carrying Tashkent
+    coordinates, so neither reviewer sees an empty map/list. Add this number
+    as the second PLAY_REVIEW_PHONE entry so a reviewer can also log in as
+    the employer and land on the employer dashboard.
 
-The reviewer phone is masked in output and the OTP code is never printed.
+Reviewer phones are masked in output and the OTP code is never printed.
 """
 
 from django.conf import settings
@@ -63,12 +66,18 @@ class Command(BaseCommand):
     )
 
     def handle(self, *args, **options):
-        review_phone = normalize_phone(getattr(settings, "PLAY_REVIEW_PHONE", "") or "")
-        if not review_phone:
+        raw = getattr(settings, "PLAY_REVIEW_PHONE", None) or []
+        if isinstance(raw, str):
+            raw = [raw]
+        review_phones = [p for p in (normalize_phone(x) for x in raw) if p]
+        if not review_phones:
             raise CommandError(
                 "PLAY_REVIEW_PHONE is not set (or invalid). Add it to the server "
                 ".env before seeding."
             )
+        # First entry = the worker reviewer; +998900000004 (below) is the
+        # employer reviewer and should be listed as the second entry.
+        review_phone = review_phones[0]
         if not (getattr(settings, "PLAY_REVIEW_OTP", "") or ""):
             self.stdout.write(self.style.WARNING(
                 "PLAY_REVIEW_OTP is not set — the login bypass is disabled until "
@@ -109,11 +118,30 @@ class Command(BaseCommand):
         profile.is_completed = True
         profile.save()
 
-        # ---- Demo employer + three visible jobs with map coordinates ----
-        employer, _ = User.objects.get_or_create(
+        # ---- Employer reviewer + three visible jobs with map coordinates ----
+        # A proper login-capable account: role=employer routes straight to the
+        # employer dashboard (no profile-completion gate for employers), and it
+        # must never be staff or verify-otp rejects it with 403.
+        employer, e_created = User.objects.get_or_create(
             phone=DEMO_EMPLOYER_PHONE,
             defaults={"role": User.Role.EMPLOYER, "is_active": True},
         )
+        e_changed = []
+        if employer.role != User.Role.EMPLOYER:
+            employer.role = User.Role.EMPLOYER
+            e_changed.append("role")
+        if not employer.is_active:
+            employer.is_active = True
+            e_changed.append("is_active")
+        if employer.is_staff or employer.is_superuser:
+            employer.is_staff = False
+            employer.is_superuser = False
+            e_changed.append("cleared-staff")
+        if employer.has_usable_password():
+            employer.set_unusable_password()
+            e_changed.append("password")
+        if e_changed:
+            employer.save()
         contact = getattr(settings, "SUPPORT_PHONE", "") or ""
         jobs_created = 0
         for spec in DEMO_JOBS:
@@ -139,10 +167,16 @@ class Command(BaseCommand):
             jobs_created += int(j_created)
 
         self.stdout.write(self.style.SUCCESS(
-            f"reviewer {_mask(review_phone)}: {'created' if created else 'updated'} "
+            f"worker reviewer   {_mask(review_phone)}: {'created' if created else 'updated'} "
             f"(profile {'created' if p_created else 'updated'}, is_completed=True)"
         ))
         self.stdout.write(self.style.SUCCESS(
-            f"demo employer {DEMO_EMPLOYER_PHONE}: {jobs_created} new job(s), "
-            f"{len(DEMO_JOBS) - jobs_created} already present"
+            f"employer reviewer {DEMO_EMPLOYER_PHONE}: "
+            f"{'created' if e_created else 'updated'} (role={employer.role}); "
+            f"{jobs_created} new job(s), {len(DEMO_JOBS) - jobs_created} already present"
         ))
+        if DEMO_EMPLOYER_PHONE not in review_phones:
+            self.stdout.write(self.style.WARNING(
+                f"note: {DEMO_EMPLOYER_PHONE} is not in PLAY_REVIEW_PHONE — add it "
+                "as the second comma-separated entry to enable employer login."
+            ))

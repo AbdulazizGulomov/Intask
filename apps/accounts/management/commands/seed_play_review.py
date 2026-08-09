@@ -8,11 +8,10 @@ Creates idempotently:
   * the worker reviewer (first PLAY_REVIEW_PHONE entry; role=worker, never
     staff) with a COMPLETE worker profile, so login lands on /worker/
     instead of the register form;
-  * an employer reviewer account (reserved-fake number +998900000004;
-    role=employer, never staff) with three active jobs carrying Tashkent
-    coordinates, so neither reviewer sees an empty map/list. Add this number
-    as the second PLAY_REVIEW_PHONE entry so a reviewer can also log in as
-    the employer and land on the employer dashboard.
+  * an employer reviewer account (second PLAY_REVIEW_PHONE entry, falling
+    back to the reserved-fake +998900000004; role=employer, never staff)
+    with three active jobs carrying Tashkent coordinates, so neither
+    reviewer sees an empty map/list and the employer dashboard has content.
 
 Reviewer phones are masked in output and the OTP code is never printed.
 """
@@ -75,9 +74,13 @@ class Command(BaseCommand):
                 "PLAY_REVIEW_PHONE is not set (or invalid). Add it to the server "
                 ".env before seeding."
             )
-        # First entry = the worker reviewer; +998900000004 (below) is the
-        # employer reviewer and should be listed as the second entry.
+        # First entry = the worker reviewer. Second entry (when present) = the
+        # employer reviewer; with a single entry we fall back to the reserved
+        # demo number, which then still needs adding to PLAY_REVIEW_PHONE.
         review_phone = review_phones[0]
+        employer_phone = (
+            review_phones[1] if len(review_phones) > 1 else DEMO_EMPLOYER_PHONE
+        )
         if not (getattr(settings, "PLAY_REVIEW_OTP", "") or ""):
             self.stdout.write(self.style.WARNING(
                 "PLAY_REVIEW_OTP is not set — the login bypass is disabled until "
@@ -123,7 +126,7 @@ class Command(BaseCommand):
         # employer dashboard (no profile-completion gate for employers), and it
         # must never be staff or verify-otp rejects it with 403.
         employer, e_created = User.objects.get_or_create(
-            phone=DEMO_EMPLOYER_PHONE,
+            phone=employer_phone,
             defaults={"role": User.Role.EMPLOYER, "is_active": True},
         )
         e_changed = []
@@ -171,12 +174,12 @@ class Command(BaseCommand):
             f"(profile {'created' if p_created else 'updated'}, is_completed=True)"
         ))
         self.stdout.write(self.style.SUCCESS(
-            f"employer reviewer {DEMO_EMPLOYER_PHONE}: "
+            f"employer reviewer {_mask(employer_phone)}: "
             f"{'created' if e_created else 'updated'} (role={employer.role}); "
             f"{jobs_created} new job(s), {len(DEMO_JOBS) - jobs_created} already present"
         ))
-        if DEMO_EMPLOYER_PHONE not in review_phones:
+        if employer_phone not in review_phones:
             self.stdout.write(self.style.WARNING(
-                f"note: {DEMO_EMPLOYER_PHONE} is not in PLAY_REVIEW_PHONE — add it "
-                "as the second comma-separated entry to enable employer login."
+                f"note: {_mask(employer_phone)} is not in PLAY_REVIEW_PHONE — add "
+                "it as the second comma-separated entry to enable employer login."
             ))

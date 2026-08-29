@@ -15,7 +15,7 @@ body {
 }
 
 body {
-  font-family: 'Manrope', -apple-system, Segoe UI, sans-serif;
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 15px;
   line-height: 1.5;
   color: var(--ink);
@@ -941,12 +941,12 @@ button {
 }
 
 .cta-l h2 {
-  font-size: 42px;
-  font-weight: 700;
+  font-size: 46px;
+  font-weight: 800;
   color: var(--ink);
-  letter-spacing: -0.04em;
+  letter-spacing: -0.045em;
   line-height: 1.08;
-  margin: 0 0 16px;
+  margin: 0 0 18px;
 }
 
 .cta-l h2 em {
@@ -957,31 +957,32 @@ button {
 .cta-l p {
   font-size: 16px;
   color: var(--ink-2);
-  margin: 0 0 30px;
+  margin: 0 0 32px;
   max-width: 530px;
+  line-height: 1.7;
 }
 
 .cta-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 14px;
-  margin-bottom: 30px;
+  margin-bottom: 32px;
   max-width: 540px;
 }
 
 .cta-stat {
-  min-height: 112px;
+  min-height: 116px;
   background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: 16px;
-  padding: 17px 16px;
+  padding: 18px 16px;
   box-shadow: var(--shadow-sm);
   transition: all 0.3s ease;
 }
 
 .cta-stat-icon {
-  width: 21px;
-  height: 21px;
+  width: 24px;
+  height: 24px;
   color: var(--accent-2);
   display: block;
   margin-bottom: 10px;
@@ -990,32 +991,32 @@ button {
 
 .cta-stat b {
   display: block;
-  font-size: 21px;
-  font-weight: 800;
+  font-size: 23px;
+  font-weight: 900;
   color: var(--accent-2);
-  letter-spacing: -0.025em;
+  letter-spacing: -0.03em;
   margin-bottom: 4px;
 }
 
 .cta-stat span {
   font-size: 12px;
   color: var(--muted);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .cta-btn {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 15px 28px;
-  min-width: 240px;
+  gap: 12px;
+  padding: 16px 30px;
+  min-width: 250px;
   justify-content: center;
   background: var(--accent-2);
   color: #fff;
-  font-size: 15px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 800;
   border-radius: 13px;
-  box-shadow: 0 18px 34px rgba(59, 91, 254, 0.28);
+  box-shadow: 0 18px 34px rgba(59, 91, 254, 0.30);
   transition: all .18s ease;
 }
 
@@ -1025,13 +1026,25 @@ button {
 }
 
 .cta-btn svg {
-  width: 18px;
-  height: 18px;
+  width: 19px;
+  height: 19px;
 }
 
 .cta-r {
   position: relative;
   min-height: 600px;
+}
+
+.cta-r::before {
+  content: "";
+  position: absolute;
+  width: 360px;
+  height: 360px;
+  right: -60px;
+  top: 55px;
+  border: 2px dashed rgba(79, 110, 230, 0.25);
+  border-radius: 50%;
+  z-index: 0;
 }
 
 .cta-dot {
@@ -1660,11 +1673,15 @@ button {
   }
 
   .cta-l h2 {
-    font-size: 34px;
+    font-size: 36px;
   }
 
   .cta-r {
     min-height: auto;
+  }
+
+  .cta-r::before {
+    display: none;
   }
 
   .cta-collage {
@@ -1709,7 +1726,7 @@ button {
   }
 
   .cta-l h2 {
-    font-size: 30px;
+    font-size: 31px;
   }
 
   .cta-l p {
@@ -1842,13 +1859,12 @@ button {
     min-height: 150px;
   }
 
-  /* FIX: also renamed in mobile rules */
-  .cta-photo--elektrik,
-  .cta-photo--santexnik,
-  .cta-photo--tozalash {
+  .cta-photo--electrician,
+  .cta-photo--plumber,
+  .cta-photo--cleaning {
     grid-column: auto;
     grid-row: auto;
-    background-size: auto 95%;
+    background-size: auto 96%;
     background-position: center bottom;
   }
 
@@ -1873,6 +1889,15 @@ button {
     grid-template-columns: 1fr;
     padding-bottom: 40px;
     gap: 32px;
+  }
+
+  .ftr-mid {
+    gap: 24px;
+  }
+
+  .ftr-app-row {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 

@@ -1,18 +1,26 @@
 {% load static i18n %}
-{% get_current_language as CURRENT_LANGUAGE %}<!DOCTYPE html>
+{% get_current_language as CURRENT_LANGUAGE %}
+
+<!DOCTYPE html>
 <html lang="{{ CURRENT_LANGUAGE }}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>InTask — {% trans "Uy xizmatlari eshigingizgacha" %}</title>
+
   <meta name="description" content="{% trans 'InTask orqali yaqin atrofdagi tekshirilgan ustalarni tez toping. Elektrik, santexnik, taʼmir, mebel yigʻish va boshqa xizmatlar.' %}">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
   <link rel="stylesheet" href="{% static 'css/landing.css' %}">
 </head>
+
 <body>
 
 <!-- ==================== HEADER ==================== -->
@@ -23,6 +31,7 @@
       <div class="logo-box">
         <img src="{% static 'img/In_task.png' %}" alt="InTask" style="width:28px;height:28px;border-radius:6px;">
       </div>
+
       <div class="logo-tx">
         <span class="logo-wm">InTask</span>
         <span class="logo-sub">{% trans "Tekshirilgan ustalar" %}</span>
@@ -30,16 +39,27 @@
     </a>
 
     <button class="loc" type="button">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-7.5 8-13a8 8 0 1 0-16 0c0 5.5 8 13 8 13Z"></path><circle cx="12" cy="9" r="3"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 22s8-7.5 8-13a8 8 0 1 0-16 0c0 5.5 8 13 8 13Z"></path>
+        <circle cx="12" cy="9" r="3"></circle>
+      </svg>
+
       <div class="loc-txt">
         <small>{% trans "Manzil" %}</small>
         {% trans "Toshkent, Yunusobod" %}
       </div>
-      <svg class="loc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+
+      <svg class="loc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
     </button>
 
     <label class="srch">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="m21 21-4.3-4.3"></path></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="7"></circle>
+        <path d="m21 21-4.3-4.3"></path>
+      </svg>
+
       <input type="text" placeholder="{% trans "Qidiring: 'Konditsioner tozalash'" %}">
       <span class="srch-hint">⌘K</span>
     </label>
@@ -57,11 +77,13 @@
         <input type="hidden" name="next" value="{{ request.path }}">
         <button type="submit" name="language" value="uz" class="{% if CURRENT_LANGUAGE == 'uz' %}on{% endif %}">UZ</button>
       </form>
+
       <form action="{% url 'set_language' %}" method="post" style="margin:0">
         {% csrf_token %}
         <input type="hidden" name="next" value="{{ request.path }}">
         <button type="submit" name="language" value="ru" class="{% if CURRENT_LANGUAGE == 'ru' %}on{% endif %}">RU</button>
       </form>
+
       <form action="{% url 'set_language' %}" method="post" style="margin:0">
         {% csrf_token %}
         <input type="hidden" name="next" value="{{ request.path }}">
@@ -77,64 +99,150 @@
 
 <!-- ==================== HERO ==================== -->
 <main class="hero">
+
+  <!-- LEFT SIDE -->
   <div class="hero-l">
-    <h1>{% blocktrans %}Uy <span class="accent-word">xizmatlari</span><br>eshigingizgacha{% endblocktrans %}</h1>
+    <h1>
+      {% blocktrans %}
+        Uy <span class="accent-word">xizmatlari</span><br>eshigingizgacha
+      {% endblocktrans %}
+    </h1>
 
     <div class="picker">
       <p class="picker-q">{% trans "Nima qidiryapsiz?" %}</p>
 
       <div class="tiles-main">
+
         <a href="{% url 'accounts:choose_role' 'employer' %}" class="tile" data-service="electrician">
-          <div class="tile-ic"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M22 6 10 22h8l-2 12 12-16h-8l2-12Z"/></svg></div>
+          <div class="tile-ic">
+            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 6 10 22h8l-2 12 12-16h-8l2-12Z"></path>
+            </svg>
+          </div>
           <div class="tile-lb">{% trans "Elektrik" %}</div>
         </a>
+
         <a href="{% url 'accounts:choose_role' 'employer' %}" class="tile" data-service="plumber">
-          <div class="tile-ic"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14 28 6 20l8-8 6 6-4 4 8 8-4 4-6-6Z"/><circle cx="26" cy="14" r="4"/><path d="m29 11 5-5"/></svg></div>
+          <div class="tile-ic">
+            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 28 6 20l8-8 6 6-4 4 8 8-4 4-6-6Z"></path>
+              <circle cx="26" cy="14" r="4"></circle>
+              <path d="m29 11 5-5"></path>
+            </svg>
+          </div>
           <div class="tile-lb">{% trans "Santexnik" %}</div>
         </a>
+
         <a href="{% url 'accounts:choose_role' 'employer' %}" class="tile" data-service="ac">
-          <div class="tile-ic"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="10" width="28" height="12" rx="2"></rect><path d="M10 26v4m8-4v4m8-4v4M6 16h28"></path></svg></div>
+          <div class="tile-ic">
+            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="6" y="10" width="28" height="12" rx="2"></rect>
+              <path d="M10 26v4m8-4v4m8-4v4M6 16h28"></path>
+            </svg>
+          </div>
           <div class="tile-lb">{% trans "Konditsioner" %}</div>
         </a>
+
         <a href="{% url 'accounts:choose_role' 'employer' %}" class="tile" data-service="cleaning">
-          <div class="tile-ic"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6c0 6-8 6-8 14 0 5 4 8 8 8s8-3 8-8c0-8-8-8-8-14Z"/><path d="M24 24c4 0 8 3 8 7v3H18"/></svg></div>
+          <div class="tile-ic">
+            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 6c0 6-8 6-8 14 0 5 4 8 8 8s8-3 8-8c0-8-8-8-8-14Z"></path>
+              <path d="M24 24c4 0 8 3 8 7v3H18"></path>
+            </svg>
+          </div>
           <div class="tile-lb">{% trans "Tozalash" %}</div>
         </a>
+
         <a href="{% url 'accounts:choose_role' 'employer' %}" class="tile" data-service="furniture">
-          <div class="tile-ic"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="12" width="28" height="8" rx="1"/><path d="M8 20v12m24-12v12M10 32h20"/><path d="M10 12V8h20v4"/></svg></div>
+          <div class="tile-ic">
+            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="6" y="12" width="28" height="8" rx="1"></rect>
+              <path d="M8 20v12m24-12v12M10 32h20"></path>
+              <path d="M10 12V8h20v4"></path>
+            </svg>
+          </div>
           <div class="tile-lb">{% trans "Mebel yig'ish" %}</div>
         </a>
+
         <a href="{% url 'accounts:choose_role' 'employer' %}" class="tile" data-service="ironing">
-          <div class="tile-ic"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8h20l-2 14H14L12 8Z"/><path d="M22 22v8m-4 0h8"/></svg></div>
+          <div class="tile-ic">
+            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 8h20l-2 14H14L12 8Z"></path>
+              <path d="M22 22v8m-4 0h8"></path>
+            </svg>
+          </div>
           <div class="tile-lb">{% trans "Dazmol" %}</div>
         </a>
+
       </div>
 
       <div class="tiles-feat">
+
         <a href="{% url 'accounts:choose_role' 'employer' %}" class="tile tile-wide" data-service="deep-clean">
-          <div class="tile-ic"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6h10l2 10H10l2-10Z"></path><path d="M10 16v4c0 4 3 7 7 7s7-3 7-7v-4"/><path d="M17 27v5"/><circle cx="17" cy="34" r="2"/></svg></div>
-          <div class="tile-lb">{% blocktrans %}Chuqur tozalash<br>va dezinfeksiya{% endblocktrans %}</div>
+          <div class="tile-ic">
+            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 6h10l2 10H10l2-10Z"></path>
+              <path d="M10 16v4c0 4 3 7 7 7s7-3 7-7v-4"></path>
+              <path d="M17 27v5"></path>
+              <circle cx="17" cy="34" r="2"></circle>
+            </svg>
+          </div>
+
+          <div class="tile-lb">
+            {% blocktrans %}
+              Chuqur tozalash<br>va dezinfeksiya
+            {% endblocktrans %}
+          </div>
+
           <span class="time-badge">45 {% trans "daq" %}</span>
         </a>
+
         <a href="{% url 'accounts:choose_role' 'employer' %}" class="tile tile-wide" data-service="repair">
-          <div class="tile-ic"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 22 22 8l4 4 2-2 4 4-2 2 4 4-14 14H8V22Z"></path><path d="m24 10 6 6"/></svg></div>
-          <div class="tile-lb">{% blocktrans %}Uy ta'miri<br>va maishiy ish{% endblocktrans %}</div>
+          <div class="tile-ic">
+            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8 22 22 8l4 4 2-2 4 4-2 2 4 4-14 14H8V22Z"></path>
+              <path d="m24 10 6 6"></path>
+            </svg>
+          </div>
+
+          <div class="tile-lb">
+            {% blocktrans %}
+              Uy ta'miri<br>va maishiy ish
+            {% endblocktrans %}
+          </div>
+
           <span class="time-badge">30 {% trans "daq" %}</span>
         </a>
+
       </div>
     </div>
 
     <div class="trust">
-      <div class="trust-item"><span class="trust-star">★</span><span class="trust-num">4.9</span><span class="trust-lb">{% trans "reyting" %}</span></div>
+      <div class="trust-item">
+        <span class="trust-star">★</span>
+        <span class="trust-num">4.9</span>
+        <span class="trust-lb">{% trans "reyting" %}</span>
+      </div>
+
       <div class="trust-sep"></div>
-      <div class="trust-item"><span class="trust-num">5K+</span><span class="trust-lb">{% trans "tekshirilgan usta" %}</span></div>
+
+      <div class="trust-item">
+        <span class="trust-num">5K+</span>
+        <span class="trust-lb">{% trans "tekshirilgan usta" %}</span>
+      </div>
+
       <div class="trust-sep"></div>
-      <div class="trust-item"><span class="trust-num">25K+</span><span class="trust-lb">{% trans "buyurtma" %}</span></div>
+
+      <div class="trust-item">
+        <span class="trust-num">25K+</span>
+        <span class="trust-lb">{% trans "buyurtma" %}</span>
+      </div>
     </div>
   </div>
 
-  <!-- RIGHT: interactive 4-tile photo collage -->
+  <!-- RIGHT SIDE -->
   <div class="hero-r" id="collage">
+
     <div class="ph" data-photo="ac">
       <img src="{% static 'img/electirc_uzbek.png' %}" alt="{% trans 'Konditsioner xizmati' %}">
       <div class="ph-cap">
@@ -145,8 +253,9 @@
         <span class="ph-cap-badge">45 {% trans "daq" %}</span>
       </div>
     </div>
+
     <div class="ph" data-photo="furniture">
-      <img src="{% static 'img/furnitureFix.png' %}" alt="{% trans 'Mebel yig&#39;ish' %}">
+      <img src="{% static 'img/furnitureFix.png' %}" alt="{% trans 'Mebel yigʻish' %}">
       <div class="ph-cap">
         <div class="ph-cap-tx">
           <small>{% trans "Xizmat" %}</small>
@@ -155,6 +264,7 @@
         <span class="ph-cap-badge">2 {% trans "soat" %}</span>
       </div>
     </div>
+
     <div class="ph" data-photo="cleaning">
       <img src="{% static 'img/cleanlady.png' %}" alt="{% trans 'Uy tozalash' %}">
       <div class="ph-cap">
@@ -165,6 +275,7 @@
         <span class="ph-cap-badge">1.5 {% trans "soat" %}</span>
       </div>
     </div>
+
     <div class="ph" data-photo="plumber">
       <img src="{% static 'img/plunmber.png' %}" alt="{% trans 'Santexnik' %}">
       <div class="ph-cap">
@@ -175,18 +286,23 @@
         <span class="ph-cap-badge">30 {% trans "daq" %}</span>
       </div>
     </div>
+
   </div>
 </main>
 
 <!-- ==================== MAP SECTION ==================== -->
 <section class="map-sec">
   <div class="map-wrap">
+
     <div class="map-head">
       <div class="map-head-l">
         <div class="eyebrow">{% trans "Jonli xarita" %}</div>
         <h2 class="map-title">{% trans "Toshkentda yaqin buyurtmalar" %}</h2>
-        <p class="map-sub">{% trans "Shahar bo'ylab joriy buyurtmalarni ko'ring — usta sifatida qo'shiling yoki hududingiz bandligini bilib oling." %}</p>
+        <p class="map-sub">
+          {% trans "Shahar bo'ylab joriy buyurtmalarni ko'ring — usta sifatida qo'shiling yoki hududingiz bandligini bilib oling." %}
+        </p>
       </div>
+
       <div class="filters" id="filters">
         <button class="fil on" data-cat="all">{% trans "Barchasi" %}</button>
         <button class="fil" data-cat="plumber">🔧 {% trans "Santexnik" %}</button>
@@ -198,165 +314,48 @@
     </div>
 
     <div class="map-grid">
+
       <aside class="side">
         <div class="side-head">
           <h3>{% trans "Faol buyurtmalar" %}</h3>
-          <div class="side-head-count"><b id="sideCount">—</b> / 20</div>
+          <div class="side-head-count">
+            <b id="sideCount">—</b> / 20
+          </div>
         </div>
+
         <div class="side-list" id="sideList"></div>
       </aside>
+
       <div class="map-box">
         <div class="map-stats">
-          <div class="stat-i"><b id="statCount">20</b><span>{% trans "buyurtma" %}</span></div>
+          <div class="stat-i">
+            <b id="statCount">20</b>
+            <span>{% trans "buyurtma" %}</span>
+          </div>
+
           <div class="stat-sep"></div>
-          <div class="stat-i"><b>12</b><span>{% trans "tuman" %}</span></div>
+
+          <div class="stat-i">
+            <b>12</b>
+            <span>{% trans "tuman" %}</span>
+          </div>
+
           <div class="stat-sep"></div>
-          <div class="stat-i"><b>5.2 {% trans "daq" %}</b><span>{% trans "o'rtacha" %}</span></div>
+
+          <div class="stat-i">
+            <b>5.2 {% trans "daq" %}</b>
+            <span>{% trans "o'rtacha" %}</span>
+          </div>
         </div>
+
         <div id="mapEl"></div>
       </div>
+
     </div>
   </div>
 </section>
 
-<!-- ==================== PRE-FOOTER CTA BAND ==================== -->
-{#<section class="cta-band">#}
-{#  <div class="cta-wrap">#}
-{##}
-{#    <div class="cta-l">#}
-{#      <h2>{% blocktrans %}Siz ham <em>usta bo'ling</em><br>va 15 mln so'mgacha toping{% endblocktrans %}</h2>#}
-{#      <p>{% trans "InTask'da buyurtmalar oling, mijozlar bilan ishlang va daromadingizni oshiring. Ro'yxatdan o'tish bepul." %}</p>#}
-{##}
-{#      <div class="cta-stats">#}
-{#        <div class="cta-stat">#}
-{#          <svg class="cta-stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">#}
-{#            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>#}
-{#            <circle cx="9" cy="7" r="4"/>#}
-{#            <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>#}
-{#          </svg>#}
-{#          <b>15K+</b>#}
-{#          <span>{% trans "haftalik buyurtmalar" %}</span>#}
-{#        </div>#}
-{#        <div class="cta-stat">#}
-{#          <svg class="cta-stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">#}
-{#            <circle cx="12" cy="12" r="10"/>#}
-{#            <polyline points="12 6 12 12 16 14"/>#}
-{#          </svg>#}
-{#          <b>24 {% trans "soat" %}</b>#}
-{#          <span>{% trans "to'lov vaqti" %}</span>#}
-{#        </div>#}
-{#        <div class="cta-stat">#}
-{#          <svg class="cta-stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">#}
-{#            <rect x="2" y="5" width="20" height="14" rx="2"/>#}
-{#            <line x1="2" y1="10" x2="22" y2="10"/>#}
-{#          </svg>#}
-{#          <b>0 UZS</b>#}
-{#          <span>{% trans "ro'yxat uchun" %}</span>#}
-{#        </div>#}
-{#      </div>#}
-{##}
-{#      <a href="{% url 'accounts:choose_role' 'worker' %}" class="cta-btn">#}
-{#        {% trans "Hoziroq ariza berish" %}#}
-{#        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">#}
-{#          <path d="M5 12h14M12 5l7 7-7 7"/>#}
-{#        </svg>#}
-{#      </a>#}
-{#    </div>#}
-{##}
-{#    <div class="cta-r">#}
-{#      <span class="cta-dot cta-dot--1"></span>#}
-{#      <span class="cta-dot cta-dot--2"></span>#}
-{#      <span class="cta-dot cta-dot--3"></span>#}
-{##}
-{#      <div class="cta-collage">#}
-{##}
-{#        <!-- TOP-LEFT: Elektrik — background-image = no checkered PNG problem -->#}
-{#        <div class="cta-photo cta-photo--elektrik"#}
-{#             style="background-image: url('{% static 'img/usta_elektrik.png' %}')">#}
-{#          <div class="cta-prof-label">#}
-{#            <span class="cta-prof-icon cta-prof-icon--blue">#}
-{#              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">#}
-{#                <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/>#}
-{#              </svg>#}
-{#            </span>#}
-{#            <div>#}
-{#              <p>{% trans "Elektrik usta" %}</p>#}
-{#              <small>{% trans "Tez va ishonchli" %}</small>#}
-{#            </div>#}
-{#          </div>#}
-{#        </div>#}
-{##}
-{#        <!-- TOP-RIGHT: Oyira daromad card -->#}
-{#        <div class="cta-earn-card">#}
-{#          <div class="cta-earn-top">#}
-{#            <span class="cta-earn-icon">#}
-{#              <svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round">#}
-{#                <path d="M22 7L13.5 15.5 8.5 10.5 2 17"/>#}
-{#                <polyline points="16 7 22 7 22 13"/>#}
-{#              </svg>#}
-{#            </span>#}
-{#            <span>{% trans "Oyira daromad" %}</span>#}
-{#          </div>#}
-{#          <strong>15 000 000</strong>#}
-{#          <span>{% trans "so'mgacha" %}</span>#}
-{#        </div>#}
-{##}
-{#        <!-- BOTTOM-LEFT: Santexnik -->#}
-{#        <div class="cta-photo cta-photo--santexnik"#}
-{#             style="background-image: url('{% static 'img/plunmber.png' %}')">#}
-{#          <div class="cta-prof-label">#}
-{#            <span class="cta-prof-icon cta-prof-icon--cyan">#}
-{#              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">#}
-{#                <path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5s-3 3.5-3 5.5a7 7 0 0 0 7 7z"/>#}
-{#              </svg>#}
-{#            </span>#}
-{#            <div>#}
-{#              <p>{% trans "Santexnik" %}</p>#}
-{#              <small>{% trans "Sifatli va kafolatli" %}</small>#}
-{#            </div>#}
-{#          </div>#}
-{#        </div>#}
-{##}
-{#        <!-- BOTTOM-RIGHT: Tozalash -->#}
-{#        <div class="cta-photo cta-photo--tozalash"#}
-{#             style="background-image: url('{% static 'img/cleanlady.png' %}')">#}
-{#          <div class="cta-prof-label cta-prof-label--top">#}
-{#            <span class="cta-prof-icon cta-prof-icon--amber">#}
-{#              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">#}
-{#                <circle cx="12" cy="12" r="5"/>#}
-{#                <line x1="12" y1="1" x2="12" y2="3"/>#}
-{#                <line x1="12" y1="21" x2="12" y2="23"/>#}
-{#                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>#}
-{#                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>#}
-{#                <line x1="1" y1="12" x2="3" y2="12"/>#}
-{#                <line x1="21" y1="12" x2="23" y2="12"/>#}
-{#                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>#}
-{#                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>#}
-{#              </svg>#}
-{#            </span>#}
-{#            <div>#}
-{#              <p>{% trans "Tozalash" %}</p>#}
-{#              <small>{% trans "Toza va ozoda" %}</small>#}
-{#            </div>#}
-{#          </div>#}
-{#          <div class="cta-social">#}
-{#            <div class="cta-avatars">#}
-{#              <span></span><span></span><span></span>#}
-{#            </div>#}
-{#            <div>#}
-{#              <strong>1000+</strong>#}
-{#              <small>{% trans "faol ustalar bilan birga" %}</small>#}
-{#            </div>#}
-{#          </div>#}
-{#        </div>#}
-{##}
-{#      </div>#}
-{#    </div>#}
-{##}
-{#  </div>#}
-{#</section>#}
 <!-- ==================== MASTER / WORKER CTA BAND ==================== -->
-
 <section class="cta-band">
   <div class="cta-wrap">
 
@@ -377,9 +376,9 @@
 
         <div class="cta-stat">
           <svg class="cta-stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"></path>
           </svg>
           <b>15K+</b>
           <span>{% trans "haftalik buyurtmalar" %}</span>
@@ -396,8 +395,8 @@
 
         <div class="cta-stat">
           <svg class="cta-stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="2" y="5" width="20" height="14" rx="2"/>
-            <line x1="2" y1="10" x2="22" y2="10"/>
+            <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+            <line x1="2" y1="10" x2="22" y2="10"></line>
           </svg>
           <b>0 UZS</b>
           <span>{% trans "ro'yxat uchun" %}</span>
@@ -408,13 +407,14 @@
       <a href="{% url 'accounts:choose_role' 'worker' %}" class="cta-btn">
         {% trans "Hoziroq ariza berish" %}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-          <path d="M5 12h14M12 5l7 7-7 7"/>
+          <path d="M5 12h14M12 5l7 7-7 7"></path>
         </svg>
       </a>
     </div>
 
     <!-- RIGHT COLLAGE -->
     <div class="cta-r">
+
       <span class="cta-dot cta-dot--1"></span>
       <span class="cta-dot cta-dot--2"></span>
       <span class="cta-dot cta-dot--3"></span>
@@ -422,9 +422,10 @@
       <div class="cta-collage">
 
         <!-- TOP LEFT: ELECTRICIAN -->
-        <div class="cta-photo cta-photo--electrician"
-             style="background-image: url('{% static 'img/usta_elektrik3.png' %}');">
-
+        <div
+          class="cta-photo cta-photo--electrician"
+          style="background-image: url('{% static 'img/usta_elektrik3.png' %}');"
+        >
           <div class="cta-prof-label">
             <span class="cta-prof-icon cta-prof-icon--blue">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -457,9 +458,10 @@
         </div>
 
         <!-- BOTTOM LEFT: PLUMBER -->
-        <div class="cta-photo cta-photo--plumber"
-             style="background-image: url('{% static 'img/usta_santexnik.png' %}');">
-
+        <div
+          class="cta-photo cta-photo--plumber"
+          style="background-image: url('{% static 'img/usta_santexnik.png' %}');"
+        >
           <div class="cta-prof-label">
             <span class="cta-prof-icon cta-prof-icon--cyan">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
@@ -475,21 +477,22 @@
         </div>
 
         <!-- BOTTOM RIGHT: CLEANING -->
-        <div class="cta-photo cta-photo--cleaning"
-             style="background-image: url('{% static 'img/usta_tozalash.png' %}');">
-
+        <div
+          class="cta-photo cta-photo--cleaning"
+          style="background-image: url('{% static 'img/usta_tozalash.png' %}');"
+        >
           <div class="cta-prof-label cta-prof-label--top">
             <span class="cta-prof-icon cta-prof-icon--amber">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <circle cx="12" cy="12" r="5"></circle>
                 <line x1="12" y1="1" x2="12" y2="3"></line>
-                <line x1="12" y1="21" x2="12" y2="23"/>
-                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-                <line x1="1" y1="12" x2="3" y2="12"/>
-                <line x1="21" y1="12" x2="23" y2="12"/>
-                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
               </svg>
             </span>
 
@@ -518,11 +521,13 @@
 
   </div>
 </section>
+
 <!-- ==================== FOOTER ==================== -->
 <footer class="ftr">
   <div class="ftr-wrap">
 
     <div class="ftr-top">
+
       <div class="ftr-brand">
         <a href="{% url 'accounts:role_select' %}" class="ftr-brand-logo">
           <div class="logo-box">
@@ -530,19 +535,36 @@
           </div>
           <span class="logo-wm">InTask</span>
         </a>
-        <p>{% trans "O'zbekistondagi №1 tekshirilgan ustalar platformasi. Har qanday uy ishi — 15 daqiqada." %}</p>
+
+        <p>
+          {% trans "O'zbekistondagi №1 tekshirilgan ustalar platformasi. Har qanday uy ishi — 15 daqiqada." %}
+        </p>
+
         <div class="ftr-social">
           <a href="#" aria-label="Telegram">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.5 4.5 2.5 11.8c-1 .4-1 1-.2 1.3l4.9 1.5 1.9 5.8c.2.6.4.9.9.9.4 0 .6-.2.9-.5l2.5-2.4 5.1 3.8c.9.5 1.6.2 1.9-.9l3.4-16c.3-1.3-.5-1.9-1.3-1.6ZM17.3 9l-7.5 6.8-.3 3.4-1.8-5.4 11.1-7c.4-.3.8-.1.5.2Z"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M21.5 4.5 2.5 11.8c-1 .4-1 1-.2 1.3l4.9 1.5 1.9 5.8c.2.6.4.9.9.9.4 0 .6-.2.9-.5l2.5-2.4 5.1 3.8c.9.5 1.6.2 1.9-.9l3.4-16c.3-1.3-.5-1.9-1.3-1.6ZM17.3 9l-7.5 6.8-.3 3.4-1.8-5.4 11.1-7c.4-.3.8-.1.5.2Z"></path>
+            </svg>
           </a>
+
           <a href="#" aria-label="Instagram">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+              <circle cx="12" cy="12" r="4"></circle>
+              <circle cx="17.5" cy="6.5" r="1" fill="currentColor"></circle>
+            </svg>
           </a>
+
           <a href="#" aria-label="Facebook">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 22v-8h3l.5-4H13V7.5c0-1 .3-1.8 1.8-1.8H17V2.2C16.5 2.1 15.3 2 14 2c-2.8 0-4.5 1.7-4.5 4.8V10H6v4h3.5v8H13Z"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M13 22v-8h3l.5-4H13V7.5c0-1 .3-1.8 1.8-1.8H17V2.2C16.5 2.1 15.3 2 14 2c-2.8 0-4.5 1.7-4.5 4.8V10H6v4h3.5v8H13Z"></path>
+            </svg>
           </a>
+
           <a href="#" aria-label="YouTube">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 8s-.2-1.4-.8-2c-.8-.8-1.6-.8-2-.9C16.4 5 12 5 12 5s-4.4 0-7.2.1c-.4 0-1.2 0-2 .9C2.2 6.6 2 8 2 8s-.2 1.7-.2 3.3v1.4c0 1.7.2 3.3.2 3.3s.2 1.4.8 2c.8.8 1.8.8 2.2.9 1.6.1 6.8.2 7 .2 0 0 4.4 0 7.2-.2.4-.1 1.2-.1 2-.9.6-.6.8-2 .8-2s.2-1.7.2-3.3v-1.4c0-1.7-.2-3.3-.2-3.3ZM10 15V9l5.5 3L10 15Z"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M22 8s-.2-1.4-.8-2c-.8-.8-1.6-.8-2-.9C16.4 5 12 5 12 5s-4.4 0-7.2.1c-.4 0-1.2 0-2 .9C2.2 6.6 2 8 2 8s-.2 1.7-.2 3.3v1.4c0 1.7.2 3.3.2 3.3s.2 1.4.8 2c.8.8 1.8.8 2.2.9 1.6.1 6.8.2 7 .2 0 0 4.4 0 7.2-.2.4-.1 1.2-.1 2-.9.6-.6.8-2 .8-2s.2-1.7.2-3.3v-1.4c0-1.7-.2-3.3-.2-3.3ZM10 15V9l5.5 3L10 15Z"></path>
+            </svg>
           </a>
         </div>
       </div>
@@ -591,25 +613,42 @@
           <li><a href="mailto:info@intask.uz">info@intask.uz</a></li>
         </ul>
       </div>
+
     </div>
 
     <div class="ftr-mid">
+
       <div class="ftr-app">
         <p class="ftr-app-t">{% trans "Ilovani yuklab oling" %}</p>
+
         <div class="ftr-app-row">
           <a href="#" class="ftr-app-badge">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01ZM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25Z"/></svg>
-            <div><small>{% trans "Download on the" %}</small><strong>App Store</strong></div>
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01ZM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25Z"></path>
+            </svg>
+
+            <div>
+              <small>{% trans "Download on the" %}</small>
+              <strong>App Store</strong>
+            </div>
           </a>
+
           <a href="#" class="ftr-app-badge">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="m3 2 16 10L3 22V2Zm2 3.4v13.2l10.4-6.6L5 5.4Z"/></svg>
-            <div><small>{% trans "Get it on" %}</small><strong>Google Play</strong></div>
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="m3 2 16 10L3 22V2Zm2 3.4v13.2l10.4-6.6L5 5.4Z"></path>
+            </svg>
+
+            <div>
+              <small>{% trans "Get it on" %}</small>
+              <strong>Google Play</strong>
+            </div>
           </a>
         </div>
       </div>
 
       <div class="ftr-pay">
         <p class="ftr-pay-t">{% trans "Qabul qilinadigan to'lovlar" %}</p>
+
         <div class="ftr-pay-row">
           <span class="pay-chip">Payme</span>
           <span class="pay-chip">Click</span>
@@ -619,6 +658,7 @@
           <span class="pay-chip">Mastercard</span>
         </div>
       </div>
+
     </div>
 
     <div class="ftr-bot">
@@ -636,5 +676,6 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="{% static 'js/landing.js' %}"></script>
+
 </body>
 </html>

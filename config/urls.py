@@ -14,6 +14,8 @@ from apps.jobs.api import (
     MyApplicationsAPIView,
     ProfessionListAPIView,
 )
+from apps.jobs.geocode import ReverseGeocodeAPIView
+from apps.jobs.views import mobile_map_picker
 from apps.accounts.views import me as me_view, become_employer as become_employer_view
 
 urlpatterns = [
@@ -33,6 +35,11 @@ urlpatterns = [
     path("api/my-applications/", MyApplicationsAPIView.as_view(), name="api_my_applications"),
 
     path("api/professions/", ProfessionListAPIView.as_view(), name="api_professions"),
+
+    # Mobile post flow: reverse geocoding + WebView map picker. Both must stay
+    # at these exact unprefixed paths (no i18n_patterns in this URLconf).
+    path("api/geocode/reverse/", ReverseGeocodeAPIView.as_view(), name="api_geocode_reverse"),
+    path("m/map-picker/", mobile_map_picker, name="mobile_map_picker"),
 
     path("i18n/", include("django.conf.urls.i18n")),
     path("admin/", admin.site.urls),

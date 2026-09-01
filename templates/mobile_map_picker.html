@@ -1,0 +1,95 @@
+{% load l10n %}<!DOCTYPE html>
+{% comment %}
+  Standalone map picker for the mobile "E'lon berish" WebView. No base
+  template, no chrome, no text — just a full-viewport Yandex map with a fixed
+  centre pin (map moves under the pin, same pattern as the web picker).
+
+  Page → app: on load and whenever the map settles (actionend / boundschange,
+  debounced ~300 ms) it posts {"type":"location","lat":..,"lng":..} via
+  window.ReactNativeWebView.postMessage (console.log fallback on desktop).
+  App → page: window.__fromApp({type:"center",lat,lng}) recenters (zoom 16,
+  short animation); a normal location message follows once settled.
+{% endcomment %}
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title></title>
+<style>
+  html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: transparent; }
+  #map { position: absolute; inset: 0; }
+  /* Centre pin — tip at the exact map centre, never intercepts gestures
+     (mirrors .jlp-pin in the web picker partial). */
+  .pin {
+    position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -100%);
+    pointer-events: none; z-index: 6;
+  }
+  .pin svg {
+    width: 34px; height: 40px; display: block; color: #E11D48;
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, .28));
+  }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div class="pin" aria-hidden="true">
+  <svg viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 2C7.9 2 4.5 5.3 4.5 9.4c0 5.3 6.6 11.9 7 12.3.3.3.7.3 1 0 .4-.4 7-7 7-12.3C19.5 5.3 16.1 2 12 2zm0 10.2a2.8 2.8 0 1 1 0-5.6 2.8 2.8 0 0 1 0 5.6z"/>
+  </svg>
+</div>
+<script src="https://api-maps.yandex.ru/2.1/?lang={{ ymaps_lang }}{% if yandex_maps_api_key %}&amp;apikey={{ yandex_maps_api_key|urlencode }}{% endif %}"></script>
+<script>
+  (function () {
+    var INITIAL = [{{ lat|unlocalize }}, {{ lng|unlocalize }}];
+    var map = null;
+    var settleTimer = null;
+
+    function send(lat, lng) {
+      var msg = JSON.stringify({ type: "location", lat: lat, lng: lng });
+      if (window.ReactNativeWebView && window.ReactNativeWebView.postMessage) {
+        window.ReactNativeWebView.postMessage(msg);
+      } else {
+        console.log(msg); // desktop testing fallback
+      }
+    }
+
+    function sendCenter() {
+      if (!map) return;
+      var c = map.getCenter();
+      send(c[0], c[1]);
+    }
+
+    function scheduleSend() {
+      clearTimeout(settleTimer);
+      settleTimer = setTimeout(sendCenter, 300);
+    }
+
+    // App → page. Accepts an object or a JSON string.
+    window.__fromApp = function (msg) {
+      if (typeof msg === "string") {
+        try { msg = JSON.parse(msg); } catch (e) { return; }
+      }
+      if (!msg || msg.type !== "center" || !map) return;
+      var lat = Number(msg.lat), lng = Number(msg.lng);
+      if (!isFinite(lat) || !isFinite(lng)) return;
+      map.setCenter([lat, lng], 16, { duration: 300 }).then(scheduleSend);
+    };
+
+    ymaps.ready(function () {
+      map = new ymaps.Map("map", {
+        center: INITIAL,
+        zoom: 15,
+        controls: ["zoomControl"]
+      }, {
+        suppressMapOpenBlock: true,
+        yandexMapDisablePoiInteractivity: true
+      });
+      map.events.add("actionend", scheduleSend);
+      map.events.add("boundschange", scheduleSend);
+      sendCenter(); // initial position on load
+    });
+  })();
+</script>
+</body>
+</html>

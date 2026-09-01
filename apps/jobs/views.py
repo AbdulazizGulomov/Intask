@@ -57,6 +57,32 @@ def job_detail(request, pk: int):
     return worker_job_detail(request, job_id=pk)
 
 
+def mobile_map_picker(request):
+    """Standalone full-viewport map picker for the React Native WebView.
+
+    No auth, no base template, no CSRF surface (GET only). Talks to the app
+    via window.ReactNativeWebView.postMessage / window.__fromApp — see
+    templates/mobile_map_picker.html for the message contract.
+    """
+    def to_float(raw, default):
+        try:
+            v = float(raw)
+        except (TypeError, ValueError):
+            return default
+        return v if -180.0 <= v <= 180.0 else default
+
+    # Same lang mapping as the reverse-geocode endpoint.
+    lang = request.GET.get("lang", "uz")
+    ymaps_lang = {"uz": "uz_UZ", "ru": "ru_RU", "en": "en_US"}.get(lang, "uz_UZ")
+
+    return render(request, "mobile_map_picker.html", {
+        "lat": to_float(request.GET.get("lat"), 41.311),
+        "lng": to_float(request.GET.get("lng"), 69.279),
+        "ymaps_lang": ymaps_lang,
+        "yandex_maps_api_key": getattr(settings, "YANDEX_MAPS_API_KEY", ""),
+    })
+
+
 @login_required
 @require_capability("can_hire")
 def employer_job_create(request):

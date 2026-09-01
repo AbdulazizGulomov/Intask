@@ -26,7 +26,8 @@ class JobListSerializer(serializers.ModelSerializer):
         fields = [
             "id", "title", "region", "job_type", "profession",
             "pay_currency", "pay_min", "pay_max", "pay_text", "pay",
-            "cover", "lat", "lng", "address", "created_at",
+            "cover", "lat", "lng", "address",
+            "district", "street", "house", "landmark", "created_at",
             "contact_phone", "contact_visible",
         ]
 
@@ -232,6 +233,17 @@ class JobCreateAPIView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+        # Structured address parts from the mobile picker. `address` stays the
+        # field web templates render, so derive it from street + house when the
+        # client doesn't send one of its own.
+        district = (str(data.get("district") or "")).strip()
+        street = (str(data.get("street") or "")).strip()
+        house = (str(data.get("house") or "")).strip()
+        landmark = (str(data.get("landmark") or "")).strip()
+        address = (str(data.get("address") or "")).strip()
+        if not address:
+            address = ", ".join(p for p in (street, house) if p)
+
         job = Job.objects.create(
             employer=request.user,
             title=title,
@@ -246,6 +258,11 @@ class JobCreateAPIView(APIView):
             contact_phone=(str(data.get("contact_phone") or "")).strip(),
             lat=self._to_float(data.get("lat")),
             lng=self._to_float(data.get("lng")),
+            address=address,
+            district=district,
+            street=street,
+            house=house,
+            landmark=landmark,
             # Up to 4 photos, each optional individually (the app requires >=1).
             photo1=request.FILES.get("photo1"),
             photo2=request.FILES.get("photo2"),

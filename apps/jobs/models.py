@@ -72,6 +72,17 @@ class Job(models.Model):
         default="",
         help_text=_("Human-readable address from the map picker (reverse-geocoded or typed)"),
     )
+    # Structured address parts from the mobile post flow (reverse-geocoded,
+    # user-editable). `address` stays the single field web templates render.
+    district = models.CharField(max_length=120, blank=True, default="")
+    street = models.CharField(max_length=160, blank=True, default="")
+    house = models.CharField(max_length=32, blank=True, default="")
+    landmark = models.CharField(
+        max_length=160,
+        blank=True,
+        default="",
+        help_text=_("Nearby landmark / orientir, free text"),
+    )
 
     is_active = models.BooleanField(default=True)
 

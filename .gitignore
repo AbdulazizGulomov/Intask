@@ -33,3 +33,6 @@ dashboard-frontend/node_modules/
 dashboard-frontend/dist/
 dashboard-frontend/.env
 dashboard-frontend/.env.*
+
+# Claude Code skills (local, third-party)
+.claude/skills/

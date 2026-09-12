@@ -7,10 +7,11 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
-from django.db.models import Count
+from django.db.models import Avg, Count, Q
 from django.shortcuts import get_object_or_404
 from apps.jobs.models import Job, JobApplication, Profession
-from apps.jobs.utils import format_pay, pay_period_warning
+from apps.jobs.utils import format_pay, pay_period_warning, haversine_km
+from apps.orders.models import Order
 
 
 class JobListSerializer(serializers.ModelSerializer):
@@ -28,7 +29,7 @@ class JobListSerializer(serializers.ModelSerializer):
             "pay_currency", "pay_min", "pay_max", "pay_text", "pay",
             "cover", "lat", "lng", "address",
             "district", "street", "house", "landmark", "created_at",
-            "contact_phone", "contact_visible",
+            "contact_phone", "contact_visible", "workers_needed",
         ]
 
     def _is_authenticated(self):
@@ -73,13 +74,18 @@ class JobListSerializer(serializers.ModelSerializer):
 
 class JobDetailSerializer(JobListSerializer):
     photos = serializers.SerializerMethodField()
+    # Employer-side "1 / 2 o'rin to'ldi": accepted applications for this job.
+    accepted_count = serializers.SerializerMethodField()
 
     class Meta(JobListSerializer.Meta):
         # lat/lng now come from JobListSerializer.Meta.fields (added for the list);
         # only the detail-only fields are appended here.
         fields = JobListSerializer.Meta.fields + [
-            "description", "contact_phone", "photos",
+            "description", "contact_phone", "photos", "accepted_count",
         ]
+
+    def get_accepted_count(self, obj):
+        return obj.applications.filter(status=JobApplication.Status.ACCEPTED).count()
 
     def get_photos(self, obj):
         request = self.context.get("request")
@@ -233,6 +239,21 @@ class JobCreateAPIView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+        # Workers needed: optional, defaults to 1, must be a positive integer.
+        workers_raw = data.get("workers_needed")
+        if workers_raw in (None, ""):
+            workers_needed = 1
+        else:
+            try:
+                workers_needed = int(str(workers_raw).strip())
+            except (TypeError, ValueError):
+                workers_needed = 0
+            if workers_needed < 1:
+                return Response(
+                    {"workers_needed": "Must be a positive integer."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
         # Structured address parts from the mobile picker. `address` stays the
         # field web templates render, so derive it from street + house when the
         # client doesn't send one of its own.
@@ -263,6 +284,7 @@ class JobCreateAPIView(APIView):
             street=street,
             house=house,
             landmark=landmark,
+            workers_needed=workers_needed,
             # Up to 4 photos, each optional individually (the app requires >=1).
             photo1=request.FILES.get("photo1"),
             photo2=request.FILES.get("photo2"),
@@ -327,6 +349,144 @@ class MyApplicationsAPIView(generics.ListAPIView):
             .select_related("job", "job__profession")
             .order_by("-created_at")
         )
+
+
+# ---- employer: applicants (mobile 4d-5 / 9c) -------------------------------
+
+# Application status -> the three strings the app understands. The model already
+# stores these values; the map guards against anything else ever landing in
+# the column.
+_APP_STATUS = {
+    JobApplication.Status.PENDING: "pending",
+    JobApplication.Status.ACCEPTED: "accepted",
+    JobApplication.Status.REJECTED: "rejected",
+}
+
+
+def _worker_stats(worker_ids):
+    """{worker_id: {"jobs_done": int, "rating": float|None}} from Orders — one
+    query for the whole applicant list. Ratings are the employer's 1-5 score of
+    the worker (Order.employer_rating); jobs_done counts completed orders."""
+    if not worker_ids:
+        return {}
+    rows = (
+        Order.objects.filter(worker_id__in=worker_ids)
+        .values("worker_id")
+        .annotate(
+            jobs_done=Count("id", filter=Q(status=Order.Status.COMPLETED)),
+            rating=Avg("employer_rating"),
+        )
+    )
+    return {r["worker_id"]: r for r in rows}
+
+
+class EmployerApplicationSerializer(serializers.ModelSerializer):
+    """One applicant as the employer app renders it. Context: `job` (for the
+    distance) and `worker_stats` from _worker_stats()."""
+    status = serializers.SerializerMethodField()
+    worker = serializers.SerializerMethodField()
+
+    class Meta:
+        model = JobApplication
+        fields = ["id", "status", "created_at", "worker"]
+
+    def get_status(self, obj):
+        return _APP_STATUS.get(obj.status, "pending")
+
+    def get_worker(self, obj):
+        job = self.context.get("job") or obj.job
+        stats = (self.context.get("worker_stats") or {}).get(obj.worker_id) or {}
+        user = obj.worker
+        wp = getattr(user, "worker_profile", None)
+        profession = getattr(wp, "profession", None)
+        distance = haversine_km(
+            job.lat, job.lng, getattr(wp, "lat", None), getattr(wp, "lng", None)
+        )
+        rating = stats.get("rating")
+        return {
+            "id": user.id,
+            "first_name": getattr(wp, "first_name", "") or "",
+            "last_name": getattr(wp, "last_name", "") or "",
+            "phone": user.phone,
+            "professions": [profession.name] if profession else [],
+            "rating": round(float(rating), 1) if rating is not None else None,
+            "jobs_done": int(stats.get("jobs_done") or 0),
+            "age": getattr(wp, "age", None),
+            "distance_km": round(distance, 1) if distance is not None else None,
+        }
+
+
+_APPLICATION_RELATED = (
+    "job", "worker", "worker__worker_profile", "worker__worker_profile__profession",
+)
+
+
+def _serialize_applications(applications, job, request):
+    stats = _worker_stats({a.worker_id for a in applications})
+    return EmployerApplicationSerializer(
+        applications,
+        many=True,
+        context={"request": request, "job": job, "worker_stats": stats},
+    ).data
+
+
+class JobApplicationsAPIView(APIView):
+    """GET /api/jobs/<pk>/applications/ — the owner's applicant list, newest first.
+    403 for anyone who is not the job's employer."""
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        job = get_object_or_404(Job, pk=pk)
+        if job.employer_id != request.user.id:
+            return Response(
+                {"detail": "Only the job's employer can view its applications."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        applications = list(
+            JobApplication.objects.filter(job=job)
+            .select_related(*_APPLICATION_RELATED)
+            .order_by("-created_at", "-id")
+        )
+        return Response(_serialize_applications(applications, job, request))
+
+
+class ApplicationDecisionAPIView(APIView):
+    """POST /api/applications/<pk>/accept/ | /reject/ — owner only; 409 unless
+    the application is still pending. Returns the updated application in the
+    list shape."""
+    permission_classes = [IsAuthenticated]
+    new_status = None  # set by the subclasses
+
+    def post(self, request, pk):
+        application = get_object_or_404(
+            JobApplication.objects.select_related(*_APPLICATION_RELATED), pk=pk
+        )
+        if application.job.employer_id != request.user.id:
+            return Response(
+                {"detail": "Only the job's employer can decide on this application."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        if application.status != JobApplication.Status.PENDING:
+            return Response(
+                {
+                    "detail": "Application is not pending.",
+                    "status": _APP_STATUS.get(application.status, "pending"),
+                },
+                status=status.HTTP_409_CONFLICT,
+            )
+        application.status = self.new_status
+        application.save(update_fields=["status"])
+        return Response(
+            _serialize_applications([application], application.job, request)[0]
+        )
+
+
+class ApplicationAcceptAPIView(ApplicationDecisionAPIView):
+    new_status = JobApplication.Status.ACCEPTED
+
+
+class ApplicationRejectAPIView(ApplicationDecisionAPIView):
+    new_status = JobApplication.Status.REJECTED
 
 
 class ProfessionSerializer(serializers.ModelSerializer):

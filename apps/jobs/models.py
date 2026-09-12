@@ -1,4 +1,5 @@
 # apps/jobs/models.py
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -85,6 +86,14 @@ class Job(models.Model):
     )
 
     is_active = models.BooleanField(default=True)
+
+    # How many workers this listing needs (mobile post flow 4d-1). The own-job
+    # screen shows "<accepted> / <workers_needed> o'rin to'ldi".
+    workers_needed = models.PositiveIntegerField(
+        default=1,
+        validators=[MinValueValidator(1)],
+        help_text=_("How many workers are needed"),
+    )
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -164,6 +164,23 @@ def _profession_payload(prof):
     }
 
 
+def _is_profile_completed(user, wp):
+    """Whether the account has what the app needs before it can act.
+
+    Worker: name, profession and phone. Employer (role == "employer"): company
+    name and phone — the company name lives in WorkerProfile.first_name (there
+    is no separate employer profile yet; that is where the mobile
+    "Kompaniyangiz haqida" form writes it). Computed on every request rather
+    than read from the stored WorkerProfile.is_completed flag, which the web
+    register flow sets without asking for a profession.
+    """
+    has_phone = bool(getattr(user, "phone", None))
+    name = (getattr(wp, "first_name", "") or "").strip()
+    if getattr(user, "role", None) == "employer":
+        return has_phone and bool(name)
+    return has_phone and bool(name) and getattr(wp, "profession_id", None) is not None
+
+
 def _me_payload(request):
     """Serialize the user + their WorkerProfile (existing fields only).
 
@@ -200,6 +217,8 @@ def _me_payload(request):
         "photo": photo_url,
         "can_work": can_work,
         "can_hire": can_hire,
+        # First-login gate for the mobile app (6c-3): see _is_profile_completed.
+        "is_completed": _is_profile_completed(u, wp),
     }
 
 

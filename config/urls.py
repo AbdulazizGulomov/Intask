@@ -13,6 +13,9 @@ from apps.jobs.api import (
     MyJobsAPIView,
     MyApplicationsAPIView,
     ProfessionListAPIView,
+    JobApplicationsAPIView,
+    ApplicationAcceptAPIView,
+    ApplicationRejectAPIView,
 )
 from apps.jobs.geocode import ReverseGeocodeAPIView
 from apps.jobs.views import mobile_map_picker
@@ -30,6 +33,11 @@ urlpatterns = [
     path("api/jobs/create/", JobCreateAPIView.as_view(), name="api_job_create"),
     path("api/jobs/<int:pk>/", JobDetailAPIView.as_view(), name="api_job_detail"),
     path("api/jobs/<int:pk>/apply/", JobApplyAPIView.as_view(), name="api_job_apply"),
+
+    # Employer side (mobile 4d-5 / 9c): applicants of an own job + decisions.
+    path("api/jobs/<int:pk>/applications/", JobApplicationsAPIView.as_view(), name="api_job_applications"),
+    path("api/applications/<int:pk>/accept/", ApplicationAcceptAPIView.as_view(), name="api_application_accept"),
+    path("api/applications/<int:pk>/reject/", ApplicationRejectAPIView.as_view(), name="api_application_reject"),
 
     path("api/my-jobs/", MyJobsAPIView.as_view(), name="api_my_jobs"),
     path("api/my-applications/", MyApplicationsAPIView.as_view(), name="api_my_applications"),

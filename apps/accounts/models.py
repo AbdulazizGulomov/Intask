@@ -139,6 +139,11 @@ class WorkerProfile(models.Model):
 
     is_completed = models.BooleanField(default=False)
 
+    # Last known location, used only so employers can see how far an applicant
+    # is (distance_km in the applicants API). Null until the app reports it.
+    lat = models.FloatField(null=True, blank=True)
+    lng = models.FloatField(null=True, blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

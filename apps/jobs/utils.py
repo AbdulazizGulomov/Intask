@@ -1,5 +1,7 @@
 # apps/jobs/utils.py
-"""Display-only pay formatting. Never alters stored Decimal values."""
+"""Display-only pay formatting (never alters stored Decimal values) and the
+small geo helper the applicants API uses."""
+import math
 from decimal import Decimal, InvalidOperation
 
 from django.utils.translation import gettext as _
@@ -92,3 +94,22 @@ def pay_period_warning(pay_min, pay_max, job_type, currency="UZS"):
         "%(amount)s so'm looks high for an %(period)s rate — did you mean a "
         "different pay period?"
     ) % {"amount": _grouped(top, " "), "period": period_label}
+
+
+def haversine_km(lat1, lng1, lat2, lng2):
+    """Great-circle distance between two points in km, or None when any
+    coordinate is missing or not numeric."""
+    try:
+        a1, o1, a2, o2 = (float(v) for v in (lat1, lng1, lat2, lng2))
+    except (TypeError, ValueError):
+        return None
+    if any(math.isnan(v) for v in (a1, o1, a2, o2)):
+        return None
+    r = 6371.0
+    d_lat = math.radians(a2 - a1)
+    d_lng = math.radians(o2 - o1)
+    h = (
+        math.sin(d_lat / 2) ** 2
+        + math.cos(math.radians(a1)) * math.cos(math.radians(a2)) * math.sin(d_lng / 2) ** 2
+    )
+    return 2 * r * math.asin(math.sqrt(h))

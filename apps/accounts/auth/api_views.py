@@ -8,7 +8,9 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 
+from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenRefreshView
 
 from apps.accounts.auth.serializers import SendOtpSerializer, VerifyOtpSerializer, is_valid_uz_phone
 from .otp import send_otp, verify_otp, normalize_phone
@@ -158,3 +160,30 @@ def verify_otp_view(request):
         },
         status=status.HTTP_200_OK,
     )
+
+
+class SafeTokenRefreshView(TokenRefreshView):
+    """TokenRefreshView that 401s for a deleted user instead of 500ing.
+
+    simplejwt's TokenRefreshSerializer.validate() looks the user up with an
+    unguarded objects.get(), so once an account is deleted (App Store
+    Guideline 5.1.1(v)) a still-cached refresh token raises User.DoesNotExist
+    and DRF turns that into a 500. The app cannot tell that apart from a
+    server fault, so it keeps the dead session instead of returning the user
+    to the login screen. Translating it to the 401 every other endpoint
+    already returns for a deleted user makes the client behaviour uniform.
+    """
+
+    def post(self, request, *args, **kwargs):
+        try:
+            return super().post(request, *args, **kwargs)
+        except User.DoesNotExist:
+            # Dict detail so the body carries `code`, matching the shape
+            # JWTAuthentication already returns for a deleted user's ACCESS
+            # token. The app can then branch on one value for both.
+            raise AuthenticationFailed(
+                {
+                    "detail": "No active account found for the given token.",
+                    "code": "user_not_found",
+                }
+            )

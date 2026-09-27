@@ -1,7 +1,7 @@
 # apps/accounts/dashboard/urls.py
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from rest_framework_simplejwt.views import TokenRefreshView
+from apps.accounts.auth.api_views import SafeTokenRefreshView
 
 from apps.moderation.dashboard import ReportViewSet
 
@@ -43,7 +43,7 @@ urlpatterns = [
     # Auth
     path("auth/login/", OperatorLoginView.as_view(), name="login"),
     path("auth/logout/", OperatorLogoutView.as_view(), name="logout"),
-    path("auth/refresh/", TokenRefreshView.as_view(), name="refresh"),
+    path("auth/refresh/", SafeTokenRefreshView.as_view(), name="refresh"),
     path("auth/me/", OperatorMeView.as_view(), name="me"),
 
     # Settings

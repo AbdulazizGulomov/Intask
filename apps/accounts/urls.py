@@ -5,7 +5,7 @@ from apps.jobs import views as job_views   # ✅ ADD THIS IMPORT
 
 from .auth.api_views import send_otp_view, verify_otp_view
 from .views import me
-from rest_framework_simplejwt.views import TokenRefreshView
+from .auth.api_views import SafeTokenRefreshView
 from django.views.generic import TemplateView
 
 app_name = "accounts"
@@ -45,7 +45,7 @@ urlpatterns = [
     # Auth (API)
     path("auth/send-otp/", send_otp_view, name="api_send_otp"),
     path("auth/verify-otp/", verify_otp_view, name="api_verify_otp"),
-    path("auth/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("auth/refresh/", SafeTokenRefreshView.as_view(), name="token_refresh"),
 
     # Profile (API)
     path("me/", me, name="me"),

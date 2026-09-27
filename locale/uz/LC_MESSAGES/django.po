@@ -2363,3 +2363,83 @@ msgstr "9. Aloqa"
 #: .\templates\terms.html
 msgid "Questions about these terms, or to report something urgent:"
 msgstr "Ushbu shartlar bo'yicha savollar yoki shoshilinch xabar uchun:"
+
+#: .\apps\accounts\models.py
+msgid "Terms accepted at"
+msgstr "Shartlar qabul qilingan vaqt"
+
+#: .\apps\accounts\models.py
+msgid "Accepted terms version"
+msgstr "Qabul qilingan shartlar versiyasi"
+
+#: .\templates\data_deletion.html
+msgid "Last updated: 27 September 2026"
+msgstr "Oxirgi yangilanish: 27-sentabr 2026"
+
+#: .\templates\data_deletion.html
+msgid ""
+"You can delete your InTask account and all data associated with it at any "
+"time. The fastest way is directly in the app — you do not need to contact us "
+"or wait for a reply."
+msgstr ""
+"InTask hisobingizni va unga bog'liq barcha ma'lumotlarni istalgan vaqtda "
+"o'chirishingiz mumkin. Eng tezkor yo'l — to'g'ridan-to'g'ri ilovada: biz "
+"bilan bog'lanish yoki javob kutish shart emas."
+
+#: .\templates\data_deletion.html
+msgid "Delete your account in the app"
+msgstr "Hisobingizni ilovada o'chiring"
+
+#: .\templates\data_deletion.html
+msgid "Open the InTask app and go to:"
+msgstr "InTask ilovasini oching va quyidagiga o'ting:"
+
+#: .\templates\data_deletion.html
+msgid "Profil → Sozlamalar → Hisobni o‘chirish"
+msgstr "Profil → Sozlamalar → Hisobni o‘chirish"
+
+#: .\templates\data_deletion.html
+msgid ""
+"Confirm when asked. Your account and all of your data are deleted "
+"immediately — there is no waiting period and no review step. The deletion is "
+"permanent and cannot be undone."
+msgstr ""
+"So'ralganda tasdiqlang. Hisobingiz va barcha ma'lumotlaringiz darhol "
+"o'chiriladi — kutish muddati ham, ko'rib chiqish bosqichi ham yo'q. "
+"O'chirish doimiy va uni qaytarib bo'lmaydi."
+
+#: .\templates\data_deletion.html
+msgid "If you cannot use the app"
+msgstr "Agar ilovadan foydalana olmasangiz"
+
+#: .\templates\data_deletion.html
+msgid ""
+"If you have uninstalled the app or cannot sign in, you can ask us to delete "
+"the account for you:"
+msgstr ""
+"Agar ilovani o'chirib tashlagan bo'lsangiz yoki tizimga kira olmasangiz, "
+"hisobni o'chirishni bizdan so'rashingiz mumkin:"
+
+#: .\templates\data_deletion.html
+msgid "Reports you filed and reports filed about you."
+msgstr "Siz yuborgan shikoyatlar va siz haqingizdagi shikoyatlar."
+
+#: .\templates\data_deletion.html
+msgid "Your block list, in both directions."
+msgstr "Bloklar ro'yxatingiz, ikkala yo'nalishda ham."
+
+#: .\templates\data_deletion.html
+msgid ""
+"Uploaded photos are removed from our servers, not only from the database."
+msgstr ""
+"Yuklangan rasmlar faqat ma'lumotlar bazasidan emas, serverlarimizdan ham "
+"o'chiriladi."
+
+#: .\templates\data_deletion.html
+msgid ""
+"After deletion, signing in again with the same phone number creates a new, "
+"empty account. None of your previous data is restored."
+msgstr ""
+"O'chirilgandan so'ng, xuddi shu telefon raqami bilan qayta kirish yangi, "
+"bo'sh hisob yaratadi. Oldingi ma'lumotlaringizning hech biri "
+"tiklanmaydi."

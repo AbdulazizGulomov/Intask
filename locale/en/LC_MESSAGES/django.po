@@ -2295,3 +2295,82 @@ msgstr "9. Contact"
 #: .\templates\terms.html
 msgid "Questions about these terms, or to report something urgent:"
 msgstr "Questions about these terms, or to report something urgent:"
+
+#: .\apps\accounts\models.py
+msgid "Terms accepted at"
+msgstr "Terms accepted at"
+
+#: .\apps\accounts\models.py
+msgid "Accepted terms version"
+msgstr "Accepted terms version"
+
+#: .\templates\data_deletion.html
+msgid "Last updated: 27 September 2026"
+msgstr "Last updated: 27 September 2026"
+
+#: .\templates\data_deletion.html
+msgid ""
+"You can delete your InTask account and all data associated with it at any "
+"time. The fastest way is directly in the app — you do not need to contact us "
+"or wait for a reply."
+msgstr ""
+"You can delete your InTask account and all data associated with it at "
+"any time. The fastest way is directly in the app — you do not need to "
+"contact us or wait for a reply."
+
+#: .\templates\data_deletion.html
+msgid "Delete your account in the app"
+msgstr "Delete your account in the app"
+
+#: .\templates\data_deletion.html
+msgid "Open the InTask app and go to:"
+msgstr "Open the InTask app and go to:"
+
+#: .\templates\data_deletion.html
+msgid "Profil → Sozlamalar → Hisobni o‘chirish"
+msgstr ""
+"Profil → Sozlamalar → Hisobni o‘chirish (Profile → Settings → Delete "
+"account)"
+
+#: .\templates\data_deletion.html
+msgid ""
+"Confirm when asked. Your account and all of your data are deleted "
+"immediately — there is no waiting period and no review step. The deletion is "
+"permanent and cannot be undone."
+msgstr ""
+"Confirm when asked. Your account and all of your data are deleted "
+"immediately — there is no waiting period and no review step. The "
+"deletion is permanent and cannot be undone."
+
+#: .\templates\data_deletion.html
+msgid "If you cannot use the app"
+msgstr "If you cannot use the app"
+
+#: .\templates\data_deletion.html
+msgid ""
+"If you have uninstalled the app or cannot sign in, you can ask us to delete "
+"the account for you:"
+msgstr ""
+"If you have uninstalled the app or cannot sign in, you can ask us to "
+"delete the account for you:"
+
+#: .\templates\data_deletion.html
+msgid "Reports you filed and reports filed about you."
+msgstr "Reports you filed and reports filed about you."
+
+#: .\templates\data_deletion.html
+msgid "Your block list, in both directions."
+msgstr "Your block list, in both directions."
+
+#: .\templates\data_deletion.html
+msgid ""
+"Uploaded photos are removed from our servers, not only from the database."
+msgstr "Uploaded photos are removed from our servers, not only from the database."
+
+#: .\templates\data_deletion.html
+msgid ""
+"After deletion, signing in again with the same phone number creates a new, "
+"empty account. None of your previous data is restored."
+msgstr ""
+"After deletion, signing in again with the same phone number creates a "
+"new, empty account. None of your previous data is restored."

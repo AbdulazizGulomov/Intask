@@ -22,6 +22,7 @@ from rest_framework.response import Response
 
 from apps.accounts.models import User, WorkerProfile
 from apps.accounts.auth.otp import verify_otp, normalize_phone
+from apps.accounts.services.deletion import delete_user_account
 from apps.jobs.models import Job, Profession
 from apps.moderation.selectors import blocked_user_ids
 from apps.jobs.utils import format_pay
@@ -230,10 +231,24 @@ def _me_payload(request):
     }
 
 
-@api_view(["GET", "PATCH"])
+@api_view(["GET", "PATCH", "DELETE"])
 @permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser, JSONParser])
 def me(request):
+    if request.method == "DELETE":
+        # Permanent account deletion (App Store Guideline 5.1.1(v)). Real
+        # deletion, not deactivation - see apps.accounts.services.deletion.
+        u = request.user
+        if u.is_staff or u.is_superuser:
+            # Staff accounts are managed in the admin. Self-service deletion
+            # here would also take out every Order they are party to.
+            return Response(
+                {"detail": "Staff accounts cannot be deleted from the app."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        delete_user_account(u)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
     if request.method == "PATCH":
         # Create the profile on first edit if it doesn't exist yet.
         wp, _ = WorkerProfile.objects.get_or_create(user=request.user)

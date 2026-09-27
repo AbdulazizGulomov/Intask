@@ -2561,3 +2561,83 @@ msgstr "9. Контакты"
 #: .\templates\terms.html
 msgid "Questions about these terms, or to report something urgent:"
 msgstr "Вопросы по этим условиям или срочное сообщение:"
+
+#: .\apps\accounts\models.py
+msgid "Terms accepted at"
+msgstr "Условия приняты"
+
+#: .\apps\accounts\models.py
+msgid "Accepted terms version"
+msgstr "Версия принятых условий"
+
+#: .\templates\data_deletion.html
+msgid "Last updated: 27 September 2026"
+msgstr "Последнее обновление: 27 сентября 2026 г."
+
+#: .\templates\data_deletion.html
+msgid ""
+"You can delete your InTask account and all data associated with it at any "
+"time. The fastest way is directly in the app — you do not need to contact us "
+"or wait for a reply."
+msgstr ""
+"Вы можете в любой момент удалить свой аккаунт InTask и все связанные с "
+"ним данные. Быстрее всего — прямо в приложении: не нужно никуда писать и "
+"ждать ответа."
+
+#: .\templates\data_deletion.html
+msgid "Delete your account in the app"
+msgstr "Удалите аккаунт в приложении"
+
+#: .\templates\data_deletion.html
+msgid "Open the InTask app and go to:"
+msgstr "Откройте приложение InTask и перейдите:"
+
+#: .\templates\data_deletion.html
+msgid "Profil → Sozlamalar → Hisobni o‘chirish"
+msgstr ""
+"Profil → Sozlamalar → Hisobni o‘chirish (Профиль → Настройки → Удалить "
+"аккаунт)"
+
+#: .\templates\data_deletion.html
+msgid ""
+"Confirm when asked. Your account and all of your data are deleted "
+"immediately — there is no waiting period and no review step. The deletion is "
+"permanent and cannot be undone."
+msgstr ""
+"Подтвердите запрос. Ваш аккаунт и все данные удаляются немедленно — без "
+"периода ожидания и без этапа проверки. Удаление необратимо."
+
+#: .\templates\data_deletion.html
+msgid "If you cannot use the app"
+msgstr "Если вы не можете воспользоваться приложением"
+
+#: .\templates\data_deletion.html
+msgid ""
+"If you have uninstalled the app or cannot sign in, you can ask us to delete "
+"the account for you:"
+msgstr ""
+"Если вы удалили приложение или не можете войти, вы можете попросить нас "
+"удалить аккаунт за вас:"
+
+#: .\templates\data_deletion.html
+msgid "Reports you filed and reports filed about you."
+msgstr "Жалобы, поданные вами, и жалобы на вас."
+
+#: .\templates\data_deletion.html
+msgid "Your block list, in both directions."
+msgstr "Ваш список блокировок — в обе стороны."
+
+#: .\templates\data_deletion.html
+msgid ""
+"Uploaded photos are removed from our servers, not only from the database."
+msgstr ""
+"Загруженные фотографии удаляются с наших серверов, а не только из базы "
+"данных."
+
+#: .\templates\data_deletion.html
+msgid ""
+"After deletion, signing in again with the same phone number creates a new, "
+"empty account. None of your previous data is restored."
+msgstr ""
+"После удаления повторный вход с тем же номером телефона создаёт новый "
+"пустой аккаунт. Никакие прежние данные не восстанавливаются."

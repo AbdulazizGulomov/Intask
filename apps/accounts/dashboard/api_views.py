@@ -59,7 +59,17 @@ class OperatorLogoutView(APIView):
     Body:
         {"refresh": "<jwt>"}
 
-    Blacklists the refresh token so it can't be used again.
+    Validates the refresh token and reports the session closed. The client
+    discards both tokens; the access token then expires on its own within
+    ACCESS_TOKEN_LIFETIME (15 minutes).
+
+    NOTE: this does NOT blacklist the token. `token.blacklist()` only exists
+    when rest_framework_simplejwt.token_blacklist is in INSTALLED_APPS, and
+    it is not — BlacklistMixin defines the method conditionally. Calling it
+    raised AttributeError, which the `except TokenError` below did not catch,
+    so every logout returned 500. To get real server-side revocation, add
+    that app to INSTALLED_APPS, run its migrations, and restore the
+    blacklist() call here.
     """
     permission_classes = [IsAuthenticated]
 
@@ -72,8 +82,7 @@ class OperatorLogoutView(APIView):
             )
 
         try:
-            token = RefreshToken(refresh)
-            token.blacklist()
+            RefreshToken(refresh)
         except TokenError:
             # Token already invalid/expired — treat as logged out anyway
             pass

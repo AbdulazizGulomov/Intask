@@ -5,12 +5,13 @@ from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseForbidden
+from django.http import Http404, HttpResponseForbidden
 from django.utils.translation import gettext as _, get_language
 
 logger = logging.getLogger(__name__)
 
 from apps.accounts.views import require_capability, UZ_REGIONS
+from apps.moderation.selectors import is_blocked_between
 from .models import Job, Profession
 from .forms import JobForm
 from .utils import format_pay
@@ -25,6 +26,9 @@ def worker_job_detail(request, job_id: int):
     preview = request.GET.get("preview") == "1"
 
     job = get_object_or_404(Job, id=job_id, is_active=True)
+    # UGC safety: a blocked employer's listing must look absent, not forbidden.
+    if job.employer_id and is_blocked_between(request.user, job.employer_id):
+        raise Http404
 
     region_label_map = dict(UZ_REGIONS)
     region_label = region_label_map.get(job.region, job.region)

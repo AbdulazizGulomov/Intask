@@ -79,6 +79,7 @@ INSTALLED_APPS = [
     "apps.jobs.apps.JobsConfig",
     "apps.orders.apps.OrdersConfig",
     "apps.analytics.apps.AnalyticsConfig",
+    "apps.moderation.apps.ModerationConfig",
 ]
 
 # =====================
@@ -236,6 +237,26 @@ PLAY_REVIEW_PHONE = [
     p.strip() for p in os.getenv("PLAY_REVIEW_PHONE", "").split(",") if p.strip()
 ]
 PLAY_REVIEW_OTP = os.getenv("PLAY_REVIEW_OTP", "")
+
+# =====================
+# UGC safety / moderation
+# =====================
+# Version string stamped onto User.terms_version when a user accepts the terms.
+# Bump this when the terms change materially — the mobile app compares it to
+# the value in GET /api/me/ and re-prompts when they differ.
+TERMS_VERSION = os.getenv("TERMS_VERSION", "1.0")
+
+# Deployment-specific additions to the shipped banned-word lists in
+# apps/moderation/wordlist.py. Same entry format (lowercase, "*" = stem).
+MODERATION_EXTRA_BANNED_WORDS = [
+    w.strip().lower()
+    for w in os.getenv("MODERATION_EXTRA_BANNED_WORDS", "").split(",")
+    if w.strip()
+]
+
+# Operator response commitment for abuse reports, in hours. Reports older than
+# this are flagged overdue in the dashboard. Apple Guideline 1.2 requires 24h.
+MODERATION_SLA_HOURS = 24
 
 # =====================
 # DRF / JWT

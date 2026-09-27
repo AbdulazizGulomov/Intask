@@ -10,6 +10,7 @@ import DashboardHome from "./pages/DashboardHome";
 import OrdersPage from "./pages/OrdersPage";
 import MastersPage from "./pages/MastersPage";
 import ClientsPage from "./pages/ClientsPage";
+import ReportsPage from "./pages/ReportsPage";
 import FinancePage from "./pages/FinancePage";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import SettingsPage from "./pages/SettingsPage";
@@ -44,6 +45,7 @@ export default function App() {
             <Route path="orders" element={<OrdersPage />} />
             <Route path="masters" element={<MastersPage />} />
             <Route path="clients" element={<ClientsPage />} />
+            <Route path="reports" element={<ReportsPage />} />
             <Route path="finance" element={<FinancePage />} />
             <Route path="analytics" element={<AnalyticsPage />} />
             <Route path="settings" element={<SettingsPage />} />

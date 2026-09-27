@@ -64,6 +64,21 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
+    # Terms / EULA acceptance (App Store Guideline 1.2). Stamped by
+    # POST /api/me/accept-terms/ and surfaced in GET /api/me/, so the app can
+    # re-prompt when settings.TERMS_VERSION moves past terms_version.
+    terms_accepted_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name=_("Terms accepted at"),
+    )
+    terms_version = models.CharField(
+        max_length=20,
+        blank=True,
+        default="",
+        verbose_name=_("Accepted terms version"),
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     objects = UserManager()

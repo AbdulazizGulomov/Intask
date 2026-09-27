@@ -1,0 +1,147 @@
+{% extends "base_site.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Terms of Use" %} — InTask{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 860px;">
+  <div class="card shadow-sm border-0 my-4">
+    <div class="card-body p-4 p-md-5">
+
+      <h1 class="h2 mb-1">{% trans "Terms of Use" %}</h1>
+      <p class="text-secondary mb-4">{% trans "Version 1.0 — Last updated: 27 September 2026" %}</p>
+
+      <p>
+        {% blocktrans trimmed %}
+        These Terms of Use govern your use of the InTask website and the InTask
+        mobile application. By creating an account, posting a job, applying to a
+        job or otherwise using InTask, you agree to these terms. If you do not
+        agree, do not use InTask.
+        {% endblocktrans %}
+      </p>
+
+      <h2 class="h4 mt-5">{% trans "1. Who may use InTask" %}</h2>
+      <ul>
+        <li>{% trans "You must be at least 18 years old." %}</li>
+        <li>{% trans "You must register with a phone number you control." %}</li>
+        <li>{% trans "One person, one account. Do not impersonate anyone else." %}</li>
+      </ul>
+
+      <div class="alert alert-danger mt-4" role="alert">
+        <h2 class="h4 mb-2">{% trans "2. Zero tolerance for objectionable content and abusive users" %}</h2>
+        <p class="mb-2">
+          {% blocktrans trimmed %}
+          InTask has <strong>zero tolerance</strong> for objectionable content and
+          for abusive behaviour. There is no warning system and no second chance
+          for serious violations: content is removed and accounts are terminated.
+          {% endblocktrans %}
+        </p>
+        <p class="mb-0">
+          {% blocktrans trimmed %}
+          Every report is reviewed by our moderation team and acted on
+          <strong>within 24 hours</strong>. Content found to violate these terms
+          is removed, and the account responsible is suspended or permanently
+          terminated.
+          {% endblocktrans %}
+        </p>
+      </div>
+
+      <h2 class="h4 mt-4">{% trans "3. What is not allowed" %}</h2>
+      <p>{% trans "You must not post, send or share any of the following:" %}</p>
+      <ul>
+        <li>{% trans "Obscene, vulgar or sexually explicit content of any kind." %}</li>
+        <li>{% trans "Harassment, threats, bullying, stalking or intimidation of any person." %}</li>
+        <li>{% trans "Hate speech or attacks based on nationality, ethnicity, religion, gender, disability or any other protected characteristic." %}</li>
+        <li>{% trans "Content promoting violence, self-harm, terrorism or any criminal activity." %}</li>
+        <li>{% trans "Sexual services, escort work, or anything involving the exploitation of a person." %}</li>
+        <li>{% trans "Drugs, weapons, counterfeit or stolen goods, forged documents, or money laundering." %}</li>
+        <li>{% trans "Any content involving minors in an unsafe, exploitative or sexual context." %}</li>
+        <li>{% trans "Fraud, scams, pyramid schemes, fake job offers, or requests for advance payment from workers." %}</li>
+        <li>{% trans "Spam, repeated duplicate listings, or advertising unrelated to work on InTask." %}</li>
+        <li>{% trans "Other people's personal data published without their consent." %}</li>
+      </ul>
+      <p>
+        {% blocktrans trimmed %}
+        InTask automatically filters job titles, job descriptions and reviews for
+        prohibited language and rejects them before they are published. Filtering
+        is a first line of defence, not a substitute for the rules above.
+        {% endblocktrans %}
+      </p>
+
+      <h2 class="h4 mt-5">{% trans "4. Reporting and blocking" %}</h2>
+      <p>
+        {% blocktrans trimmed %}
+        Every job listing and every user profile in the app has a
+        <strong>Report</strong> action. Use it whenever you see content or
+        behaviour that breaks these rules. Reports are confidential — the person
+        you report is not told who reported them.
+        {% endblocktrans %}
+      </p>
+      <p>
+        {% blocktrans trimmed %}
+        You can also <strong>Block</strong> any user. A block works in both
+        directions immediately: their jobs disappear from your lists and your
+        jobs disappear from theirs, and neither of you can apply to or see the
+        other's listings.
+        {% endblocktrans %}
+      </p>
+      <p>{% trans "What we do when a report arrives:" %}</p>
+      <ul>
+        <li>{% trans "A moderator reviews every report within 24 hours of it being submitted." %}</li>
+        <li>{% trans "Content that violates these terms is hidden or deleted." %}</li>
+        <li>{% trans "The account responsible is deactivated, and for serious violations permanently terminated." %}</li>
+        <li>{% trans "Where the law requires it, we cooperate with the relevant authorities." %}</li>
+      </ul>
+
+      <h2 class="h4 mt-5">{% trans "5. Your responsibilities" %}</h2>
+      <ul>
+        <li>{% trans "You are responsible for everything posted from your account." %}</li>
+        <li>{% trans "Job listings must describe real work, with honest pay and honest conditions." %}</li>
+        <li>{% trans "Agreements about pay, schedule and safety are between the employer and the worker. InTask is a platform that connects them, not an employer or an agent." %}</li>
+        <li>{% trans "Meet safely, and verify who you are dealing with before starting work." %}</li>
+      </ul>
+
+      <h2 class="h4 mt-5">{% trans "6. Suspension and termination" %}</h2>
+      <p>
+        {% blocktrans trimmed %}
+        We may suspend or terminate any account, without prior notice, when it
+        posts objectionable content, harasses or abuses another user, or
+        repeatedly breaks these terms. Terminated users may not create a new
+        account.
+        {% endblocktrans %}
+      </p>
+
+      <h2 class="h4 mt-5">{% trans "7. Deleting your account" %}</h2>
+      <p>
+        {% blocktrans trimmed %}
+        You can delete your account and all data associated with it at any time.
+        Deletion is permanent and cannot be undone.
+        {% endblocktrans %}
+      </p>
+      <p>
+        <a href="{% url 'accounts:data_deletion' %}">{% trans "How to delete your account and data" %}</a>
+      </p>
+
+      <h2 class="h4 mt-5">{% trans "8. Changes to these terms" %}</h2>
+      <p>
+        {% blocktrans trimmed %}
+        We may update these terms. When we do, we publish a new version here and
+        ask you to accept it in the app before you continue using InTask.
+        {% endblocktrans %}
+      </p>
+
+      <h2 class="h4 mt-5">{% trans "9. Contact" %}</h2>
+      <p>
+        {% trans "Questions about these terms, or to report something urgent:" %}<br>
+        <a href="mailto:abdulaziz.gulomov91@gmail.com">abdulaziz.gulomov91@gmail.com</a><br>
+        <a href="tel:+998996177337">+998 99 617 73 37</a>
+      </p>
+
+      <p class="mt-4">
+        <a href="{% url 'accounts:privacy_policy' %}">{% trans "Read our full Privacy Policy" %}</a>
+      </p>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

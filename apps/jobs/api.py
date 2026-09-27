@@ -8,9 +8,12 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django.db.models import Avg, Count, Q
+from django.http import Http404
 from django.shortcuts import get_object_or_404
 from apps.jobs.models import Job, JobApplication, Profession
 from apps.jobs.utils import format_pay, pay_period_warning, haversine_km
+from apps.moderation.filters import REJECTION_MESSAGE, contains_banned_words
+from apps.moderation.selectors import blocked_user_ids, is_blocked_between
 from apps.orders.models import Order
 
 
@@ -127,13 +130,24 @@ class JobListAPIView(generics.ListAPIView):
             qs = qs.filter(title__icontains=search)
         if profession:
             qs = qs.filter(profession_id=profession)
+        # UGC safety: a block hides each party's listings from the other, in
+        # both directions. No-op for anonymous callers.
+        blocked = blocked_user_ids(self.request.user)
+        if blocked:
+            qs = qs.exclude(employer_id__in=blocked)
         return qs
 
 
 class JobDetailAPIView(generics.RetrieveAPIView):
     serializer_class = JobDetailSerializer
     permission_classes = [AllowAny]
-    queryset = Job.objects.filter(is_active=True).select_related("profession")
+
+    def get_queryset(self):
+        qs = Job.objects.filter(is_active=True).select_related("profession")
+        # 404 rather than 403 for a blocked employer's job: the listing should
+        # look absent, not merely forbidden.
+        blocked = blocked_user_ids(self.request.user)
+        return qs.exclude(employer_id__in=blocked) if blocked else qs
 
 
 class JobApplyAPIView(APIView):
@@ -142,6 +156,10 @@ class JobApplyAPIView(APIView):
     def post(self, request, pk):
         job = get_object_or_404(Job, pk=pk, is_active=True)
         user = request.user
+        # Blocked in either direction -> the job is invisible to this user, so
+        # applying must fail the same way browsing does.
+        if job.employer_id and is_blocked_between(user, job.employer_id):
+            raise Http404
         # Capability-based gate (dual-mode): allow anyone who can work — worker/
         # employer role, or anyone with a WorkerProfile. Only pure non-worker
         # roles (operator/admin) are blocked.
@@ -210,6 +228,18 @@ class JobCreateAPIView(APIView):
             errors["job_type"] = "This field is required."
         if errors:
             return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+
+        # UGC safety: reject banned language in the two free-text fields before
+        # anything is written. Errors are keyed per field so the app can point
+        # at the offending input; the message never echoes the matched word.
+        description_raw = str(data.get("description") or "")
+        content_errors = {}
+        if contains_banned_words(title):
+            content_errors["title"] = [str(REJECTION_MESSAGE)]
+        if contains_banned_words(description_raw):
+            content_errors["description"] = [str(REJECTION_MESSAGE)]
+        if content_errors:
+            return Response(content_errors, status=status.HTTP_400_BAD_REQUEST)
 
         # Profession is optional; keep only a valid existing id, else leave unset
         # (same lenient behavior as the web view).
@@ -344,11 +374,13 @@ class MyApplicationsAPIView(generics.ListAPIView):
     pagination_class = None
 
     def get_queryset(self):
-        return (
+        qs = (
             JobApplication.objects.filter(worker=self.request.user)
             .select_related("job", "job__profession")
             .order_by("-created_at")
         )
+        blocked = blocked_user_ids(self.request.user)
+        return qs.exclude(job__employer_id__in=blocked) if blocked else qs
 
 
 # ---- employer: applicants (mobile 4d-5 / 9c) -------------------------------
@@ -442,8 +474,12 @@ class JobApplicationsAPIView(APIView):
                 {"detail": "Only the job's employer can view its applications."},
                 status=status.HTTP_403_FORBIDDEN,
             )
+        applications_qs = JobApplication.objects.filter(job=job)
+        blocked = blocked_user_ids(request.user)
+        if blocked:
+            applications_qs = applications_qs.exclude(worker_id__in=blocked)
         applications = list(
-            JobApplication.objects.filter(job=job)
+            applications_qs
             .select_related(*_APPLICATION_RELATED)
             .order_by("-created_at", "-id")
         )

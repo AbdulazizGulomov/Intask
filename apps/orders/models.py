@@ -129,6 +129,24 @@ class Order(models.Model):
         verbose_name = _("Order")
         verbose_name_plural = _("Orders")
 
+    def clean(self):
+        """Reject banned language in the free-text review fields.
+
+        Model-level so the UGC filter holds for every write path — the
+        operator dashboard today, and any worker/employer review endpoint
+        added later — rather than living in one serializer.
+        """
+        from django.core.exceptions import ValidationError
+
+        from apps.moderation.filters import REJECTION_MESSAGE, contains_banned_words
+
+        errors = {}
+        for field in ("employer_review", "worker_review"):
+            if contains_banned_words(getattr(self, field, "") or ""):
+                errors[field] = REJECTION_MESSAGE
+        if errors:
+            raise ValidationError(errors)
+
     def __str__(self):
         return f"Order #{self.pk} — {self.title}"
 

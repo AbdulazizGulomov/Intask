@@ -3,6 +3,8 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView
 
+from apps.moderation.dashboard import ReportViewSet
+
 from .api_views import (
     # Auth
     OperatorLoginView,
@@ -31,6 +33,8 @@ router = DefaultRouter()
 router.register(r"orders", OrderViewSet, basename="order")
 router.register(r"masters", MasterViewSet, basename="master")
 router.register(r"clients", ClientViewSet, basename="client")
+# UGC safety: abuse-report moderation queue (App Store Guideline 1.2).
+router.register(r"reports", ReportViewSet, basename="report")
 
 
 app_name = "dashboard"

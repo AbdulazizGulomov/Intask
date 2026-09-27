@@ -17,6 +17,8 @@ urlpatterns = [
     # Legal pages (must stay publicly reachable — Google Play requirement)
     path("privacy-policy/", TemplateView.as_view(template_name="privacy_policy.html"), name="privacy_policy"),
     path("data-deletion/", TemplateView.as_view(template_name="data_deletion.html"), name="data_deletion"),
+    # Terms / EULA (App Store Guideline 1.2) - must stay publicly reachable.
+    path("terms/", TemplateView.as_view(template_name="terms.html"), name="terms"),
     path("role/", views.role_select, name="role_select"),
     path("choose-role/<str:role>/", views.choose_role, name="choose_role"),
     path("after-otp/", views.after_otp_redirect, name="after_otp_redirect"),

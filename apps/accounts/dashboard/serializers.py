@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
 
 from apps.accounts.models import User
+from apps.moderation.filters import validate_clean_text
 
 
 class OperatorLoginSerializer(serializers.Serializer):
@@ -339,7 +340,19 @@ class OrderUpdateSerializer(serializers.ModelSerializer):
             "lng",
             "agreed_price",
             "cancellation_reason",
+            # Review text is editable so an operator can act on a report
+            # against a review; the UGC word-list filter applies (below).
+            "employer_review",
+            "worker_review",
         )
+
+    def validate_employer_review(self, value):
+        validate_clean_text(value, "employer_review")
+        return value
+
+    def validate_worker_review(self, value):
+        validate_clean_text(value, "worker_review")
+        return value
 
     def update(self, instance, validated_data):
         # Track status changes in history

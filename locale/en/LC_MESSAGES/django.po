@@ -1879,3 +1879,419 @@ msgstr "Location not confirmed — the listing will be saved without a map posit
 #: .\templates\landing.html
 msgid "Ma'lumotlarni o'chirish"
 msgstr "Data deletion"
+
+#: .\apps\moderation\models.py
+msgid "User"
+msgstr "User"
+
+#: .\apps\moderation\models.py
+msgid "Moderation"
+msgstr "Moderation"
+
+#: .\apps\moderation\models.py
+msgid "Spam"
+msgstr "Spam"
+
+#: .\apps\moderation\models.py
+msgid "Abuse or harassment"
+msgstr "Abuse or harassment"
+
+#: .\apps\moderation\models.py
+msgid "Fraud or scam"
+msgstr "Fraud or scam"
+
+#: .\apps\moderation\models.py
+msgid "Inappropriate content"
+msgstr "Inappropriate content"
+
+#: .\apps\moderation\models.py
+msgid "Other"
+msgstr "Other"
+
+#: .\apps\moderation\models.py
+msgid "Open"
+msgstr "Open"
+
+#: .\apps\moderation\models.py
+msgid "Resolved"
+msgstr "Resolved"
+
+#: .\apps\moderation\models.py
+msgid "Rejected"
+msgstr "Rejected"
+
+#: .\apps\moderation\models.py
+msgid "Reporter"
+msgstr "Reporter"
+
+#: .\apps\moderation\models.py
+msgid "Reported user"
+msgstr "Reported user"
+
+#: .\apps\moderation\models.py
+msgid "Reported job"
+msgstr "Reported job"
+
+#: .\apps\moderation\models.py
+msgid "Resolved by"
+msgstr "Resolved by"
+
+#: .\apps\moderation\models.py
+msgid "Report"
+msgstr "Report"
+
+#: .\apps\moderation\models.py
+msgid "Reports"
+msgstr "Reports"
+
+#: .\apps\moderation\models.py
+msgid "Blocker"
+msgstr "Blocker"
+
+#: .\apps\moderation\models.py
+msgid "Blocked user"
+msgstr "Blocked user"
+
+#: .\apps\moderation\models.py
+msgid "Block"
+msgstr "Block"
+
+#: .\apps\moderation\models.py
+msgid "Blocks"
+msgstr "Blocks"
+
+#: .\apps\moderation\api.py .\apps\moderation\serializers.py
+msgid "You already have an open report for this target."
+msgstr "You already have an open report for this target."
+
+#: .\apps\moderation\api.py .\apps\moderation\serializers.py
+msgid "This field is required."
+msgstr "This field is required."
+
+#: .\apps\moderation\api.py .\apps\moderation\serializers.py
+msgid "Must be a numeric user id."
+msgstr "Must be a numeric user id."
+
+#: .\apps\moderation\api.py .\apps\moderation\serializers.py
+msgid "You cannot block yourself."
+msgstr "You cannot block yourself."
+
+#: .\apps\moderation\dashboard.py
+msgid "This report does not target a job."
+msgstr "This report does not target a job."
+
+#: .\apps\moderation\dashboard.py
+msgid "This report has no user to deactivate."
+msgstr "This report has no user to deactivate."
+
+#: .\apps\moderation\dashboard.py
+msgid "Staff and operator accounts cannot be deactivated here."
+msgstr "Staff and operator accounts cannot be deactivated here."
+
+#: .\apps\moderation\filters.py
+msgid ""
+"This text contains language that is not allowed on InTask. Please remove "
+"any offensive, abusive or illegal content and try again."
+msgstr ""
+"This text contains language that is not allowed on InTask. Please remove "
+"any offensive, abusive or illegal content and try again."
+
+#: .\apps\moderation\api.py .\apps\moderation\serializers.py
+msgid "target_user is required when target_type is 'user'."
+msgstr "target_user is required when target_type is 'user'."
+
+#: .\apps\moderation\api.py .\apps\moderation\serializers.py
+msgid "target_job must be empty when target_type is 'user'."
+msgstr "target_job must be empty when target_type is 'user'."
+
+#: .\apps\moderation\api.py .\apps\moderation\serializers.py
+msgid "You cannot report yourself."
+msgstr "You cannot report yourself."
+
+#: .\apps\moderation\api.py .\apps\moderation\serializers.py
+msgid "target_job is required when target_type is 'job'."
+msgstr "target_job is required when target_type is 'job'."
+
+#: .\apps\moderation\api.py .\apps\moderation\serializers.py
+msgid "target_user must be empty when target_type is 'job'."
+msgstr "target_user must be empty when target_type is 'job'."
+
+#: .\apps\moderation\api.py .\apps\moderation\serializers.py
+msgid "You cannot report your own job."
+msgstr "You cannot report your own job."
+
+#: .\templates\terms.html
+msgid "Terms of Use"
+msgstr "Terms of Use"
+
+#: .\templates\terms.html
+msgid "Version 1.0 — Last updated: 27 September 2026"
+msgstr "Version 1.0 — Last updated: 27 September 2026"
+
+#: .\templates\terms.html
+msgid ""
+"These Terms of Use govern your use of the InTask website and the InTask "
+"mobile application. By creating an account, posting a job, applying to a "
+"job or otherwise using InTask, you agree to these terms. If you do not "
+"agree, do not use InTask."
+msgstr ""
+"These Terms of Use govern your use of the InTask website and the InTask "
+"mobile application. By creating an account, posting a job, applying to a "
+"job or otherwise using InTask, you agree to these terms. If you do not "
+"agree, do not use InTask."
+
+#: .\templates\terms.html
+msgid "1. Who may use InTask"
+msgstr "1. Who may use InTask"
+
+#: .\templates\terms.html
+msgid "You must be at least 18 years old."
+msgstr "You must be at least 18 years old."
+
+#: .\templates\terms.html
+msgid "You must register with a phone number you control."
+msgstr "You must register with a phone number you control."
+
+#: .\templates\terms.html
+msgid "One person, one account. Do not impersonate anyone else."
+msgstr "One person, one account. Do not impersonate anyone else."
+
+#: .\templates\terms.html
+msgid "2. Zero tolerance for objectionable content and abusive users"
+msgstr "2. Zero tolerance for objectionable content and abusive users"
+
+#: .\templates\terms.html
+msgid ""
+"InTask has <strong>zero tolerance</strong> for objectionable content and "
+"for abusive behaviour. There is no warning system and no second chance "
+"for serious violations: content is removed and accounts are terminated."
+msgstr ""
+"InTask has <strong>zero tolerance</strong> for objectionable content and "
+"for abusive behaviour. There is no warning system and no second chance "
+"for serious violations: content is removed and accounts are terminated."
+
+#: .\templates\terms.html
+msgid ""
+"Every report is reviewed by our moderation team and acted on "
+"<strong>within 24 hours</strong>. Content found to violate these terms "
+"is removed, and the account responsible is suspended or permanently "
+"terminated."
+msgstr ""
+"Every report is reviewed by our moderation team and acted on "
+"<strong>within 24 hours</strong>. Content found to violate these terms "
+"is removed, and the account responsible is suspended or permanently "
+"terminated."
+
+#: .\templates\terms.html
+msgid "3. What is not allowed"
+msgstr "3. What is not allowed"
+
+#: .\templates\terms.html
+msgid "You must not post, send or share any of the following:"
+msgstr "You must not post, send or share any of the following:"
+
+#: .\templates\terms.html
+msgid "Obscene, vulgar or sexually explicit content of any kind."
+msgstr "Obscene, vulgar or sexually explicit content of any kind."
+
+#: .\templates\terms.html
+msgid "Harassment, threats, bullying, stalking or intimidation of any person."
+msgstr "Harassment, threats, bullying, stalking or intimidation of any person."
+
+#: .\templates\terms.html
+msgid ""
+"Hate speech or attacks based on nationality, ethnicity, religion, "
+"gender, disability or any other protected characteristic."
+msgstr ""
+"Hate speech or attacks based on nationality, ethnicity, religion, "
+"gender, disability or any other protected characteristic."
+
+#: .\templates\terms.html
+msgid "Content promoting violence, self-harm, terrorism or any criminal activity."
+msgstr "Content promoting violence, self-harm, terrorism or any criminal activity."
+
+#: .\templates\terms.html
+msgid ""
+"Sexual services, escort work, or anything involving the exploitation of "
+"a person."
+msgstr ""
+"Sexual services, escort work, or anything involving the exploitation of "
+"a person."
+
+#: .\templates\terms.html
+msgid ""
+"Drugs, weapons, counterfeit or stolen goods, forged documents, or money "
+"laundering."
+msgstr ""
+"Drugs, weapons, counterfeit or stolen goods, forged documents, or money "
+"laundering."
+
+#: .\templates\terms.html
+msgid "Any content involving minors in an unsafe, exploitative or sexual context."
+msgstr "Any content involving minors in an unsafe, exploitative or sexual context."
+
+#: .\templates\terms.html
+msgid ""
+"Fraud, scams, pyramid schemes, fake job offers, or requests for advance "
+"payment from workers."
+msgstr ""
+"Fraud, scams, pyramid schemes, fake job offers, or requests for advance "
+"payment from workers."
+
+#: .\templates\terms.html
+msgid ""
+"Spam, repeated duplicate listings, or advertising unrelated to work on "
+"InTask."
+msgstr ""
+"Spam, repeated duplicate listings, or advertising unrelated to work on "
+"InTask."
+
+#: .\templates\terms.html
+msgid "Other people's personal data published without their consent."
+msgstr "Other people's personal data published without their consent."
+
+#: .\templates\terms.html
+msgid ""
+"InTask automatically filters job titles, job descriptions and reviews "
+"for prohibited language and rejects them before they are published. "
+"Filtering is a first line of defence, not a substitute for the rules "
+"above."
+msgstr ""
+"InTask automatically filters job titles, job descriptions and reviews "
+"for prohibited language and rejects them before they are published. "
+"Filtering is a first line of defence, not a substitute for the rules "
+"above."
+
+#: .\templates\terms.html
+msgid "4. Reporting and blocking"
+msgstr "4. Reporting and blocking"
+
+#: .\templates\terms.html
+msgid ""
+"Every job listing and every user profile in the app has a "
+"<strong>Report</strong> action. Use it whenever you see content or "
+"behaviour that breaks these rules. Reports are confidential — the person "
+"you report is not told who reported them."
+msgstr ""
+"Every job listing and every user profile in the app has a "
+"<strong>Report</strong> action. Use it whenever you see content or "
+"behaviour that breaks these rules. Reports are confidential — the person "
+"you report is not told who reported them."
+
+#: .\templates\terms.html
+msgid ""
+"You can also <strong>Block</strong> any user. A block works in both "
+"directions immediately: their jobs disappear from your lists and your "
+"jobs disappear from theirs, and neither of you can apply to or see the "
+"other's listings."
+msgstr ""
+"You can also <strong>Block</strong> any user. A block works in both "
+"directions immediately: their jobs disappear from your lists and your "
+"jobs disappear from theirs, and neither of you can apply to or see the "
+"other's listings."
+
+#: .\templates\terms.html
+msgid "What we do when a report arrives:"
+msgstr "What we do when a report arrives:"
+
+#: .\templates\terms.html
+msgid "A moderator reviews every report within 24 hours of it being submitted."
+msgstr "A moderator reviews every report within 24 hours of it being submitted."
+
+#: .\templates\terms.html
+msgid "Content that violates these terms is hidden or deleted."
+msgstr "Content that violates these terms is hidden or deleted."
+
+#: .\templates\terms.html
+msgid ""
+"The account responsible is deactivated, and for serious violations "
+"permanently terminated."
+msgstr ""
+"The account responsible is deactivated, and for serious violations "
+"permanently terminated."
+
+#: .\templates\terms.html
+msgid "Where the law requires it, we cooperate with the relevant authorities."
+msgstr "Where the law requires it, we cooperate with the relevant authorities."
+
+#: .\templates\terms.html
+msgid "5. Your responsibilities"
+msgstr "5. Your responsibilities"
+
+#: .\templates\terms.html
+msgid "You are responsible for everything posted from your account."
+msgstr "You are responsible for everything posted from your account."
+
+#: .\templates\terms.html
+msgid ""
+"Job listings must describe real work, with honest pay and honest "
+"conditions."
+msgstr ""
+"Job listings must describe real work, with honest pay and honest "
+"conditions."
+
+#: .\templates\terms.html
+msgid ""
+"Agreements about pay, schedule and safety are between the employer and "
+"the worker. InTask is a platform that connects them, not an employer or "
+"an agent."
+msgstr ""
+"Agreements about pay, schedule and safety are between the employer and "
+"the worker. InTask is a platform that connects them, not an employer or "
+"an agent."
+
+#: .\templates\terms.html
+msgid "Meet safely, and verify who you are dealing with before starting work."
+msgstr "Meet safely, and verify who you are dealing with before starting work."
+
+#: .\templates\terms.html
+msgid "6. Suspension and termination"
+msgstr "6. Suspension and termination"
+
+#: .\templates\terms.html
+msgid ""
+"We may suspend or terminate any account, without prior notice, when it "
+"posts objectionable content, harasses or abuses another user, or "
+"repeatedly breaks these terms. Terminated users may not create a new "
+"account."
+msgstr ""
+"We may suspend or terminate any account, without prior notice, when it "
+"posts objectionable content, harasses or abuses another user, or "
+"repeatedly breaks these terms. Terminated users may not create a new "
+"account."
+
+#: .\templates\terms.html
+msgid "7. Deleting your account"
+msgstr "7. Deleting your account"
+
+#: .\templates\terms.html
+msgid ""
+"You can delete your account and all data associated with it at any time. "
+"Deletion is permanent and cannot be undone."
+msgstr ""
+"You can delete your account and all data associated with it at any time. "
+"Deletion is permanent and cannot be undone."
+
+#: .\templates\terms.html
+msgid "How to delete your account and data"
+msgstr "How to delete your account and data"
+
+#: .\templates\terms.html
+msgid "8. Changes to these terms"
+msgstr "8. Changes to these terms"
+
+#: .\templates\terms.html
+msgid ""
+"We may update these terms. When we do, we publish a new version here and "
+"ask you to accept it in the app before you continue using InTask."
+msgstr ""
+"We may update these terms. When we do, we publish a new version here and "
+"ask you to accept it in the app before you continue using InTask."
+
+#: .\templates\terms.html
+msgid "9. Contact"
+msgstr "9. Contact"
+
+#: .\templates\terms.html
+msgid "Questions about these terms, or to report something urgent:"
+msgstr "Questions about these terms, or to report something urgent:"

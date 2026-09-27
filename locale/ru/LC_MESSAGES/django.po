@@ -2136,3 +2136,428 @@ msgstr "Удаление аккаунта и данных"
 #: .\templates\landing.html
 msgid "Ma'lumotlarni o'chirish"
 msgstr "Удаление данных"
+
+#: .\apps\moderation\models.py
+msgid "User"
+msgstr "Пользователь"
+
+#: .\apps\moderation\models.py
+msgid "Moderation"
+msgstr "Модерация"
+
+#: .\apps\moderation\models.py
+msgid "Spam"
+msgstr "Спам"
+
+#: .\apps\moderation\models.py
+msgid "Abuse or harassment"
+msgstr "Оскорбления или преследование"
+
+#: .\apps\moderation\models.py
+msgid "Fraud or scam"
+msgstr "Мошенничество или обман"
+
+#: .\apps\moderation\models.py
+msgid "Inappropriate content"
+msgstr "Неприемлемый контент"
+
+#: .\apps\moderation\models.py
+msgid "Other"
+msgstr "Другое"
+
+#: .\apps\moderation\models.py
+msgid "Open"
+msgstr "Открыта"
+
+#: .\apps\moderation\models.py
+msgid "Resolved"
+msgstr "Решена"
+
+#: .\apps\moderation\models.py
+msgid "Rejected"
+msgstr "Отклонена"
+
+#: .\apps\moderation\models.py
+msgid "Reporter"
+msgstr "Заявитель"
+
+#: .\apps\moderation\models.py
+msgid "Reported user"
+msgstr "Пользователь в жалобе"
+
+#: .\apps\moderation\models.py
+msgid "Reported job"
+msgstr "Работа в жалобе"
+
+#: .\apps\moderation\models.py
+msgid "Resolved by"
+msgstr "Кем решена"
+
+#: .\apps\moderation\models.py
+msgid "Report"
+msgstr "Жалоба"
+
+#: .\apps\moderation\models.py
+msgid "Reports"
+msgstr "Жалобы"
+
+#: .\apps\moderation\models.py
+msgid "Blocker"
+msgstr "Заблокировавший"
+
+#: .\apps\moderation\models.py
+msgid "Blocked user"
+msgstr "Заблокированный пользователь"
+
+#: .\apps\moderation\models.py
+msgid "Block"
+msgstr "Блокировка"
+
+#: .\apps\moderation\models.py
+msgid "Blocks"
+msgstr "Блокировки"
+
+#: .\apps\moderation\api.py .\apps\moderation\serializers.py
+msgid "You already have an open report for this target."
+msgstr "У вас уже есть открытая жалоба на этот объект."
+
+#: .\apps\moderation\api.py .\apps\moderation\serializers.py
+msgid "This field is required."
+msgstr "Это поле обязательно."
+
+#: .\apps\moderation\api.py .\apps\moderation\serializers.py
+msgid "Must be a numeric user id."
+msgstr "ID пользователя должен быть числом."
+
+#: .\apps\moderation\api.py .\apps\moderation\serializers.py
+msgid "You cannot block yourself."
+msgstr "Вы не можете заблокировать самого себя."
+
+#: .\apps\moderation\dashboard.py
+msgid "This report does not target a job."
+msgstr "Эта жалоба не относится к работе."
+
+#: .\apps\moderation\dashboard.py
+msgid "This report has no user to deactivate."
+msgstr "В этой жалобе нет пользователя для деактивации."
+
+#: .\apps\moderation\dashboard.py
+msgid "Staff and operator accounts cannot be deactivated here."
+msgstr "Учётные записи сотрудников и операторов здесь деактивировать нельзя."
+
+#: .\apps\moderation\filters.py
+msgid ""
+"This text contains language that is not allowed on InTask. Please remove "
+"any offensive, abusive or illegal content and try again."
+msgstr ""
+"Этот текст содержит выражения, недопустимые в InTask. Удалите "
+"оскорбительное, нецензурное или противоправное содержание и повторите "
+"попытку."
+
+#: .\apps\moderation\api.py .\apps\moderation\serializers.py
+msgid "target_user is required when target_type is 'user'."
+msgstr "Если target_type = 'user', поле target_user обязательно."
+
+#: .\apps\moderation\api.py .\apps\moderation\serializers.py
+msgid "target_job must be empty when target_type is 'user'."
+msgstr "Если target_type = 'user', поле target_job должно быть пустым."
+
+#: .\apps\moderation\api.py .\apps\moderation\serializers.py
+msgid "You cannot report yourself."
+msgstr "Вы не можете пожаловаться на самого себя."
+
+#: .\apps\moderation\api.py .\apps\moderation\serializers.py
+msgid "target_job is required when target_type is 'job'."
+msgstr "Если target_type = 'job', поле target_job обязательно."
+
+#: .\apps\moderation\api.py .\apps\moderation\serializers.py
+msgid "target_user must be empty when target_type is 'job'."
+msgstr "Если target_type = 'job', поле target_user должно быть пустым."
+
+#: .\apps\moderation\api.py .\apps\moderation\serializers.py
+msgid "You cannot report your own job."
+msgstr "Вы не можете пожаловаться на своё же объявление."
+
+#: .\templates\terms.html
+msgid "Terms of Use"
+msgstr "Условия использования"
+
+#: .\templates\terms.html
+msgid "Version 1.0 — Last updated: 27 September 2026"
+msgstr "Версия 1.0 — Последнее обновление: 27 сентября 2026 г."
+
+#: .\templates\terms.html
+msgid ""
+"These Terms of Use govern your use of the InTask website and the InTask "
+"mobile application. By creating an account, posting a job, applying to a "
+"job or otherwise using InTask, you agree to these terms. If you do not "
+"agree, do not use InTask."
+msgstr ""
+"Настоящие Условия использования регулируют использование вами сайта "
+"InTask и мобильного приложения InTask. Создавая аккаунт, размещая "
+"объявление, откликаясь на работу или иным образом используя InTask, вы "
+"принимаете эти условия. Если вы не согласны — не используйте InTask."
+
+#: .\templates\terms.html
+msgid "1. Who may use InTask"
+msgstr "1. Кто может использовать InTask"
+
+#: .\templates\terms.html
+msgid "You must be at least 18 years old."
+msgstr "Вам должно быть не менее 18 лет."
+
+#: .\templates\terms.html
+msgid "You must register with a phone number you control."
+msgstr "Регистрируйтесь с номером телефона, который принадлежит вам."
+
+#: .\templates\terms.html
+msgid "One person, one account. Do not impersonate anyone else."
+msgstr "Один человек — один аккаунт. Не выдавайте себя за другого."
+
+#: .\templates\terms.html
+msgid "2. Zero tolerance for objectionable content and abusive users"
+msgstr "2. Нулевая терпимость к недопустимому контенту и агрессивным пользователям"
+
+#: .\templates\terms.html
+msgid ""
+"InTask has <strong>zero tolerance</strong> for objectionable content and "
+"for abusive behaviour. There is no warning system and no second chance "
+"for serious violations: content is removed and accounts are terminated."
+msgstr ""
+"InTask придерживается <strong>нулевой терпимости</strong> к "
+"недопустимому контенту и агрессивному поведению. За серьёзные нарушения "
+"нет ни предупреждений, ни второго шанса: контент удаляется, а аккаунты "
+"блокируются навсегда."
+
+#: .\templates\terms.html
+msgid ""
+"Every report is reviewed by our moderation team and acted on "
+"<strong>within 24 hours</strong>. Content found to violate these terms "
+"is removed, and the account responsible is suspended or permanently "
+"terminated."
+msgstr ""
+"Каждая жалоба рассматривается нашей командой модерации, и меры "
+"принимаются <strong>в течение 24 часов</strong>. Контент, нарушающий эти "
+"условия, удаляется, а соответствующий аккаунт блокируется временно или "
+"навсегда."
+
+#: .\templates\terms.html
+msgid "3. What is not allowed"
+msgstr "3. Что запрещено"
+
+#: .\templates\terms.html
+msgid "You must not post, send or share any of the following:"
+msgstr "Запрещается размещать, отправлять или распространять следующее:"
+
+#: .\templates\terms.html
+msgid "Obscene, vulgar or sexually explicit content of any kind."
+msgstr "Любой непристойный, вульгарный или сексуально откровенный контент."
+
+#: .\templates\terms.html
+msgid "Harassment, threats, bullying, stalking or intimidation of any person."
+msgstr "Преследование, угрозы, травля, слежка или запугивание любого человека."
+
+#: .\templates\terms.html
+msgid ""
+"Hate speech or attacks based on nationality, ethnicity, religion, "
+"gender, disability or any other protected characteristic."
+msgstr ""
+"Разжигание ненависти или нападки по признаку национальности, этнической "
+"принадлежности, религии, пола, инвалидности или иного защищаемого "
+"признака."
+
+#: .\templates\terms.html
+msgid "Content promoting violence, self-harm, terrorism or any criminal activity."
+msgstr ""
+"Контент, пропагандирующий насилие, самоповреждение, терроризм или любую "
+"преступную деятельность."
+
+#: .\templates\terms.html
+msgid ""
+"Sexual services, escort work, or anything involving the exploitation of "
+"a person."
+msgstr ""
+"Сексуальные услуги, эскорт или что-либо связанное с эксплуатацией "
+"человека."
+
+#: .\templates\terms.html
+msgid ""
+"Drugs, weapons, counterfeit or stolen goods, forged documents, or money "
+"laundering."
+msgstr ""
+"Наркотики, оружие, контрафакт или краденое, поддельные документы или "
+"отмывание денег."
+
+#: .\templates\terms.html
+msgid "Any content involving minors in an unsafe, exploitative or sexual context."
+msgstr ""
+"Любой контент с участием несовершеннолетних в небезопасном, "
+"эксплуатационном или сексуальном контексте."
+
+#: .\templates\terms.html
+msgid ""
+"Fraud, scams, pyramid schemes, fake job offers, or requests for advance "
+"payment from workers."
+msgstr ""
+"Мошенничество, обман, финансовые пирамиды, фиктивные вакансии или "
+"требование предоплаты от работников."
+
+#: .\templates\terms.html
+msgid ""
+"Spam, repeated duplicate listings, or advertising unrelated to work on "
+"InTask."
+msgstr ""
+"Спам, повторяющиеся одинаковые объявления или реклама, не связанная с "
+"работой в InTask."
+
+#: .\templates\terms.html
+msgid "Other people's personal data published without their consent."
+msgstr "Персональные данные других людей, опубликованные без их согласия."
+
+#: .\templates\terms.html
+msgid ""
+"InTask automatically filters job titles, job descriptions and reviews "
+"for prohibited language and rejects them before they are published. "
+"Filtering is a first line of defence, not a substitute for the rules "
+"above."
+msgstr ""
+"InTask автоматически проверяет заголовки объявлений, описания и отзывы "
+"на запрещённую лексику и отклоняет их до публикации. Фильтрация — это "
+"первая линия защиты, а не замена правилам выше."
+
+#: .\templates\terms.html
+msgid "4. Reporting and blocking"
+msgstr "4. Жалобы и блокировка"
+
+#: .\templates\terms.html
+msgid ""
+"Every job listing and every user profile in the app has a "
+"<strong>Report</strong> action. Use it whenever you see content or "
+"behaviour that breaks these rules. Reports are confidential — the person "
+"you report is not told who reported them."
+msgstr ""
+"У каждого объявления и каждого профиля в приложении есть действие "
+"<strong>Пожаловаться</strong>. Используйте его, когда видите контент или "
+"поведение, нарушающее эти правила. Жалобы конфиденциальны — тот, на кого "
+"пожаловались, не узнает, кто это сделал."
+
+#: .\templates\terms.html
+msgid ""
+"You can also <strong>Block</strong> any user. A block works in both "
+"directions immediately: their jobs disappear from your lists and your "
+"jobs disappear from theirs, and neither of you can apply to or see the "
+"other's listings."
+msgstr ""
+"Вы также можете <strong>Заблокировать</strong> любого пользователя. "
+"Блокировка сразу действует в обе стороны: его объявления исчезают из "
+"ваших списков, а ваши — из его, и ни один из вас не может видеть "
+"объявления другого или откликаться на них."
+
+#: .\templates\terms.html
+msgid "What we do when a report arrives:"
+msgstr "Что мы делаем при поступлении жалобы:"
+
+#: .\templates\terms.html
+msgid "A moderator reviews every report within 24 hours of it being submitted."
+msgstr "Модератор рассматривает каждую жалобу в течение 24 часов с момента подачи."
+
+#: .\templates\terms.html
+msgid "Content that violates these terms is hidden or deleted."
+msgstr "Контент, нарушающий эти условия, скрывается или удаляется."
+
+#: .\templates\terms.html
+msgid ""
+"The account responsible is deactivated, and for serious violations "
+"permanently terminated."
+msgstr ""
+"Соответствующий аккаунт деактивируется, а при серьёзных нарушениях "
+"удаляется навсегда."
+
+#: .\templates\terms.html
+msgid "Where the law requires it, we cooperate with the relevant authorities."
+msgstr ""
+"В случаях, предусмотренных законом, мы сотрудничаем с компетентными "
+"органами."
+
+#: .\templates\terms.html
+msgid "5. Your responsibilities"
+msgstr "5. Ваши обязанности"
+
+#: .\templates\terms.html
+msgid "You are responsible for everything posted from your account."
+msgstr "Вы несёте ответственность за всё, что размещено с вашего аккаунта."
+
+#: .\templates\terms.html
+msgid ""
+"Job listings must describe real work, with honest pay and honest "
+"conditions."
+msgstr ""
+"Объявления должны описывать реальную работу с честной оплатой и честными "
+"условиями."
+
+#: .\templates\terms.html
+msgid ""
+"Agreements about pay, schedule and safety are between the employer and "
+"the worker. InTask is a platform that connects them, not an employer or "
+"an agent."
+msgstr ""
+"Договорённости об оплате, графике и безопасности — между заказчиком и "
+"исполнителем. InTask — платформа, которая их связывает, а не "
+"работодатель и не посредник."
+
+#: .\templates\terms.html
+msgid "Meet safely, and verify who you are dealing with before starting work."
+msgstr "Встречайтесь безопасно и проверяйте, с кем имеете дело, до начала работы."
+
+#: .\templates\terms.html
+msgid "6. Suspension and termination"
+msgstr "6. Приостановка и удаление аккаунта"
+
+#: .\templates\terms.html
+msgid ""
+"We may suspend or terminate any account, without prior notice, when it "
+"posts objectionable content, harasses or abuses another user, or "
+"repeatedly breaks these terms. Terminated users may not create a new "
+"account."
+msgstr ""
+"Мы можем приостановить или удалить любой аккаунт без предварительного "
+"уведомления, если с него размещают недопустимый контент, преследуют или "
+"оскорбляют других пользователей либо неоднократно нарушают эти условия. "
+"Пользователи с удалёнными аккаунтами не вправе создавать новые."
+
+#: .\templates\terms.html
+msgid "7. Deleting your account"
+msgstr "7. Удаление аккаунта"
+
+#: .\templates\terms.html
+msgid ""
+"You can delete your account and all data associated with it at any time. "
+"Deletion is permanent and cannot be undone."
+msgstr ""
+"Вы можете в любой момент удалить свой аккаунт и все связанные с ним "
+"данные. Удаление необратимо."
+
+#: .\templates\terms.html
+msgid "How to delete your account and data"
+msgstr "Как удалить аккаунт и данные"
+
+#: .\templates\terms.html
+msgid "8. Changes to these terms"
+msgstr "8. Изменения условий"
+
+#: .\templates\terms.html
+msgid ""
+"We may update these terms. When we do, we publish a new version here and "
+"ask you to accept it in the app before you continue using InTask."
+msgstr ""
+"Мы можем обновлять эти условия. В таком случае мы публикуем здесь новую "
+"версию и просим принять её в приложении, прежде чем вы продолжите "
+"пользоваться InTask."
+
+#: .\templates\terms.html
+msgid "9. Contact"
+msgstr "9. Контакты"
+
+#: .\templates\terms.html
+msgid "Questions about these terms, or to report something urgent:"
+msgstr "Вопросы по этим условиям или срочное сообщение:"

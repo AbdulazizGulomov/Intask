@@ -19,7 +19,16 @@ from apps.jobs.api import (
 )
 from apps.jobs.geocode import ReverseGeocodeAPIView
 from apps.jobs.views import mobile_map_picker
-from apps.accounts.views import me as me_view, become_employer as become_employer_view
+from apps.accounts.views import (
+    me as me_view,
+    become_employer as become_employer_view,
+    accept_terms as accept_terms_view,
+)
+from apps.moderation.api import (
+    ReportCreateAPIView,
+    BlockListCreateAPIView,
+    BlockDeleteAPIView,
+)
 
 urlpatterns = [
     path("api/dashboard/", include("apps.accounts.dashboard.urls")),  # operator dashboard API
@@ -28,6 +37,12 @@ urlpatterns = [
 
     path("api/me/", me_view, name="api_me"),  # GET + PATCH worker profile
     path("api/me/become-employer/", become_employer_view, name="api_become_employer"),
+    path("api/me/accept-terms/", accept_terms_view, name="api_accept_terms"),
+
+    # UGC safety (App Store Guideline 1.2): report + block.
+    path("api/reports/", ReportCreateAPIView.as_view(), name="api_report_create"),
+    path("api/blocks/", BlockListCreateAPIView.as_view(), name="api_blocks"),
+    path("api/blocks/<int:user_id>/", BlockDeleteAPIView.as_view(), name="api_block_delete"),
 
     path("api/jobs/", JobListAPIView.as_view(), name="api_job_list"),
     path("api/jobs/create/", JobCreateAPIView.as_view(), name="api_job_create"),

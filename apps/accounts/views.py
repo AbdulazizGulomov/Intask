@@ -11,6 +11,7 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.utils import timezone
 from django.utils.translation import get_language
 
 from rest_framework import status
@@ -22,6 +23,7 @@ from rest_framework.response import Response
 from apps.accounts.models import User, WorkerProfile
 from apps.accounts.auth.otp import verify_otp, normalize_phone
 from apps.jobs.models import Job, Profession
+from apps.moderation.selectors import blocked_user_ids
 from apps.jobs.utils import format_pay
 
 
@@ -219,6 +221,12 @@ def _me_payload(request):
         "can_hire": can_hire,
         # First-login gate for the mobile app (6c-3): see _is_profile_completed.
         "is_completed": _is_profile_completed(u, wp),
+        # Terms/EULA acceptance (App Store Guideline 1.2). The app compares
+        # terms_version against terms_version_current and re-prompts when they
+        # differ or terms_accepted_at is null.
+        "terms_accepted_at": u.terms_accepted_at.isoformat() if u.terms_accepted_at else None,
+        "terms_version": u.terms_version or "",
+        "terms_version_current": getattr(settings, "TERMS_VERSION", ""),
     }
 
 
@@ -312,6 +320,29 @@ def become_employer(request):
     return Response({"can_work": payload["can_work"], "can_hire": payload["can_hire"]})
 
 
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def accept_terms(request):
+    """POST /api/me/accept-terms/ — record acceptance of the current terms.
+
+    Stamps the server clock and settings.TERMS_VERSION, ignoring any
+    client-supplied timestamp or version. Idempotent: re-accepting the same
+    version refreshes the timestamp rather than erroring, so a retry after a
+    dropped response is safe.
+    """
+    u = request.user
+    u.terms_accepted_at = timezone.now()
+    u.terms_version = getattr(settings, "TERMS_VERSION", "")
+    u.save(update_fields=["terms_accepted_at", "terms_version"])
+
+    return Response(
+        {
+            "terms_accepted_at": u.terms_accepted_at.isoformat(),
+            "terms_version": u.terms_version,
+        }
+    )
+
+
 def require_login_for_apply(request):
     if not request.user.is_authenticated:
         next_url = request.GET.get("next") or reverse("accounts:worker_home")
@@ -369,6 +400,10 @@ def worker_home(request):
     ]
 
     qs = Job.objects.filter(is_active=True)
+    # UGC safety: same symmetric block filter the mobile job list applies.
+    blocked = blocked_user_ids(request.user)
+    if blocked:
+        qs = qs.exclude(employer_id__in=blocked)
 
     if selected_regions:
         qs = qs.filter(region__in=selected_regions)

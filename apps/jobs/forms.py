@@ -3,6 +3,8 @@
 from django import forms
 from django.utils.translation import get_language
 
+from apps.moderation.filters import REJECTION_MESSAGE, contains_banned_words
+
 from .models import Job
 from .utils import pay_period_warning
 
@@ -19,6 +21,20 @@ class JobForm(forms.ModelForm):
             self.fields["profession"].label_from_instance = (
                 lambda obj: obj.display_name(lang)
             )
+
+    def clean_title(self):
+        # UGC safety: same word-list filter the mobile create endpoint applies,
+        # so a banned listing cannot be smuggled in through the web form.
+        title = self.cleaned_data.get("title") or ""
+        if contains_banned_words(title):
+            raise forms.ValidationError(REJECTION_MESSAGE)
+        return title
+
+    def clean_description(self):
+        description = self.cleaned_data.get("description") or ""
+        if contains_banned_words(description):
+            raise forms.ValidationError(REJECTION_MESSAGE)
+        return description
 
     def clean(self):
         cleaned = super().clean()

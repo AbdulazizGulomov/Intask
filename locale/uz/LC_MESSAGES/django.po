@@ -1933,3 +1933,433 @@ msgstr "To'liq Maxfiylik siyosatini o'qing"
 #: .\templates\partials\footer_links.html .\templates\base_site.html
 msgid "Delete account & data"
 msgstr "Hisob va ma'lumotlarni o'chirish"
+
+#: .\apps\moderation\models.py
+msgid "User"
+msgstr "Foydalanuvchi"
+
+#: .\apps\moderation\models.py
+msgid "Moderation"
+msgstr "Moderatsiya"
+
+#: .\apps\moderation\models.py
+msgid "Spam"
+msgstr "Spam"
+
+#: .\apps\moderation\models.py
+msgid "Abuse or harassment"
+msgstr "Haqorat yoki ta'qib"
+
+#: .\apps\moderation\models.py
+msgid "Fraud or scam"
+msgstr "Firibgarlik yoki aldov"
+
+#: .\apps\moderation\models.py
+msgid "Inappropriate content"
+msgstr "Nomaqbul kontent"
+
+#: .\apps\moderation\models.py
+msgid "Other"
+msgstr "Boshqa"
+
+#: .\apps\moderation\models.py
+msgid "Open"
+msgstr "Ochiq"
+
+#: .\apps\moderation\models.py
+msgid "Resolved"
+msgstr "Hal qilindi"
+
+#: .\apps\moderation\models.py
+msgid "Rejected"
+msgstr "Rad etildi"
+
+#: .\apps\moderation\models.py
+msgid "Reporter"
+msgstr "Shikoyat qiluvchi"
+
+#: .\apps\moderation\models.py
+msgid "Reported user"
+msgstr "Shikoyat qilingan foydalanuvchi"
+
+#: .\apps\moderation\models.py
+msgid "Reported job"
+msgstr "Shikoyat qilingan ish"
+
+#: .\apps\moderation\models.py
+msgid "Resolved by"
+msgstr "Kim hal qildi"
+
+#: .\apps\moderation\models.py
+msgid "Report"
+msgstr "Shikoyat"
+
+#: .\apps\moderation\models.py
+msgid "Reports"
+msgstr "Shikoyatlar"
+
+#: .\apps\moderation\models.py
+msgid "Blocker"
+msgstr "Bloklagan"
+
+#: .\apps\moderation\models.py
+msgid "Blocked user"
+msgstr "Bloklangan foydalanuvchi"
+
+#: .\apps\moderation\models.py
+msgid "Block"
+msgstr "Bloklash"
+
+#: .\apps\moderation\models.py
+msgid "Blocks"
+msgstr "Bloklashlar"
+
+#: .\apps\moderation\api.py .\apps\moderation\serializers.py
+msgid "You already have an open report for this target."
+msgstr "Sizda bu obyekt bo'yicha ochiq shikoyat allaqachon mavjud."
+
+#: .\apps\moderation\api.py .\apps\moderation\serializers.py
+msgid "This field is required."
+msgstr "Bu maydon to'ldirilishi shart."
+
+#: .\apps\moderation\api.py .\apps\moderation\serializers.py
+msgid "Must be a numeric user id."
+msgstr "Foydalanuvchi ID raqam bo'lishi kerak."
+
+#: .\apps\moderation\api.py .\apps\moderation\serializers.py
+msgid "You cannot block yourself."
+msgstr "O'zingizni bloklay olmaysiz."
+
+#: .\apps\moderation\dashboard.py
+msgid "This report does not target a job."
+msgstr "Bu shikoyat ishga qaratilmagan."
+
+#: .\apps\moderation\dashboard.py
+msgid "This report has no user to deactivate."
+msgstr "Bu shikoyatda o'chiriladigan foydalanuvchi yo'q."
+
+#: .\apps\moderation\dashboard.py
+msgid "Staff and operator accounts cannot be deactivated here."
+msgstr "Xodim va operator hisoblarini bu yerdan o'chirib bo'lmaydi."
+
+#: .\apps\moderation\filters.py
+msgid ""
+"This text contains language that is not allowed on InTask. Please remove "
+"any offensive, abusive or illegal content and try again."
+msgstr ""
+"Bu matnda InTask'da ruxsat etilmagan so'zlar bor. Haqoratli, tahqirli "
+"yoki noqonuniy mazmunni olib tashlang va qayta urinib ko'ring."
+
+#: .\apps\moderation\api.py .\apps\moderation\serializers.py
+msgid "target_user is required when target_type is 'user'."
+msgstr "target_type 'user' bo'lganda target_user ko'rsatilishi shart."
+
+#: .\apps\moderation\api.py .\apps\moderation\serializers.py
+msgid "target_job must be empty when target_type is 'user'."
+msgstr "target_type 'user' bo'lganda target_job bo'sh bo'lishi kerak."
+
+#: .\apps\moderation\api.py .\apps\moderation\serializers.py
+msgid "You cannot report yourself."
+msgstr "O'zingiz ustingizdan shikoyat qila olmaysiz."
+
+#: .\apps\moderation\api.py .\apps\moderation\serializers.py
+msgid "target_job is required when target_type is 'job'."
+msgstr "target_type 'job' bo'lganda target_job ko'rsatilishi shart."
+
+#: .\apps\moderation\api.py .\apps\moderation\serializers.py
+msgid "target_user must be empty when target_type is 'job'."
+msgstr "target_type 'job' bo'lganda target_user bo'sh bo'lishi kerak."
+
+#: .\apps\moderation\api.py .\apps\moderation\serializers.py
+msgid "You cannot report your own job."
+msgstr "O'z ishingiz ustidan shikoyat qila olmaysiz."
+
+#: .\templates\terms.html
+msgid "Terms of Use"
+msgstr "Foydalanish shartlari"
+
+#: .\templates\terms.html
+msgid "Version 1.0 — Last updated: 27 September 2026"
+msgstr "Versiya 1.0 — Oxirgi yangilanish: 27-sentabr 2026"
+
+#: .\templates\terms.html
+msgid ""
+"These Terms of Use govern your use of the InTask website and the InTask "
+"mobile application. By creating an account, posting a job, applying to a "
+"job or otherwise using InTask, you agree to these terms. If you do not "
+"agree, do not use InTask."
+msgstr ""
+"Ushbu Foydalanish shartlari InTask veb-sayti va InTask mobil ilovasidan "
+"foydalanishingizni tartibga soladi. Hisob yaratish, ish e'lon qilish, "
+"ishga ariza berish yoki InTask'dan boshqacha foydalanish orqali siz "
+"ushbu shartlarga rozilik bildirasiz. Rozi bo'lmasangiz, InTask'dan "
+"foydalanmang."
+
+#: .\templates\terms.html
+msgid "1. Who may use InTask"
+msgstr "1. Kim InTask'dan foydalanishi mumkin"
+
+#: .\templates\terms.html
+msgid "You must be at least 18 years old."
+msgstr "Siz kamida 18 yoshda bo'lishingiz kerak."
+
+#: .\templates\terms.html
+msgid "You must register with a phone number you control."
+msgstr "O'zingizga tegishli telefon raqami bilan ro'yxatdan o'tishingiz kerak."
+
+#: .\templates\terms.html
+msgid "One person, one account. Do not impersonate anyone else."
+msgstr "Bir shaxs — bitta hisob. Boshqa odam nomidan ish ko'rmang."
+
+#: .\templates\terms.html
+msgid "2. Zero tolerance for objectionable content and abusive users"
+msgstr ""
+"2. Nomaqbul kontent va haqoratli foydalanuvchilarga mutlaqo toqat "
+"qilinmaydi"
+
+#: .\templates\terms.html
+msgid ""
+"InTask has <strong>zero tolerance</strong> for objectionable content and "
+"for abusive behaviour. There is no warning system and no second chance "
+"for serious violations: content is removed and accounts are terminated."
+msgstr ""
+"InTask nomaqbul kontent va haqoratli xatti-harakatlarga <strong>mutlaqo "
+"toqat qilmaydi</strong>. Jiddiy qoidabuzarliklar uchun ogohlantirish "
+"tizimi ham, ikkinchi imkoniyat ham yo'q: kontent o'chiriladi, hisoblar "
+"esa bekor qilinadi."
+
+#: .\templates\terms.html
+msgid ""
+"Every report is reviewed by our moderation team and acted on "
+"<strong>within 24 hours</strong>. Content found to violate these terms "
+"is removed, and the account responsible is suspended or permanently "
+"terminated."
+msgstr ""
+"Har bir shikoyat moderatsiya jamoamiz tomonidan ko'rib chiqiladi va "
+"<strong>24 soat ichida</strong> chora ko'riladi. Ushbu shartlarni buzgan "
+"kontent o'chiriladi, aybdor hisob esa to'xtatiladi yoki butunlay bekor "
+"qilinadi."
+
+#: .\templates\terms.html
+msgid "3. What is not allowed"
+msgstr "3. Nima taqiqlanadi"
+
+#: .\templates\terms.html
+msgid "You must not post, send or share any of the following:"
+msgstr "Quyidagilarni joylashtirish, yuborish yoki ulashish taqiqlanadi:"
+
+#: .\templates\terms.html
+msgid "Obscene, vulgar or sexually explicit content of any kind."
+msgstr "Har qanday uyatsiz, qo'pol yoki jinsiy mazmundagi kontent."
+
+#: .\templates\terms.html
+msgid "Harassment, threats, bullying, stalking or intimidation of any person."
+msgstr "Har qanday shaxsni ta'qib qilish, qo'rqitish, tahdid yoki bosim o'tkazish."
+
+#: .\templates\terms.html
+msgid ""
+"Hate speech or attacks based on nationality, ethnicity, religion, "
+"gender, disability or any other protected characteristic."
+msgstr ""
+"Millati, etnik kelib chiqishi, dini, jinsi, nogironligi yoki boshqa "
+"himoyalangan belgisi bo'yicha nafrat va hujumlar."
+
+#: .\templates\terms.html
+msgid "Content promoting violence, self-harm, terrorism or any criminal activity."
+msgstr ""
+"Zo'ravonlik, o'z-o'ziga zarar yetkazish, terrorizm yoki jinoiy "
+"faoliyatni targ'ib qiluvchi kontent."
+
+#: .\templates\terms.html
+msgid ""
+"Sexual services, escort work, or anything involving the exploitation of "
+"a person."
+msgstr ""
+"Jinsiy xizmatlar, eskort ishi yoki shaxsni ekspluatatsiya qiluvchi har "
+"qanday narsa."
+
+#: .\templates\terms.html
+msgid ""
+"Drugs, weapons, counterfeit or stolen goods, forged documents, or money "
+"laundering."
+msgstr ""
+"Giyohvand moddalar, qurol, qalbaki yoki o'g'irlangan mol, soxta "
+"hujjatlar yoki pul yuvish."
+
+#: .\templates\terms.html
+msgid "Any content involving minors in an unsafe, exploitative or sexual context."
+msgstr ""
+"Voyaga yetmaganlarni xavfli, ekspluatatsion yoki jinsiy kontekstda aks "
+"ettiruvchi har qanday kontent."
+
+#: .\templates\terms.html
+msgid ""
+"Fraud, scams, pyramid schemes, fake job offers, or requests for advance "
+"payment from workers."
+msgstr ""
+"Firibgarlik, aldov, moliyaviy piramidalar, soxta ish takliflari yoki "
+"ishchilardan oldindan to'lov talab qilish."
+
+#: .\templates\terms.html
+msgid ""
+"Spam, repeated duplicate listings, or advertising unrelated to work on "
+"InTask."
+msgstr ""
+"Spam, takroriy bir xil e'lonlar yoki InTask'dagi ishga aloqasi bo'lmagan "
+"reklama."
+
+#: .\templates\terms.html
+msgid "Other people's personal data published without their consent."
+msgstr "Boshqa shaxslarning roziligisiz e'lon qilingan shaxsiy ma'lumotlari."
+
+#: .\templates\terms.html
+msgid ""
+"InTask automatically filters job titles, job descriptions and reviews "
+"for prohibited language and rejects them before they are published. "
+"Filtering is a first line of defence, not a substitute for the rules "
+"above."
+msgstr ""
+"InTask ish sarlavhalari, tavsiflari va sharhlarini taqiqlangan so'zlarga "
+"avtomatik tekshiradi va ular e'lon qilinishidan oldin rad etadi. "
+"Filtrlash — birinchi himoya chizig'i, yuqoridagi qoidalar o'rnini "
+"bosmaydi."
+
+#: .\templates\terms.html
+msgid "4. Reporting and blocking"
+msgstr "4. Shikoyat qilish va bloklash"
+
+#: .\templates\terms.html
+msgid ""
+"Every job listing and every user profile in the app has a "
+"<strong>Report</strong> action. Use it whenever you see content or "
+"behaviour that breaks these rules. Reports are confidential — the person "
+"you report is not told who reported them."
+msgstr ""
+"Ilovadagi har bir ish e'loni va har bir foydalanuvchi profilida "
+"<strong>Shikoyat qilish</strong> tugmasi bor. Ushbu qoidalarni buzuvchi "
+"kontent yoki xatti-harakatni ko'rsangiz, undan foydalaning. Shikoyatlar "
+"maxfiy — siz shikoyat qilgan shaxsga kim shikoyat qilgani aytilmaydi."
+
+#: .\templates\terms.html
+msgid ""
+"You can also <strong>Block</strong> any user. A block works in both "
+"directions immediately: their jobs disappear from your lists and your "
+"jobs disappear from theirs, and neither of you can apply to or see the "
+"other's listings."
+msgstr ""
+"Shuningdek, har qanday foydalanuvchini <strong>Bloklash</strong>ingiz "
+"mumkin. Bloklash darhol ikki tomonlama ishlaydi: ularning e'lonlari "
+"sizning ro'yxatingizdan, sizniki esa ularnikidan yo'qoladi va ikkalangiz "
+"ham bir-biringizning e'lonlaringizni ko'ra yoki ularga ariza bera "
+"olmaysiz."
+
+#: .\templates\terms.html
+msgid "What we do when a report arrives:"
+msgstr "Shikoyat kelganda nima qilamiz:"
+
+#: .\templates\terms.html
+msgid "A moderator reviews every report within 24 hours of it being submitted."
+msgstr ""
+"Moderator har bir shikoyatni yuborilganidan keyin 24 soat ichida ko'rib "
+"chiqadi."
+
+#: .\templates\terms.html
+msgid "Content that violates these terms is hidden or deleted."
+msgstr "Ushbu shartlarni buzuvchi kontent yashiriladi yoki o'chiriladi."
+
+#: .\templates\terms.html
+msgid ""
+"The account responsible is deactivated, and for serious violations "
+"permanently terminated."
+msgstr ""
+"Aybdor hisob faolsizlantiriladi, jiddiy qoidabuzarliklarda esa butunlay "
+"bekor qilinadi."
+
+#: .\templates\terms.html
+msgid "Where the law requires it, we cooperate with the relevant authorities."
+msgstr "Qonun talab qilgan hollarda tegishli organlar bilan hamkorlik qilamiz."
+
+#: .\templates\terms.html
+msgid "5. Your responsibilities"
+msgstr "5. Sizning majburiyatlaringiz"
+
+#: .\templates\terms.html
+msgid "You are responsible for everything posted from your account."
+msgstr "Hisobingizdan joylashtirilgan hamma narsa uchun siz javobgarsiz."
+
+#: .\templates\terms.html
+msgid ""
+"Job listings must describe real work, with honest pay and honest "
+"conditions."
+msgstr ""
+"Ish e'lonlari haqiqiy ishni, halol to'lov va halol shartlar bilan "
+"tavsiflashi kerak."
+
+#: .\templates\terms.html
+msgid ""
+"Agreements about pay, schedule and safety are between the employer and "
+"the worker. InTask is a platform that connects them, not an employer or "
+"an agent."
+msgstr ""
+"To'lov, jadval va xavfsizlik bo'yicha kelishuvlar ish beruvchi bilan "
+"ishchi o'rtasida bo'ladi. InTask ularni bog'lovchi platforma, ish "
+"beruvchi yoki vositachi emas."
+
+#: .\templates\terms.html
+msgid "Meet safely, and verify who you are dealing with before starting work."
+msgstr ""
+"Xavfsiz uchrashing va ishni boshlashdan oldin kim bilan ish "
+"ko'rayotganingizni tekshiring."
+
+#: .\templates\terms.html
+msgid "6. Suspension and termination"
+msgstr "6. To'xtatish va bekor qilish"
+
+#: .\templates\terms.html
+msgid ""
+"We may suspend or terminate any account, without prior notice, when it "
+"posts objectionable content, harasses or abuses another user, or "
+"repeatedly breaks these terms. Terminated users may not create a new "
+"account."
+msgstr ""
+"Nomaqbul kontent joylashtirgan, boshqa foydalanuvchini ta'qib yoki "
+"haqorat qilgan yoxud ushbu shartlarni takroran buzgan har qanday hisobni "
+"oldindan ogohlantirmasdan to'xtatishimiz yoki bekor qilishimiz mumkin. "
+"Hisobi bekor qilingan foydalanuvchilar yangi hisob yarata olmaydi."
+
+#: .\templates\terms.html
+msgid "7. Deleting your account"
+msgstr "7. Hisobingizni o'chirish"
+
+#: .\templates\terms.html
+msgid ""
+"You can delete your account and all data associated with it at any time. "
+"Deletion is permanent and cannot be undone."
+msgstr ""
+"Hisobingizni va unga bog'liq barcha ma'lumotlarni istalgan vaqtda "
+"o'chirishingiz mumkin. O'chirish qaytarib bo'lmaydigan va doimiydir."
+
+#: .\templates\terms.html
+msgid "How to delete your account and data"
+msgstr "Hisob va ma'lumotlarni qanday o'chirish mumkin"
+
+#: .\templates\terms.html
+msgid "8. Changes to these terms"
+msgstr "8. Ushbu shartlardagi o'zgarishlar"
+
+#: .\templates\terms.html
+msgid ""
+"We may update these terms. When we do, we publish a new version here and "
+"ask you to accept it in the app before you continue using InTask."
+msgstr ""
+"Ushbu shartlarni yangilashimiz mumkin. Bunda yangi versiyani shu yerda "
+"e'lon qilamiz va InTask'dan foydalanishda davom etishdan oldin ilovada "
+"uni qabul qilishingizni so'raymiz."
+
+#: .\templates\terms.html
+msgid "9. Contact"
+msgstr "9. Aloqa"
+
+#: .\templates\terms.html
+msgid "Questions about these terms, or to report something urgent:"
+msgstr "Ushbu shartlar bo'yicha savollar yoki shoshilinch xabar uchun:"

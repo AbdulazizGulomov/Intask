@@ -85,6 +85,11 @@ class JobDetailSerializer(JobListSerializer):
         # only the detail-only fields are appended here.
         fields = JobListSerializer.Meta.fields + [
             "description", "contact_phone", "photos", "accepted_count",
+            # The poster's user id, so the mobile app can offer "Block user" on
+            # a listing (App Store Guideline 1.2). POST /api/blocks/ takes
+            # {"user_id"}. Not a privacy leak: an opaque integer, and
+            # contact_phone stays gated to authenticated callers.
+            "employer_id",
         ]
 
     def get_accepted_count(self, obj):

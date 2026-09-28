@@ -357,3 +357,33 @@ class EmployerApplicationsAPITests(TestCase):
         mine = c.get("/api/my-applications/").json()
         self.assertEqual({x["status"] for x in mine}, {"pending"})
         self.assertEqual(set(mine[0]), {"id", "status", "applied_at", "job"})
+
+
+class JobDetailEmployerIdTests(TestCase):
+    """The mobile app needs the poster's user id to offer "Block user" on a
+    job (App Store Guideline 1.2); POST /api/blocks/ takes {"user_id"}."""
+
+    def setUp(self):
+        self.User = get_user_model()
+
+    def test_detail_exposes_employer_id(self):
+        employer = self.User.objects.create(phone="+998900014001", role="employer")
+        job = Job.objects.create(
+            employer=employer, title="Elektrik kerak", region="andijon",
+            job_type="hourly",
+        )
+        response = APIClient().get(f"/api/jobs/{job.pk}/")
+        self.assertEqual(response.status_code, 200, response.content)
+        self.assertEqual(response.json()["employer_id"], employer.pk)
+
+    def test_list_does_not_expose_employer_id(self):
+        """Only the detail view needs it; the list payload stays as it is."""
+        employer = self.User.objects.create(phone="+998900014002", role="employer")
+        Job.objects.create(
+            employer=employer, title="Suvoqchi kerak", region="andijon",
+            job_type="daily",
+        )
+        response = APIClient().get("/api/jobs/")
+        self.assertEqual(response.status_code, 200, response.content)
+        first = response.json()["results"][0]
+        self.assertNotIn("employer_id", first)
